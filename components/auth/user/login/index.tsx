@@ -7,9 +7,18 @@ import Link from "next/link";
 
 import BaseLayout from "../../base";
 import { loginSchema } from "./loginSchema";
+import { poster } from "@/lib/utils";
+import Router from "next/router";
+import { signIn } from "next-auth/react";
 
 type Props = {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
+};
+
+const signInWithGoogleHandler = () => {
+  signIn("google", {
+    callbackUrl: "/",
+  });
 };
 
 function Login({ handleSubmit }: Props) {
@@ -18,12 +27,6 @@ function Login({ handleSubmit }: Props) {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const emailRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (!emailRef.current) return;
-    emailRef.current.focus();
-  }, []);
 
   return (
     <BaseLayout
@@ -33,8 +36,25 @@ function Login({ handleSubmit }: Props) {
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={loginSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          alert(JSON.stringify(values, null, 2));
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            const status = await signIn("credentials", {
+              redirect: false,
+              email: values.email,
+              password: values.password,
+              callbackUrl: "/",
+            });
+
+            if (status?.ok && status?.url) {
+              setErrorMessage("");
+
+              Router.push({
+                pathname: status?.url,
+              });
+            }
+          } catch (error) {
+            setErrorMessage("Error occured,  please try again!");
+          }
         }}
       >
         {({
@@ -46,12 +66,11 @@ function Login({ handleSubmit }: Props) {
           handleSubmit,
           isSubmitting,
         }) => (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onChange={() => setErrorMessage("")}>
             <fieldset>
               <div className="mb-5 flex flex-col">
                 <label htmlFor="useremailInput">Email</label>
                 <input
-                  ref={emailRef}
                   className="rounded-md"
                   name="email"
                   type="email"
@@ -61,7 +80,7 @@ function Login({ handleSubmit }: Props) {
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
-                <p className="text-red-500  ">
+                <p className="text-red-500">
                   {errors.email && touched.email && errors.email}
                 </p>
               </div>
@@ -77,7 +96,7 @@ function Login({ handleSubmit }: Props) {
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
-                <p className="text-red-500  ">
+                <p className="text-red-500">
                   {errors.password && touched.password && errors.password}
                 </p>
               </div>
@@ -100,7 +119,9 @@ function Login({ handleSubmit }: Props) {
                   Forgot Password
                 </button>
               </div>
-              {errorMessage && <div>{errorMessage}</div>}
+              {errorMessage && (
+                <div className="text-center text-red-500">{errorMessage}</div>
+              )}
 
               <div className="rounded-md bg-cyan-600 text-center">
                 <button
@@ -117,7 +138,10 @@ function Login({ handleSubmit }: Props) {
       </Formik>
 
       <div className="mt-4 mb-8 rounded-md border-2 border-gray-300 text-center">
-        <button className="flex w-full justify-center py-3">
+        <button
+          className="flex w-full justify-center py-3"
+          onClick={signInWithGoogleHandler}
+        >
           <Google className="h-6 w-6" />{" "}
           <p className="ml-2 font-medium text-gray-700">Sign in with Google</p>
         </button>

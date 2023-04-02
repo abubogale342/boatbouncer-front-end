@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Provider as RWBProvider } from "react-wrap-balancer";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import cx from "classnames";
 import localFont from "@next/font/local";
 import { Inter } from "@next/font/google";

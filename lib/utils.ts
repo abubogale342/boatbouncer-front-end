@@ -1,3 +1,4 @@
+import axios from "axios";
 import ms from "ms";
 
 export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
@@ -61,3 +62,17 @@ export const truncate = (str: string, length: number) => {
   if (!str || str.length <= length) return str;
   return `${str.slice(0, length)}...`;
 };
+
+export function getter<JSON = any>(path: RequestInfo): Promise<JSON> {
+  return axios
+    .get(`${process.env.API_URL}/${path}`)
+    .then((res) => res.data)
+    .catch((err) => err);
+}
+
+export function poster(path: string, body?: any) {
+  return axios
+    .post(`${process.env.NEXT_PUBLIC_API_URL}/${path}`, body)
+    .then((res) => res.data)
+    .catch((err) => err);
+}

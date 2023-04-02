@@ -9,7 +9,8 @@ type Props = {
 function Update({ handleSubmit }: Props) {
   const initialValues = {
     email: "testemail@gmail.com",
-    password: "QAZ@wedfrc12",
+    newPassword: "QAZ@wedfrc12",
+    confirmPassword: "QAZ@wedfrc12",
     userName: "Test user",
     firstName: "Mark",
     lastName: "John",
@@ -29,6 +30,7 @@ function Update({ handleSubmit }: Props) {
         handleSubmit={handleSubmit}
         type="Save Account"
         initialValues={initialValues}
+        page="update"
       />
       <div className="mt-4 mb-8 rounded-md border-2 border-gray-300 text-center">
         <button className="flex w-full justify-center gap-3 py-3">
