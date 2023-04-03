@@ -22,6 +22,7 @@ export default function Header(props) {
           >
             Boatbouncer
           </p>
+          {props?.children}
         </div>
         {props.email || props.user.email ? (
           <div className="mr-12 flex flex-row items-center gap-6">

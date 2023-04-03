@@ -3,12 +3,17 @@ import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import { IncomingMessage } from "http";
 import { getSession } from "next-auth/react";
+import Link from "next/link";
 import { Fragment } from "react";
 
 export default function Index(props: any) {
   return (
     <Fragment>
-      <Header {...props} />
+      <Header {...props}>
+        <Link href="/" className="ml-6 text-sm font-bold text-cyan-600">
+          Home
+        </Link>
+      </Header>
       <hr className="mt-1 h-px border-0 bg-gray-200" />
       <main className="mt-12 mb-12">
         <p className="text-center text-3xl font-medium text-gray-900">
