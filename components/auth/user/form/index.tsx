@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { formSchema } from "./schema";
+import { formRegisterSchema, formUpdateSchema } from "./schema";
 import { Formik } from "formik";
 import { motion } from "framer-motion";
 import { poster } from "@/lib/utils";
@@ -34,11 +34,13 @@ type Props = {
     state: string;
     zipCode: string;
     phoneNumber: string;
+    id: string | undefined | null;
   };
   page: String | null | undefined;
 };
 
 function Form({ handleSubmit, type, initialValues, page }: Props) {
+  console.log("initialValues", initialValues);
   const [step, setStep] = useState(1);
   // const { executeRecaptcha } = useGoogleReCaptcha();
   const [errorMessage, setErrorMessage] = useState("");
@@ -72,7 +74,9 @@ function Form({ handleSubmit, type, initialValues, page }: Props) {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={formSchema}
+      validationSchema={
+        page === "update" ? formUpdateSchema : formRegisterSchema
+      }
       onSubmit={async (values, { setSubmitting }) => {
         let finalValues = Object.assign(
           {},
@@ -86,11 +90,18 @@ function Form({ handleSubmit, type, initialValues, page }: Props) {
             city: values.city,
             email: values.email,
             zipCode: values.zipCode,
-            password: values.confirmPassword,
+            ...(values.confirmPassword && { password: values.confirmPassword }),
           },
         );
 
         if (page === "update") {
+          if (!finalValues.password) {
+            delete finalValues.password;
+          }
+          // const createdAccount = await poster(
+          //   `user/update/${initialValues.id}`,
+          //   finalValues,
+          // );
         } else if (page === "register") {
           try {
             await setupRecaptcha((args: any) => {

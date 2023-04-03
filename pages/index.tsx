@@ -1,22 +1,16 @@
 import Feature from "@/components/home/feature";
 import Footer from "@/components/shared/footer";
+import Header from "@/components/shared/header";
 import { IncomingMessage } from "http";
-import { getSession, signOut, useSession } from "next-auth/react";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { getSession } from "next-auth/react";
 import Link from "next/link";
 import homePic from "../public/home.png";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import Balancer from "react-wrap-balancer";
 import Image from "next/image";
-import icon from "../public/icon.svg";
-import { Fragment } from "react";
-import { Camera } from "lucide-react";
 
-export default function Home() {
-  const { data: session, status } = useSession();
-  console.log("session", session);
-
+export default function Home(props: any) {
   const searchPlaceHandler = (event: any) => {
     event.preventDefault();
   };
@@ -27,73 +21,7 @@ export default function Home() {
         className="relative h-screen bg-cover bg-right"
         style={{ backgroundImage: `url("/home.svg")` }}
       >
-        <nav className="flex h-16 items-center justify-between">
-          <Image src={icon} alt="logo" className="ml-5 md:ml-24" />
-          {session ? (
-            <div className="mr-12 flex flex-row items-center gap-6">
-              <button className="text-xs font-normal text-gray-500">
-                <Search size={24} />
-              </button>
-              <button className="rounded-lg border-2 border-gray-600 px-4 py-1  text-white">
-                My Inbox
-              </button>
-
-              <DropdownMenu.Root>
-                <DropdownMenu.Trigger asChild>
-                  <button>
-                    <img
-                      className="h-14 w-14 rounded-full border-2 border-gray-600 text-white"
-                      src={session?.picture || session?.image}
-                      alt="Profile"
-                    />
-                  </button>
-                </DropdownMenu.Trigger>
-
-                <DropdownMenu.Portal>
-                  <DropdownMenu.Content
-                    className="DropdownMenuContent"
-                    sideOffset={5}
-                  >
-                    <DropdownMenu.Item className="DropdownMenuItem">
-                      Bookings
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item className="DropdownMenuItem">
-                      My Listings
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item className="DropdownMenuItem">
-                      Payments
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item className="DropdownMenuItem">
-                      Favourites
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item className="DropdownMenuItem">
-                      <Link href="/user/update">Edit Profile</Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item className="DropdownMenuItem">
-                      <button onClick={() => signOut()}>Log out</button>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Arrow className="DropdownMenuArrow" />
-                  </DropdownMenu.Content>
-                </DropdownMenu.Portal>
-              </DropdownMenu.Root>
-            </div>
-          ) : (
-            <div className="flex flex-row items-center">
-              <Link
-                href="/user/login"
-                className=" mr-8 text-xs font-normal text-gray-500"
-              >
-                Login
-              </Link>
-              <Link
-                href="/user/register"
-                className="mr-3 rounded-md bg-yellow-500 px-4 py-2 text-xs  font-normal text-white md:mr-24"
-              >
-                Create Account
-              </Link>
-            </div>
-          )}
-        </nav>
+        <Header {...props} page="home"></Header>
 
         <motion.div className="absolute top-1/2 left-1/2 m-0 w-4/5 -translate-x-1/2 -translate-y-1/2 md:w-2/3">
           <motion.p className="text-center text-4xl font-bold md:text-6xl">
@@ -123,21 +51,21 @@ export default function Home() {
           </form>
         </motion.div>
       </div>
-      {/* <Footer></Footer> */}
+      <Footer />
     </main>
   );
 }
 
-// export async function getServerSideProps({
-//   req,
-// }: {
-//   req: IncomingMessage | undefined;
-// }) {
-//   const session = await getSession({ req });
+export async function getServerSideProps({
+  req,
+}: {
+  req: IncomingMessage | undefined;
+}) {
+  const session = await getSession({ req });
 
-//   return {
-//     props: {
-//       session,
-//     },
-//   };
-// }
+  return {
+    props: {
+      ...session,
+    }, // will be passed to the page component as props
+  };
+}

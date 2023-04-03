@@ -24,6 +24,7 @@ export type Props = {
     state: string;
     zipCode: string;
     phoneNumber: string;
+    id: string | undefined | null;
   };
   page: String | null | undefined;
 };

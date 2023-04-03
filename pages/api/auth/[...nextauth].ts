@@ -2,6 +2,59 @@ import NextAuth, { NextAuthOptions, RequestInternal } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { poster } from "@/lib/utils";
+import { Props } from "@/lib/types";
+import { DefaultSession } from "next-auth";
+
+// nextauth.d.ts
+declare module "next-auth" {
+  interface User {
+    email: string;
+    newPassword: string;
+    confirmPassword: string;
+    userName: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    phoneNumber: string;
+    id: string | undefined | null;
+  }
+
+  interface Session extends DefaultSession {
+    email: string;
+    newPassword: string;
+    confirmPassword: string;
+    userName: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    phoneNumber: string;
+    id: string | undefined | null;
+  }
+}
+
+// nextauth.d.ts
+declare module "next-auth/jwt" {
+  interface JWT {
+    email: string;
+    newPassword: string;
+    confirmPassword: string;
+    userName: string;
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    phoneNumber: string;
+    id: string | undefined | null;
+  }
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -40,12 +93,11 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
-      // Persist the OAuth access_token and or the user id to the token right after signin
-      return { ...token, ...user };
+    async jwt({ token }) {
+      return { ...token };
     },
+
     async session({ session, token }) {
-      // Send properties to the client, like an access_token and user id from a provider.
       return { ...session, ...token };
     },
   },

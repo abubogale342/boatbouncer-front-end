@@ -14,6 +14,7 @@ module.exports = {
       fontFamily: {
         display: ["var(--font-sf)", "system-ui", "sans-serif"],
         default: ["var(--font-inter)", "system-ui", "sans-serif"],
+        manrope: ["var(--font-inter)", "system-ui", "Manrope"],
       },
       animation: {
         // Tooltip

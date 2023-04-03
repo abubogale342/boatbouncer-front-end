@@ -123,7 +123,7 @@ function Login({ handleSubmit }: Props) {
                 <div className="text-center text-red-500">{errorMessage}</div>
               )}
 
-              <div className="rounded-md bg-cyan-600 text-center">
+              <div className="cursor-pointer rounded-md bg-cyan-600 text-center">
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -143,7 +143,9 @@ function Login({ handleSubmit }: Props) {
           onClick={signInWithGoogleHandler}
         >
           <Google className="h-6 w-6" />{" "}
-          <p className="ml-2 font-medium text-gray-700">Sign in with Google</p>
+          <p className="ml-2 cursor-pointer font-medium text-gray-700">
+            Sign in with Google
+          </p>
         </button>
       </div>
       <motion.p className="text-center text-sm text-gray-500">

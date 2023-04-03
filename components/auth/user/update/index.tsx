@@ -1,25 +1,18 @@
 import React, { useState } from "react";
 import BaseLayout from "../../base";
 import Form from "../form";
+import { useSession } from "next-auth/react";
 
 type Props = {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
 function Update({ handleSubmit }: Props) {
-  const initialValues = {
-    email: "testemail@gmail.com",
-    newPassword: "QAZ@wedfrc12",
-    confirmPassword: "QAZ@wedfrc12",
-    userName: "Test user",
-    firstName: "Mark",
-    lastName: "John",
-    address: "Seattle",
-    city: "SF",
-    state: "WA",
-    zipCode: "98116",
-    phoneNumber: "251913345678",
-  };
+  const { data: session } = useSession();
+
+  const initialValues = session;
+
+  if (!initialValues) return;
 
   return (
     <BaseLayout

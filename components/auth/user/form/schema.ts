@@ -7,7 +7,7 @@ const specialCharRegex = /(?=.*[!@#$%^&*])(?=.{8,})/; // Password should contain
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-export const formSchema = Yup.object().shape({
+export const formRegisterSchema = Yup.object().shape({
   userName: Yup.string().required("User name is required"),
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
@@ -24,6 +24,25 @@ export const formSchema = Yup.object().shape({
     .required("Confirmation password is required!")
     .oneOf([Yup.ref("newPassword"), ""], "Passwords must match"),
   phoneNumber: Yup.string().required("Phone number is required"),
+});
+
+export const formUpdateSchema = Yup.object().shape({
+  userName: Yup.string(),
+  firstName: Yup.string(),
+  lastName: Yup.string(),
+  email: Yup.string().email("Invalid email"),
+  newPassword: Yup.string()
+    .min(8, "Password should be at least 8 cahracters")
+    .max(60, "Password should not be greater than 60!")
+    .matches(lowerLetterRegex, "Password should contain a lowercase letter")
+    .matches(upperLetterRegex, "Password should contain an uppercase letter")
+    .matches(numberRegex, "Password should contain a number")
+    .matches(specialCharRegex, "Password should contain a special character"),
+  confirmPassword: Yup.string().oneOf(
+    [Yup.ref("newPassword"), ""],
+    "Passwords must match",
+  ),
+  phoneNumber: Yup.string(),
 });
 
 export const basicInfo = [
