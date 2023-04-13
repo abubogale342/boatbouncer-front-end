@@ -1,4 +1,5 @@
-import favouriteImage from "../../public/favouriteBoat.svg";
+import Image from "next/image";
+import FavouriteImage from "../../public/favouriteBoat.svg";
 
 const Boat = ({
   page,
@@ -23,11 +24,20 @@ const Boat = ({
         page === "listing" ? "sm:flex-row" : ""
       }   gap-0 rounded-2xl border border-solid border-zinc-100 p-2`}
     >
-      <img
-        src={boatImg ?? favouriteImage}
-        alt=""
-        className="mb-2 h-auto max-w-xs rounded-2xl sm:h-auto sm:w-auto"
-      />
+      {boatImg ? (
+        <img
+          src={boatImg}
+          alt=""
+          className="mb-2 h-auto max-w-xs rounded-2xl sm:h-auto sm:w-auto"
+        />
+      ) : (
+        <Image
+          src={FavouriteImage}
+          alt=""
+          className="mb-2 h-auto max-w-xs rounded-2xl sm:h-auto sm:w-auto"
+        />
+      )}
+
       <div className="p-2">
         <div className="flex flex-row items-center justify-between">
           <p className="text-xs font-light text-zinc-900">

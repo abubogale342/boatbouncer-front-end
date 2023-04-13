@@ -40,6 +40,7 @@ export default function Home(props: any) {
             <input
               className="h-12 w-full rounded-3xl border-none pr-4 pl-14 outline-slate-400 placeholder:pl-0 md:h-14 md:pr-44"
               placeholder="Where would you like to travel"
+              required
             />
             <button
               type="submit"

@@ -31,10 +31,18 @@ export default function Index(props: any) {
             List of your favourite boats
           </p>
           <div className="flex w-full flex-wrap justify-evenly gap-2">
-            <Boat page="favourites">{""}</Boat>
-            <Boat page="favourites">{""}</Boat>
-            <Boat page="favourites">{""}</Boat>
-            <Boat page="favourites">{""}</Boat>
+            <Boat page="favourites" boatImg={null} location={null}>
+              {""}
+            </Boat>
+            <Boat page="favourites" boatImg={null} location={null}>
+              {""}
+            </Boat>
+            <Boat page="favourites" boatImg={null} location={null}>
+              {""}
+            </Boat>
+            <Boat page="favourites" boatImg={null} location={null}>
+              {""}
+            </Boat>
           </div>
         </motion.div>
       </AnimatePresence>
