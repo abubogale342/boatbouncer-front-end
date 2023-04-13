@@ -21,14 +21,14 @@ export async function getServerSideProps({
 }) {
   const session = await getSession({ req });
 
-  if (session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+  // if (session) {
+  //   return {
+  //     redirect: {
+  //       destination: "/",
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   return {
     props: {}, // will be passed to the page component as props

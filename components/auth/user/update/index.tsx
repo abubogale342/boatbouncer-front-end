@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import BaseLayout from "../../base";
 import Form from "../form";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 type Props = {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
@@ -11,8 +12,9 @@ function Update({ handleSubmit }: Props) {
   const { data: session } = useSession();
 
   const initialValues = session;
+  console.log(initialValues);
 
-  if (!initialValues) return;
+  if (!initialValues) return null;
 
   return (
     <BaseLayout
@@ -26,9 +28,12 @@ function Update({ handleSubmit }: Props) {
         page="update"
       />
       <div className="mt-4 mb-8 rounded-md border-2 border-gray-300 text-center">
-        <button className="flex w-full justify-center gap-3 py-3">
-          <p className="font-medium text-gray-700">Cancel</p>
-        </button>
+        <Link
+          href="/"
+          className="flex w-full justify-center gap-3 py-3 font-medium text-gray-700"
+        >
+          Cancel
+        </Link>
       </div>
     </BaseLayout>
   );

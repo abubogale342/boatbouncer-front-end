@@ -23,6 +23,7 @@ function Register({ handleSubmit }: Props) {
     state: "",
     zipCode: "",
     phoneNumber: "",
+    id: "",
   };
 
   return (

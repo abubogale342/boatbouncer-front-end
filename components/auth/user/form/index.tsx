@@ -40,7 +40,6 @@ type Props = {
 };
 
 function Form({ handleSubmit, type, initialValues, page }: Props) {
-  console.log("initialValues", initialValues);
   const [step, setStep] = useState(1);
   // const { executeRecaptcha } = useGoogleReCaptcha();
   const [errorMessage, setErrorMessage] = useState("");
@@ -95,6 +94,7 @@ function Form({ handleSubmit, type, initialValues, page }: Props) {
         );
 
         if (page === "update") {
+          console.log("finalValues", finalValues);
           if (!finalValues.password) {
             delete finalValues.password;
           }

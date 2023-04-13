@@ -2,7 +2,7 @@ import Feature from "@/components/home/feature";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import { IncomingMessage } from "http";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
 import homePic from "../public/home.png";
 import { motion } from "framer-motion";
@@ -29,25 +29,24 @@ export default function Home(props: any) {
             <span className="text-cyan-600">of travel</span>
           </motion.p>
 
-          <motion.p className="home-sub__header mt-2 text-center text-4xl font-bold sm:mt-3 md:text-6xl">
+          <motion.p className="home-sub__header  mb-14 mt-2 text-center text-4xl font-bold sm:mt-3 md:text-6xl">
             Not a destination
           </motion.p>
           <form
-            className="relative mx-auto mt-14 w-4/5"
+            className="relative mx-auto h-12 w-4/5"
             onSubmit={searchPlaceHandler}
           >
-            <Search size={24} className="absolute top-4 left-4" />
+            <Search size={24} className="absolute top-1/3 left-4" />
             <input
               className="h-12 w-full rounded-3xl border-none pr-4 pl-14 outline-slate-400 placeholder:pl-0 md:h-14 md:pr-44"
-              placeholder="Where would you like to travel ;)"
+              placeholder="Where would you like to travel"
             />
             <button
-              type="button"
-              className="absolute top-1 right-1 hidden w-fit rounded-3xl bg-cyan-600 py-3 px-6 md:block"
+              type="submit"
+              className="absolute top-1 right-1 hidden h-10 w-fit rounded-3xl bg-cyan-600 py-3 px-6 text-xs font-medium text-white sm:block md:top-2"
             >
               Start Looking
             </button>
-            {/* <button>View Map</button> */}
           </form>
         </motion.div>
       </div>

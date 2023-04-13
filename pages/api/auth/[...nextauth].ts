@@ -8,51 +8,54 @@ import { DefaultSession } from "next-auth";
 // nextauth.d.ts
 declare module "next-auth" {
   interface User {
-    email: string;
-    newPassword: string;
-    confirmPassword: string;
-    userName: string;
-    firstName: string;
-    lastName: string;
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    phoneNumber: string;
-    id: string | undefined | null;
+    email?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+    userName?: string;
+    firstName?: string;
+    lastName?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    phoneNumber?: string;
+    id?: string | undefined | null;
+    token?: string | undefined | null;
   }
 
   interface Session extends DefaultSession {
-    email: string;
-    newPassword: string;
-    confirmPassword: string;
-    userName: string;
-    firstName: string;
-    lastName: string;
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    phoneNumber: string;
-    id: string | undefined | null;
+    email?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+    userName?: string;
+    firstName?: string;
+    lastName?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    phoneNumber?: string;
+    id?: string | undefined | null;
+    token?: string | undefined | null;
   }
 }
 
 // nextauth.d.ts
 declare module "next-auth/jwt" {
   interface JWT {
-    email: string;
-    newPassword: string;
-    confirmPassword: string;
-    userName: string;
-    firstName: string;
-    lastName: string;
-    address: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    phoneNumber: string;
-    id: string | undefined | null;
+    email?: string;
+    newPassword?: string;
+    confirmPassword?: string;
+    userName?: string;
+    firstName?: string;
+    lastName?: string;
+    address?: string;
+    city?: string;
+    state?: string;
+    zipCode?: string;
+    phoneNumber?: string;
+    id?: string | undefined | null;
+    token?: string | undefined | null;
   }
 }
 
@@ -93,8 +96,8 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token }) {
-      return { ...token };
+    async jwt({ token, user }) {
+      return { ...token, ...user };
     },
 
     async session({ session, token }) {

@@ -76,3 +76,19 @@ export function poster(path: string, body?: any) {
     .then((res) => res.data)
     .catch((err) => err);
 }
+
+export function objectDiff(obj1: any, obj2: any) {
+  let diffObj: any = {};
+  for (let key in obj2) {
+    if (!(obj2?.[key] && obj1?.[key])) {
+      continue;
+    }
+    if (JSON.stringify(obj2?.[key]) == JSON.stringify(obj1?.[key])) {
+      continue;
+    } else {
+      diffObj[key] = obj2[key];
+    }
+  }
+
+  return diffObj;
+}

@@ -4,10 +4,11 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Provider as RWBProvider } from "react-wrap-balancer";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
+import { Provider } from "react-redux";
 import cx from "classnames";
 import localFont from "@next/font/local";
 import { Inter } from "@next/font/google";
+import { store } from "@/components/shared/store";
 
 const sfPro = localFont({
   src: "../styles/SF-Pro-Display-Medium.otf",
@@ -26,9 +27,11 @@ export default function MyApp({
   return (
     <SessionProvider session={session}>
       <RWBProvider>
-        <div className={cx(sfPro.variable, inter.variable)}>
-          <Component {...pageProps} />
-        </div>
+        <Provider store={store}>
+          <div className={cx(sfPro.variable, inter.variable)}>
+            <Component {...pageProps} />
+          </div>
+        </Provider>
       </RWBProvider>
       <Analytics />
     </SessionProvider>
