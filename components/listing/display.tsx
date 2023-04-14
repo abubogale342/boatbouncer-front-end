@@ -4,7 +4,7 @@ import Skeleton from "../shared/icons/skeleton";
 import useFetcher from "@/lib/hooks/use-axios";
 import { useSession } from "next-auth/react";
 import { Circle, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import Boat from "../boat";
 import {
   resetBoat,
@@ -31,6 +31,13 @@ const DisplayListings = ({
     if (!session?.token) return;
     fetchWithAuth(`/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`);
   }, [session?.token, pageNo]);
+
+  useLayoutEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [pageNo]);
 
   let displayEl = (
     <motion.p className="mr-4 flex h-14 items-center justify-center text-3xl text-red-500">
@@ -168,9 +175,9 @@ const DisplayListings = ({
               <button
                 onClick={nextPage}
                 className={`rounded-lg border px-5 py-1.5 text-lg font-medium ${
-                  pageNo * PAGE_SIZE > dataLength ? "opacity-40" : ""
+                  pageNo * PAGE_SIZE >= dataLength ? "opacity-40" : ""
                 }`}
-                disabled={pageNo * PAGE_SIZE > dataLength}
+                disabled={pageNo * PAGE_SIZE >= dataLength}
               >
                 Next
               </button>

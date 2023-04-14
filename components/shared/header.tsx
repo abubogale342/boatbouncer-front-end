@@ -28,9 +28,9 @@ export default function Header(props: any) {
         </div>
         {props?.email || props?.user?.email ? (
           <div className="mr-12 flex flex-row items-center justify-between gap-5">
-            <button className="text-xs font-normal text-gray-500">
+            {/* <button className="text-xs font-normal text-gray-500">
               <Search size={24} />
-            </button>
+            </button> */}
             <button className="hidden rounded-lg border-2 border-solid border-gray-200 px-4 py-2 font-medium text-gray-700 sm:block">
               My Inbox
             </button>

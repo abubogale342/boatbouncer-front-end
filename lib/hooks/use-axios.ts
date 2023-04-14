@@ -95,6 +95,7 @@ function useFetcher() {
     updateBoat,
     deleteBoat,
     dataLength,
+    setData,
     loading,
     error,
     data,

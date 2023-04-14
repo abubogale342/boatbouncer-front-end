@@ -1,18 +1,15 @@
-import Feature from "@/components/home/feature";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import { IncomingMessage } from "http";
-import { getSession, useSession } from "next-auth/react";
-import Link from "next/link";
-import homePic from "../public/home.png";
+import { getSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
-import Balancer from "react-wrap-balancer";
-import Image from "next/image";
+import { useState } from "react";
 
 export default function Home(props: any) {
-  const searchPlaceHandler = (event: any) => {
-    event.preventDefault();
+  const [searchVal, setSearchVal] = useState("");
+
+  const handleChange = (event: any) => {
+    setSearchVal(event.target.value);
   };
 
   return (
@@ -32,22 +29,48 @@ export default function Home(props: any) {
           <motion.p className="home-sub__header  mb-14 mt-2 text-center text-4xl font-bold sm:mt-3 md:text-6xl">
             Not a destination
           </motion.p>
-          <form
-            className="relative mx-auto h-12 w-4/5"
-            onSubmit={searchPlaceHandler}
-          >
-            <Search size={24} className="absolute top-1/3 left-4" />
-            <input
-              className="h-12 w-full rounded-3xl border-none pr-4 pl-14 outline-slate-400 placeholder:pl-0 md:h-14 md:pr-44"
-              placeholder="Where would you like to travel"
-              required
-            />
-            <button
-              type="submit"
-              className="absolute top-1 right-1 hidden h-10 w-fit rounded-3xl bg-cyan-600 py-3 px-6 text-xs font-medium text-white sm:block md:top-2"
+
+          <form action={`/search?query=${searchVal}`} method="POST">
+            <label
+              htmlFor="default-search"
+              className="sr-only mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-              Start Looking
-            </button>
+              Search
+            </label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                <svg
+                  aria-hidden="true"
+                  className="h-5 w-5 text-gray-500 dark:text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 pr-16 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                placeholder="Where would you like to travel ..."
+                value={searchVal}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="submit"
+                className="absolute right-1 bottom-2.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Search
+              </button>
+            </div>
           </form>
         </motion.div>
       </div>
@@ -66,6 +89,6 @@ export async function getServerSideProps({
   return {
     props: {
       ...session,
-    }, // will be passed to the page component as props
+    },
   };
 }
