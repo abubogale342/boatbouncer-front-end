@@ -4,7 +4,7 @@ import Icon from "./icons/icon";
 
 export default function Footer() {
   return (
-    <footer className="hidden bg-slate-800 px-6 pl-16 pt-12 pb-6 md:block">
+    <footer className="mt-auto hidden bg-slate-800 px-6 pb-6 pl-16 pt-12 md:block">
       <div className="mx-auto mb-12 flex flex-col items-start gap-12 text-white md:flex-row md:gap-6">
         <div className="flex flex-col font-manrope">
           <Icon className="fill-white" />
@@ -14,9 +14,10 @@ export default function Footer() {
             and water activities! Whether you are looking to explore the open
             waters, enjoy a day out with friends and family, or simply want to
             relax and take in the scenery, we have the perfect options for you.
-            So if you're ready to hit the water and experience and start your
-            adventure, come to BoatBouncer. We look forward to providing you
-            with a memorable and enjoyable experience that you'll never forget.
+            So if you&apos;re ready to hit the water and experience and start
+            your adventure, come to BoatBouncer. We look forward to providing
+            you with a memorable and enjoyable experience that you&apos;ll never
+            forget.
           </p>
         </div>
         <div className="ml-0 grid grid-cols-3 md:ml-6 md:flex md:flex-row md:gap-6">

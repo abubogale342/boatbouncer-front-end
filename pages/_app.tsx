@@ -9,6 +9,9 @@ import cx from "classnames";
 import localFont from "@next/font/local";
 import { Inter } from "@next/font/google";
 import { store } from "@/components/shared/store";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import React from "react";
 
 const sfPro = localFont({
   src: "../styles/SF-Pro-Display-Medium.otf",
@@ -20,17 +23,25 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+if (!process.browser) React.useLayoutEffect = React.useEffect;
+
 export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps<{ session: Session }>) {
+  const stripePromise = loadStripe(
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
+  );
+
   return (
     <SessionProvider session={session}>
       <RWBProvider>
         <Provider store={store}>
-          <div className={cx(sfPro.variable, inter.variable)}>
-            <Component {...pageProps} />
-          </div>
+          <Elements stripe={stripePromise}>
+            <div className={cx(sfPro.variable, inter.variable)}>
+              <Component {...pageProps} />
+            </div>
+          </Elements>
         </Provider>
       </RWBProvider>
       <Analytics />

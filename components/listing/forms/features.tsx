@@ -91,7 +91,7 @@ const FeatureForm = ({
         )}
       </div>
 
-      <div className="mt-10 pr-4 pl-1">
+      <div className="mt-10 pl-4 pr-4">
         <p className="text-xl font-semibold text-gray-900">Amenities</p>
         <hr className="my-4 h-px border-0 bg-gray-200" />
 

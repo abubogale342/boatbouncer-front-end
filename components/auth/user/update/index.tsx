@@ -12,7 +12,6 @@ function Update({ handleSubmit }: Props) {
   const { data: session } = useSession();
 
   const initialValues = session;
-  console.log(initialValues);
 
   if (!initialValues) return null;
 
@@ -27,7 +26,7 @@ function Update({ handleSubmit }: Props) {
         initialValues={initialValues}
         page="update"
       />
-      <div className="mt-4 mb-8 rounded-md border-2 border-gray-300 text-center">
+      <div className="mb-8 mt-4 rounded-md border-2 border-gray-300 text-center">
         <Link
           href="/"
           className="flex w-full justify-center gap-3 py-3 font-medium text-gray-700"

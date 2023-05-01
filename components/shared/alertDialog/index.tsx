@@ -9,7 +9,7 @@ const AlertDialogs = ({
   data,
   description,
 }: {
-  children: ReactNode | undefined | null;
+  children: ReactNode;
   prompt: string;
   confirmHandler: Function;
   data: string;

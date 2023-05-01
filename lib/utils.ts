@@ -1,5 +1,6 @@
 import axios from "axios";
 import ms from "ms";
+import { DateObject } from "react-multi-date-picker";
 
 export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
   if (!timestamp) return "never";
@@ -91,4 +92,20 @@ export function objectDiff(obj1: any, obj2: any) {
   }
 
   return diffObj;
+}
+
+export function dateToUTC(date: DateObject) {
+  return new Date(
+    Date.UTC(
+      date.year,
+      Number(date.month) - 1,
+      date.day,
+      date.hour,
+      date.minute,
+      date.second,
+      date.millisecond,
+    ),
+  )
+    .toISOString()
+    .replace("Z", "+00:00");
 }

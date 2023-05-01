@@ -33,6 +33,7 @@ const initialState = {
     ],
   },
   editableBoat: null,
+  bookmarks: null,
 };
 
 export const boatSlice = createSlice({
@@ -87,6 +88,12 @@ export const boatSlice = createSlice({
       state.boatInfo = initialState.boatInfo;
       state.editableBoat = initialState.editableBoat;
     },
+    setBookmarks: (state, { payload: bookmarks }) => {
+      state.bookmarks = bookmarks;
+    },
+    resetBookmarks: (state) => {
+      state.bookmarks = initialState.bookmarks;
+    },
   },
 });
 
@@ -104,6 +111,8 @@ export const {
   setBoatInfo,
   setEditableBoat,
   resetBoat,
+  setBookmarks,
+  resetBookmarks,
 } = boatSlice.actions;
 
 export default boatSlice.reducer;

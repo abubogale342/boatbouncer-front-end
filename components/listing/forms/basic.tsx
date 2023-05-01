@@ -11,14 +11,18 @@ const BasicInfo = ({
   touched,
   handleChange,
   handleBlur,
+  setValues,
 }: {
   values: any;
   errors: any;
   touched: any;
   handleChange: any;
   handleBlur: any;
+  setValues: any;
 }) => {
   const dispatch = useDispatch();
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
 
   const updateBasicFields = useDebouncedCallback((key, value) => {
     dispatch(updateBasicInfoField({ key, value }));
@@ -31,7 +35,7 @@ const BasicInfo = ({
   return (
     <div className="w-full px-4 sm:mt-6 sm:w-1/2">
       <p className="text-xl font-semibold text-gray-900">Basic Information</p>
-      <hr className="mt-3 mb-6 h-px border-0 bg-gray-200" />
+      <hr className="mb-6 mt-3 h-px border-0 bg-gray-200" />
       <div className="mb-4 flex flex-col gap-6">
         <div className="flex flex-col">
           <label className="mb-2 text-xs text-gray-700">Boat Name</label>
@@ -132,6 +136,9 @@ const BasicInfo = ({
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
             placeholder="Year"
             onBlur={handleBlur}
+            type="number"
+            min={year - 150}
+            max={year}
             name="year"
             value={values.year}
             onChange={(event) => {

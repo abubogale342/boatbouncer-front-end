@@ -29,7 +29,7 @@ const DisplayListings = ({
 
   useEffect(() => {
     if (!session?.token) return;
-    fetchWithAuth(`/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`);
+    fetchWithAuth(`/boat?pageNo=${pageNo}&size=${PAGE_SIZE}`);
   }, [session?.token, pageNo]);
 
   useLayoutEffect(() => {
@@ -107,11 +107,11 @@ const DisplayListings = ({
           <div className="flex flex-row gap-2">
             <button
               onClick={() => editListingHandler(boat)}
-              className="my-2 rounded-lg border border-solid border-cyan-600 py-2 px-3 text-sm font-medium text-cyan-600"
+              className="my-2 rounded-lg border border-solid border-cyan-600 px-3 py-2 text-sm font-medium text-cyan-600"
             >
               Edit Listing
             </button>
-            <button className="my-2 flex flex-row items-center rounded-lg border border-solid border-amber-500 py-2 px-3 text-sm font-medium text-amber-500">
+            <button className="my-2 flex flex-row items-center rounded-lg border border-solid border-amber-500 px-3 py-2 text-sm font-medium text-amber-500">
               Bookings <Circle size="20" className="ml-2" />
             </button>
           </div>
@@ -151,7 +151,7 @@ const DisplayListings = ({
             <Plus size="20" /> Add New Listing
           </button>
         </div>
-        <p className="mt-4 mb-10 ml-6 text-gray-500">
+        <p className="mb-10 ml-6 mt-4 text-gray-500">
           Track, manage and forecast your Listings.
         </p>
         <div className="mx-auto flex w-full flex-wrap justify-evenly gap-2">

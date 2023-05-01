@@ -4,6 +4,8 @@ import { IncomingMessage } from "http";
 import { getSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import Image from "next/image";
+import home from "public/home.svg";
 
 export default function Home(props: any) {
   const [searchVal, setSearchVal] = useState("");
@@ -13,14 +15,26 @@ export default function Home(props: any) {
   };
 
   return (
-    <main>
+    <main className="flex min-h-screen flex-col">
       <div
         className="relative h-screen bg-cover bg-right"
         style={{ backgroundImage: `url("/home.svg")` }}
       >
+        {/* <Image
+          layout="fill"
+          className="pointer-events-none object-cover object-center"
+          src={home}
+          alt={""}
+          loading="lazy"
+        /> */}
+        {/* <Image
+          src={home}
+          alt=""
+          className="z-1 fixed right-0 top-0 h-screen w-screen"
+        /> */}
         <Header {...props} page="home"></Header>
 
-        <motion.div className="absolute top-1/2 left-1/2 m-0 w-4/5 -translate-x-1/2 -translate-y-1/2 md:w-2/3">
+        <motion.div className="absolute left-1/2 top-1/2 m-0 w-4/5 -translate-x-1/2 -translate-y-1/2 md:w-2/3">
           <motion.p className="text-center text-4xl font-bold md:text-6xl">
             <span className="text-white">Happiness is a way </span>
             <span className="text-cyan-600">of travel</span>
@@ -66,7 +80,7 @@ export default function Home(props: any) {
               />
               <button
                 type="submit"
-                className="absolute right-1 bottom-2.5 rounded-lg bg-blue-700 px-4 py-2 text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                className="absolute bottom-2.5 right-1 rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 Search
               </button>

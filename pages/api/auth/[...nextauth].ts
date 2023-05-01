@@ -8,7 +8,7 @@ import { DefaultSession } from "next-auth";
 // nextauth.d.ts
 declare module "next-auth" {
   interface User {
-    email?: string;
+    email?: string | string;
     newPassword?: string;
     confirmPassword?: string;
     userName?: string;
@@ -21,10 +21,11 @@ declare module "next-auth" {
     phoneNumber?: string;
     id?: string | undefined | null;
     token?: string | undefined | null;
+    stripeCustomerId?: string | undefined | null;
   }
 
   interface Session extends DefaultSession {
-    email?: string;
+    email?: string | undefined;
     newPassword?: string;
     confirmPassword?: string;
     userName?: string;
@@ -37,6 +38,7 @@ declare module "next-auth" {
     phoneNumber?: string;
     id?: string | undefined | null;
     token?: string | undefined | null;
+    stripeCustomerId?: string | undefined | null;
   }
 }
 

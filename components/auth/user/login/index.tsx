@@ -115,7 +115,10 @@ function Login({ handleSubmit }: Props) {
                     Remember for 30 days
                   </label>
                 </div>
-                <button className="text-sm font-medium text-cyan-600">
+                <button
+                  type="button"
+                  className="text-sm font-medium text-cyan-600"
+                >
                   Forgot Password
                 </button>
               </div>

@@ -1,3 +1,5 @@
+import Meta from "@/components/layout/meta";
+import Map from "@/components/map";
 import SearchResults from "@/components/searchResults";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
@@ -5,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Filter } from "lucide-react";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 
 export default function Search(props: any) {
   const { data, error, ...user } = props;
@@ -15,6 +17,10 @@ export default function Search(props: any) {
   const handleChange = (event: any) => {
     setSearchVal(event.target.value);
   };
+
+  // const handleMapViewChange  = (event:ChangeEventHandler<HTMLInputElement> | undefined)  => {
+
+  // }
 
   let element = null;
 
@@ -49,13 +55,15 @@ export default function Search(props: any) {
   }
 
   return (
-    <Fragment>
+    <div className="flex min-h-screen flex-col">
+      <Meta title="Search" />
+
       <Header {...user}>
         <Link href="/" className="ml-6 text-sm font-bold text-cyan-600">
           Home
         </Link>
       </Header>
-      <hr className="mt-1 mb-2 h-px border-0 bg-gray-200" />
+      <hr className="mb-2 mt-1 h-px border-0 bg-gray-200" />
 
       <div className="mx-4 mt-6 flex flex-col items-center justify-between gap-4 sm:mr-10 sm:mt-3 sm:flex-row sm:gap-20 md:gap-28 lg:gap-60">
         <form
@@ -93,7 +101,7 @@ export default function Search(props: any) {
           </div>
           <button
             type="submit"
-            className="ml-2 inline-flex items-center rounded-lg border border-gray-200  py-2.5 px-3 text-sm font-medium text-gray-700 focus:outline-none"
+            className="ml-2 inline-flex items-center rounded-lg border border-gray-200  px-3 py-2.5 text-sm font-medium text-gray-700 focus:outline-none"
           >
             Search
           </button>
@@ -101,8 +109,13 @@ export default function Search(props: any) {
 
         <div className="ml-auto flex flex-row items-center gap-7">
           <label className="relative hidden w-28 cursor-pointer items-center sm:inline-flex">
-            <input type="checkbox" value="" className="peer sr-only" />
-            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+            <input
+              type="checkbox"
+              value=""
+              className="peer sr-only"
+              // onChange={handleMapViewChange}
+            />
+            <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
             <span className="ml-1 text-sm font-medium text-gray-700 dark:text-gray-300">
               Map View
             </span>
@@ -119,15 +132,20 @@ export default function Search(props: any) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="my-6 sm:my-12"
+          className="my-6 flex flex-row sm:my-12"
         >
           <div className="flex w-full flex-wrap justify-evenly gap-x-1.5 gap-y-2.5">
             {element}
           </div>
+          {data && data?.data && data?.data?.length > 0 && (
+            <div className="hidden w-1/2 sm:block">
+              <Map />
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
       <Footer />
-    </Fragment>
+    </div>
   );
 }
 
@@ -136,6 +154,16 @@ export async function getServerSideProps(context: any) {
   const { method } = req;
 
   const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   const myHeaders = new Headers();
 
   myHeaders.append("Authorization", "Bearer " + session?.token);

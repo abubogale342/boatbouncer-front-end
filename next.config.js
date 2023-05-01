@@ -4,6 +4,14 @@ const nextConfig = {
   swcMinify: true,
   images: {
     domains: ["lh3.googleusercontent.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        // port: "",
+        // pathname: "/account123/**",
+      },
+    ],
   },
   async redirects() {
     return [

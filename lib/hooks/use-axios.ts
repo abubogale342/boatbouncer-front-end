@@ -1,6 +1,8 @@
 import Axios from "axios";
+import { setActiveId } from "features/bookmark/bookmarkSlice";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 function useFetcher() {
   const { data: session } = useSession();
@@ -8,6 +10,7 @@ function useFetcher() {
   const [error, setError] = useState(null);
   const [data, setData] = useState<any>(null);
   const [dataLength, setDataLength] = useState(0);
+  const dispatch = useDispatch();
 
   Axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -47,6 +50,26 @@ function useFetcher() {
     }
   }
 
+  async function cancelBooking(path: string, book: any) {
+    let deleteBooking = await Axios.put(path);
+    if (deleteBooking.statusText == "OK") {
+      let filteredData = data.filter((d: any) => d._id !== book._id);
+      const filteredIndex = data.findIndex((d: any) => d._id === book._id);
+      setData(filteredData);
+      if (filteredData.length === 1) {
+        dispatch(setActiveId(filteredData[0]._id));
+      } else if (filteredData.length === 0) {
+        dispatch(setActiveId(null));
+      } else {
+        if (filteredIndex === filteredData.length) {
+          dispatch(setActiveId(filteredData[filteredIndex - 1]._id));
+        } else {
+          dispatch(setActiveId(filteredData[filteredIndex]._id));
+        }
+      }
+    }
+  }
+
   function fetchWithAuth(path: string, body?: any) {
     setError(null);
     setLoading(true);
@@ -80,6 +103,22 @@ function useFetcher() {
     }
   }
 
+  function attachPaymentCard(path: string) {
+    return Axios.post(path);
+  }
+
+  function getPaymentCards(path: string) {
+    return Axios.get(path);
+  }
+
+  function updateOffer(path: string, body: any) {
+    return Axios.put(path, body);
+  }
+
+  function acceptOffer(path: string) {
+    return Axios.put(path);
+  }
+
   function fetchWithAuthSync(path: string, body?: any) {
     if (body) {
       return Axios.post(path, body);
@@ -92,6 +131,11 @@ function useFetcher() {
     Axios,
     fetchWithAuth,
     fetchWithAuthSync,
+    attachPaymentCard,
+    getPaymentCards,
+    cancelBooking,
+    updateOffer,
+    acceptOffer,
     updateBoat,
     deleteBoat,
     dataLength,

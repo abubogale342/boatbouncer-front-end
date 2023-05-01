@@ -1,30 +1,57 @@
-import SearchResults from "@/components/searchResults";
+import { AnimatePresence, motion } from "framer-motion";
+import Carousel from "@/components/layout/carousel";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
-import { AnimatePresence, motion } from "framer-motion";
-import { Filter } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { getSession } from "next-auth/react";
-import Link from "next/link";
 import { Fragment } from "react";
+import Link from "next/link";
+import BookingForm from "@/components/booking/form";
+import Meta from "@/components/layout/meta";
 
 export default function Search(props: any) {
   const { data, error, ...user } = props;
-  console.log("data", data);
 
   let element = null;
 
   if (data) {
     element = (
-      <div className="ml-4">
-        <img src={data.imageUrls[0]} alt="" />
-        <h1 className="text-lg font-medium">Description</h1>
-        <p>{data.description}</p>
-        <h1 className="text-lg font-medium">Amenities</h1>
-        <ul className="flex flex-row gap-3">
-          {data.amenities.map((item: string, index: number) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
+      <div
+        className={`mx-4 grid w-full grid-cols-1 gap-6 sm:mx-12 ${
+          data.owner === user._id ? "" : "sm:grid-cols-[4fr_3fr] md:mx-24"
+        }`}
+      >
+        <div>
+          <Carousel images={[data?.imageUrls?.[0], data?.imageUrls?.[0]]} />
+          {data.owner === user._id && (
+            <p className="mt-1 text-center text-lg italic">
+              Note: Since you are creator of this boat, you can't book for
+              yourself
+            </p>
+          )}
+
+          <br />
+          <h1 className="mb-1 text-lg font-bold">Description</h1>
+          <p className="text-lg text-gray-500">{data.description}</p>
+          <br />
+          <h1 className="mb-1 text-lg font-bold">Amenities</h1>
+          <ul className="flex flex-row flex-wrap gap-5">
+            {data?.amenities?.map((item: string, index: number) => (
+              <span
+                key={index}
+                className="flex flex-row items-center gap-2 text-lg text-gray-500"
+              >
+                <CheckCircle2 />
+                <li key={index}>{item}</li>
+              </span>
+            ))}
+          </ul>
+        </div>
+        {data.owner !== user._id && (
+          <div className="mx-auto hidden w-full sm:block">
+            <BookingForm data={data} user={user} />
+          </div>
+        )}
       </div>
     );
   }
@@ -43,13 +70,18 @@ export default function Search(props: any) {
   }
 
   return (
-    <Fragment>
+    <div className="flex min-h-screen flex-col">
+      <Meta
+        title={data ? data.boatName : "boat"}
+        description={data?.description}
+      />
+
       <Header {...user}>
         <Link href="/" className="ml-6 text-sm font-bold text-cyan-600">
           Home
         </Link>
       </Header>
-      <hr className="mt-1 mb-2 h-px border-0 bg-gray-200" />
+      <hr className="mb-2 mt-1 h-px border-0 bg-gray-200" />
 
       <AnimatePresence>
         <motion.div
@@ -65,7 +97,7 @@ export default function Search(props: any) {
         </motion.div>
       </AnimatePresence>
       <Footer />
-    </Fragment>
+    </div>
   );
 }
 
@@ -73,6 +105,16 @@ export async function getServerSideProps(context: any) {
   const { req, params } = context;
 
   const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   const myHeaders = new Headers();
 
   myHeaders.append("Authorization", "Bearer " + session?.token);

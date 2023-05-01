@@ -37,7 +37,7 @@ const SearchResults = ({ boats, total }: { boats: any; total: number }) => {
   if (pageNo === 1) {
     element = boats.map((boat: any) => (
       <Link key={boat._id} href={`/boat/${boat._id}`}>
-        <Boat page="" boatImg={boat.imageUrls} location={boat.location}>
+        <Boat page="" boatImg={boat.imageUrls[0]} location={boat.location}>
           {""}
         </Boat>
       </Link>
@@ -50,14 +50,11 @@ const SearchResults = ({ boats, total }: { boats: any; total: number }) => {
 
   if (pageNo !== 1 && !loading && data) {
     element = data.map((boat: any) => (
-      <Boat
-        key={boat._id}
-        page=""
-        boatImg={boat.imageUrls}
-        location={boat.location}
-      >
-        {""}
-      </Boat>
+      <Link key={boat._id} href={`/boat/${boat._id}`}>
+        <Boat page="" boatImg={boat.imageUrls} location={boat.location}>
+          {""}
+        </Boat>
+      </Link>
     ));
   }
 

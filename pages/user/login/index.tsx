@@ -2,6 +2,7 @@ import React from "react";
 import Login from "@/components/auth/user/login";
 import { getSession } from "next-auth/react";
 import { IncomingMessage } from "http";
+import Meta from "@/components/layout/meta";
 
 function index() {
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
@@ -9,7 +10,12 @@ function index() {
     console.log(event);
   };
 
-  return <Login handleSubmit={submitHandler} />;
+  return (
+    <>
+      <Meta title="login" />
+      <Login handleSubmit={submitHandler} />;
+    </>
+  );
 }
 
 export default index;
@@ -21,14 +27,14 @@ export async function getServerSideProps({
 }) {
   const session = await getSession({ req });
 
-  // if (session) {
-  //   return {
-  //     redirect: {
-  //       destination: "/",
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {}, // will be passed to the page component as props

@@ -11,7 +11,7 @@ function BaseLayout({
   action,
   prompt,
 }: {
-  children: React.ReactNode | String | undefined | null;
+  children: React.ReactNode;
   action: String;
   prompt: String;
 }) {
@@ -20,7 +20,7 @@ function BaseLayout({
       <motion.div className="m-0 flex w-full flex-row items-center p-0">
         <div className="grid h-screen max-h-screen flex-grow grid-cols-1 gap-0">
           <header className="h-fit self-start">
-            <div className="flex items-center pt-3 pb-3 pl-3 sm:pt-8 sm:pl-8">
+            <div className="flex items-center pb-3 pl-3 pt-3 sm:pl-8 sm:pt-8">
               <Image src={logo} alt="logo" />
             </div>
           </header>

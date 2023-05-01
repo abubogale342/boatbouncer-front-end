@@ -10,6 +10,7 @@ import useGeolocation from "react-hook-geolocation";
 import { useDispatch } from "react-redux";
 import { updateCoordinateField } from "features/boat/boatSlice";
 import DisplayListings from "@/components/listing/display";
+import Meta from "@/components/layout/meta";
 
 export default function Index(props: any) {
   const [enableAddList, setEnableAddList] = useState(false);
@@ -42,7 +43,9 @@ export default function Index(props: any) {
   }
 
   return (
-    <Fragment>
+    <div className="flex min-h-screen flex-col">
+      <Meta title="listings" />
+
       <Header {...props}>
         <Link href="/" className="ml-6 text-sm font-bold text-cyan-600">
           Home
@@ -51,7 +54,7 @@ export default function Index(props: any) {
       <hr className="mt-1 h-px border-0 bg-gray-200" />
       <main className="my-4 sm:my-8">{listingEl}</main>
       <Footer />
-    </Fragment>
+    </div>
   );
 }
 
