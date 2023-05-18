@@ -58,6 +58,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
             imageUrls: [boatInfo.imageUrls],
             subCategory: [boatInfo.subCategory],
             securityAllowance: `${boatInfo.securityAllowance} USD`,
+            captained: true,
           };
 
           if (editableBoat) {

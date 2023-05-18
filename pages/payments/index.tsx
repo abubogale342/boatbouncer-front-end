@@ -29,9 +29,9 @@ export default function Index(props: any) {
     fetchWithAuth("user/getMethods");
   }, [session?.token, refresh]);
 
-  const refreshHn= () => {
-    setRefresh(r => !r)
-  }
+  const refreshHn = () => {
+    setRefresh((r) => !r);
+  };
 
   let cardListDisplayEl = <></>;
 
@@ -60,7 +60,7 @@ export default function Index(props: any) {
         key="no-card"
         className="mx-4 mb-10 flex h-14 justify-center text-center text-lg text-red-500 sm:text-xl md:text-2xl lg:text-3xl"
       >
-        You haven't added any payment methods for later use.
+        You haven&apos;t added any payment methods for later use.
       </div>
     );
   }

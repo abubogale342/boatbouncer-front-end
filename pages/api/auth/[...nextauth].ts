@@ -22,6 +22,8 @@ declare module "next-auth" {
     id?: string | undefined | null;
     token?: string | undefined | null;
     stripeCustomerId?: string | undefined | null;
+    stripeAccountId?: string | undefined | null;
+    chargesEnabled?: boolean | undefined;
   }
 
   interface Session extends DefaultSession {
@@ -39,6 +41,8 @@ declare module "next-auth" {
     id?: string | undefined | null;
     token?: string | undefined | null;
     stripeCustomerId?: string | undefined | null;
+    stripeAccountId?: string | undefined | null;
+    chargesEnabled?: boolean | undefined;
   }
 }
 

@@ -55,8 +55,6 @@ const Card = ({
   const [expiryError, setExpiryError] =
     useState<StripeElementChangeEvent["error"]>();
 
-  console.log(numError, cvcError, expiryError);
-
   const stripe = useStripe();
   const elements = useElements();
 
@@ -74,8 +72,6 @@ const Card = ({
       card: cardElement as StripeCardElement,
       billing_details: value,
     });
-
-    console.log("paymentMethod", paymentMethod);
 
     if (paymentMethod?.paymentMethod?.id) {
       attachPaymentCard("user/attachMethod/" + paymentMethod?.paymentMethod?.id)

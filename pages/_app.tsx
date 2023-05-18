@@ -12,6 +12,7 @@ import { store } from "@/components/shared/store";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import React from "react";
+import ErrorBoundary from "@/components/error";
 
 const sfPro = localFont({
   src: "../styles/SF-Pro-Display-Medium.otf",
@@ -38,9 +39,11 @@ export default function MyApp({
       <RWBProvider>
         <Provider store={store}>
           <Elements stripe={stripePromise}>
-            <div className={cx(sfPro.variable, inter.variable)}>
-              <Component {...pageProps} />
-            </div>
+            <ErrorBoundary>
+              <div className={cx(sfPro.variable, inter.variable)}>
+                <Component {...pageProps} />
+              </div>
+            </ErrorBoundary>
           </Elements>
         </Provider>
       </RWBProvider>

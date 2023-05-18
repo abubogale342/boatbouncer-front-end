@@ -55,6 +55,8 @@ function BaseLayout({
             alt="Boat Image"
             className="relative hidden h-screen w-full md:block xl:w-auto"
             style={{ objectFit: "cover" }}
+            placeholder="blur"
+            priority
           />
         </div>
       </motion.div>

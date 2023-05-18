@@ -10,6 +10,12 @@ import { setActiveId } from "features/bookmark/bookmarkSlice";
 import useFetcher from "@/lib/hooks/use-axios";
 import { useDispatch } from "react-redux";
 import Router from "next/router";
+import Datepicker from "react-tailwindcss-datepicker";
+import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
+import DatePicker from "react-datepicker";
+import { addHours, getHours, setHours, setMinutes } from "date-fns";
+import { PopoverDirectionType } from "react-tailwindcss-datepicker/dist/types";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface IProps {
   data: any;
@@ -18,20 +24,43 @@ interface IProps {
 
 const BookingForm = ({ data, user }: IProps) => {
   const [pricingType, setPricingType] = useState("Per Hour");
-  const [timeValue, setTimeValue] = useState<DateRange<Dayjs>>(() => [
-    dayjs().add(1, "hour"),
-    dayjs().add(2, "hour"),
-  ]);
 
-  const [dayValue, setDayValue] = useState<DateRange<Dayjs>>([
-    dayjs().add(1, "day"),
-    dayjs().add(2, "day"),
-  ]);
   const { fetchWithAuthSync } = useFetcher();
   const dispatch = useDispatch();
 
+  const [value, setValue] = useState<DateValueType>({
+    startDate: null,
+    endDate: null,
+  });
+
+  const [dateError, setDateError] = useState("");
+  const [startDate, setStartDate] = useState<Date | null>();
+  const [endDate, setEndDate] = useState<Date | null>();
+
+  const handleValueChange = (newValue: DateValueType) => {
+    setDateError("");
+    setValue(newValue);
+  };
+
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setPricingType(event.target.value);
+  };
+
+  const filterPassedStartTime = (time: Date) => {
+    const currentDate = addHours(new Date(), 2);
+    const selectedDate = new Date(time);
+
+    return currentDate.getTime() < selectedDate.getTime();
+  };
+
+  const filterPassedEndTime = (time: Date) => {
+    const currentDate = addHours(
+      startDate ? new Date(startDate) : new Date(),
+      3,
+    );
+    const selectedDate = new Date(time);
+
+    return currentDate.getTime() < selectedDate.getTime();
   };
 
   const requestBookingSubmitHn = (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,11 +68,25 @@ const BookingForm = ({ data, user }: IProps) => {
     let end;
 
     if (pricingType === "Per Hour") {
-      start = timeValue[0]?.toDate().toISOString().replace("Z", "+00:00");
-      end = timeValue[1]?.toDate().toISOString().replace("Z", "+00:00");
+      if (startDate && endDate) {
+        start = startDate.toISOString().replace("Z", "+00:00");
+        end = endDate.toISOString().replace("Z", "+00:00");
+        setDateError("");
+      } else {
+        setDateError("Select Booking DateTime Range");
+        event.preventDefault();
+        return;
+      }
     } else {
-      start = dayValue[0]?.toDate().toISOString().replace("Z", "+00:00");
-      end = dayValue[1]?.toDate().toISOString().replace("Z", "+00:00");
+      if (value?.startDate && value.endDate) {
+        setDateError("");
+        start = new Date(value?.startDate).toISOString().replace("Z", "+00:00");
+        end = new Date(value?.endDate).toISOString().replace("Z", "+00:00");
+      } else {
+        event.preventDefault();
+        setDateError("Select Booking DateTime Range");
+        return;
+      }
     }
 
     const bookingData = {
@@ -91,28 +134,57 @@ const BookingForm = ({ data, user }: IProps) => {
           </select>
 
           {pricingType === "Per Hour" && (
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <SingleInputDateTimeRangeField
-                className="mt-3 w-full"
-                disablePast
-                label="Time range"
-                value={timeValue}
-                onChange={(newValue) => setTimeValue(newValue)}
+            <div className="flex flex-row items-center">
+              <DatePicker
+                timeFormat="p"
+                dateFormat="Pp"
+                showTimeSelect
+                selected={startDate}
+                minDate={new Date()}
+                onChange={(date) => {
+                  setDateError("");
+                  setStartDate(date);
+                }}
+                filterTime={filterPassedStartTime}
+                placeholderText="Starting Time"
+                className="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               />
-            </LocalizationProvider>
+              <span className="w-4 text-2xl"> ~ </span>
+              <DatePicker
+                timeFormat="p"
+                dateFormat="Pp"
+                showTimeSelect
+                selected={endDate}
+                placeholderText="Ending Time"
+                minDate={addHours(
+                  startDate ? new Date(startDate) : new Date(),
+                  2,
+                )}
+                filterTime={filterPassedEndTime}
+                onChange={(date) => {
+                  setDateError("");
+                  setEndDate(date);
+                }}
+                className="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+              />
+            </div>
           )}
 
           {pricingType === "Per Day" && (
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <SingleInputDateRangeField
-                disablePast
-                label="Day Range"
-                className="mt-3 w-full"
-                value={dayValue}
-                onChange={(newValue) => setDayValue(newValue)}
-              />
-            </LocalizationProvider>
+            <Datepicker
+              value={value}
+              showFooter={true}
+              minDate={new Date()}
+              primaryColor={"cyan"}
+              placeholder={"date range"}
+              onChange={handleValueChange}
+              displayFormat={"DD/MM/YYYY"}
+              popoverDirection={"down" as PopoverDirectionType}
+            />
           )}
+          <p className="text-center text-red-600">
+            {dateError ? "Select Booking DateTime Range" : ""}
+          </p>
         </div>
 
         <br />
@@ -120,8 +192,17 @@ const BookingForm = ({ data, user }: IProps) => {
         <div className="grid grid-cols-2 items-center text-zinc-800">
           <p className="text-xs font-light">Booking Duration</p>
           <p className="text-end">
-            <span className="font-medium">12</span>{" "}
-            <span className="font-light">Hours</span>
+            <span className="font-medium">
+              {pricingType === "Per Hour"
+                ? dayjs(endDate).diff(dayjs(startDate), "hour")
+                : dayjs(value?.endDate ?? 0).diff(
+                    dayjs(value?.startDate ?? 0),
+                    "day",
+                  )}{" "}
+            </span>{" "}
+            <span className="font-light">
+              {pricingType === "Per Hour" ? "hours" : "days"}
+            </span>
           </p>
           <p className="text-xs font-light">Boat Price</p>
           <p className="text-end font-medium">879.0</p>

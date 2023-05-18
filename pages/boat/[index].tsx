@@ -25,7 +25,7 @@ export default function Search(props: any) {
           <Carousel images={[data?.imageUrls?.[0], data?.imageUrls?.[0]]} />
           {data.owner === user._id && (
             <p className="mt-1 text-center text-lg italic">
-              Note: Since you are creator of this boat, you can't book for
+              Note: Since you are creator of this boat, you can&apos;t book for
               yourself
             </p>
           )}

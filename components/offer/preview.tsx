@@ -8,6 +8,7 @@ const Preview = ({
   departureDate,
   returnDate,
   className,
+  source,
   type,
 }: {
   boatPrice: string;
@@ -16,6 +17,7 @@ const Preview = ({
   departureDate: DateType | undefined;
   returnDate: DateType | undefined;
   className?: string;
+  source?: string;
   type?: string;
 }) => {
   return (
@@ -25,26 +27,38 @@ const Preview = ({
         className
       }
     >
-      <p className="text-xs font-light text-gray-800">Return Date</p>
-      <p className="mb-2 font-medium text-gray-800 md:mb-0 md:justify-self-end">
-        {departureDate
-          ? dayjs(departureDate).format(
-              `${
-                type == "Per Day" ? "ddd MMM DD YYYY" : "ddd MMM DD YYYY HH:mm"
-              }`,
-            )
-          : ""}
-      </p>
-      <p className="text-xs font-light text-gray-800">Departure Date</p>
-      <p className="mb-2 font-medium text-gray-800 md:mb-0 md:justify-self-end">
-        {returnDate
-          ? dayjs(returnDate).format(
-              `${
-                type == "Per Day" ? "ddd MMM DD YYYY" : "ddd MMM DD YYYY HH:mm"
-              }`,
-            )
-          : ""}
-      </p>
+      {source && source !== "pay" && (
+        <p className="text-xs font-light text-gray-800">Return Date</p>
+      )}
+      {source && source !== "pay" && (
+        <p className="mb-2 font-medium text-gray-800 md:mb-0 md:justify-self-end">
+          {departureDate
+            ? dayjs(departureDate).format(
+                `${
+                  type == "Per Day"
+                    ? "ddd MMM DD YYYY"
+                    : "ddd MMM DD YYYY HH:mm"
+                }`,
+              )
+            : ""}
+        </p>
+      )}
+      {source && source !== "pay" && (
+        <p className="text-xs font-light text-gray-800">Departure Date</p>
+      )}
+      {source && source !== "pay" && (
+        <p className="mb-2 font-medium text-gray-800 md:mb-0 md:justify-self-end">
+          {returnDate
+            ? dayjs(returnDate).format(
+                `${
+                  type == "Per Day"
+                    ? "ddd MMM DD YYYY"
+                    : "ddd MMM DD YYYY HH:mm"
+                }`,
+              )
+            : ""}
+        </p>
+      )}
       <p className="text-xs font-light text-gray-800">Boat Price</p>
       <p className="mb-2 font-medium text-gray-800 md:mb-0 md:justify-self-end">
         {boatPrice}

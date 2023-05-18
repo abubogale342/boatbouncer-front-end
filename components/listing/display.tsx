@@ -29,7 +29,7 @@ const DisplayListings = ({
 
   useEffect(() => {
     if (!session?.token) return;
-    fetchWithAuth(`/boat?pageNo=${pageNo}&size=${PAGE_SIZE}`);
+    fetchWithAuth(`/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`);
   }, [session?.token, pageNo]);
 
   useLayoutEffect(() => {

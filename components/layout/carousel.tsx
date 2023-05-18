@@ -25,12 +25,12 @@ export default function Carousel({ images }: { images: any }) {
 
   return (
     <div className="relative">
-      <AiFillLeftCircle
-        onClick={handlePrevSlide}
-        className="absolute inset-y-1/2 left-4 z-20 m-auto cursor-pointer text-5xl text-white opacity-90 sm:left-5"
-      />
+      <div className="relative m-auto flex h-[45vh] w-full overflow-hidden">
+        <AiFillLeftCircle
+          onClick={handlePrevSlide}
+          className="absolute inset-y-1/2 left-4 z-20 m-auto cursor-pointer text-5xl text-white opacity-90 sm:left-5"
+        />
 
-      <div className="relative m-auto flex h-[50vh] w-full overflow-hidden">
         <Swipe
           onSwipeLeft={handleNextSlide}
           onSwipeRight={handlePrevSlide}
@@ -39,24 +39,24 @@ export default function Carousel({ images }: { images: any }) {
           {images.map((image: string, index: number) => {
             if (index === currentSlide) {
               return (
-                <Image
+                <img
                   key={index}
                   src={image}
                   alt=""
-                  fill
-                  object-fit="contain"
-                  className="animate-fadeIn"
+                  className="animate-fadeIn relative mx-auto hidden h-full w-fit max-w-[100%] md:block xl:w-auto"
+                  style={{ objectFit: "cover" }}
+                  object-fit="cover"
                 />
               );
             }
           })}
         </Swipe>
-      </div>
 
-      <AiFillRightCircle
-        onClick={handleNextSlide}
-        className="absolute inset-y-1/2 right-4 z-20 m-auto cursor-pointer text-5xl text-white opacity-90 sm:right-5"
-      />
+        <AiFillRightCircle
+          onClick={handleNextSlide}
+          className="absolute inset-y-1/2 right-4 z-20 m-auto cursor-pointer text-5xl text-white opacity-90 sm:right-5"
+        />
+      </div>
 
       <div className="absolute inset-x-1/2 bottom-4 z-20">
         <div className="relative flex w-fit justify-center rounded-full bg-white p-2">

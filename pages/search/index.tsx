@@ -7,20 +7,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Filter } from "lucide-react";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export default function Search(props: any) {
   const { data, error, ...user } = props;
 
   const [searchVal, setSearchVal] = useState("");
+  const [checked, setChecked] = useState(false);
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchVal(event.target.value);
   };
 
-  // const handleMapViewChange  = (event:ChangeEventHandler<HTMLInputElement> | undefined)  => {
-
-  // }
+  const handleMapViewChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
 
   let element = null;
 
@@ -111,9 +112,8 @@ export default function Search(props: any) {
           <label className="relative hidden w-28 cursor-pointer items-center sm:inline-flex">
             <input
               type="checkbox"
-              value=""
               className="peer sr-only"
-              // onChange={handleMapViewChange}
+              onChange={handleMapViewChange}
             />
             <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
             <span className="ml-1 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -132,16 +132,16 @@ export default function Search(props: any) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="my-6 flex flex-row sm:my-12"
+          className="my-6 flex flex-col sm:my-12"
         >
-          <div className="flex w-full flex-wrap justify-evenly gap-x-1.5 gap-y-2.5">
-            {element}
-          </div>
-          {data && data?.data && data?.data?.length > 0 && (
-            <div className="hidden w-1/2 sm:block">
+          {data && data?.data && data?.data?.length > 0 && checked && (
+            <div className="hidden w-full sm:block">
               <Map />
             </div>
           )}
+          <div className="flex w-full flex-wrap justify-evenly gap-x-1.5 gap-y-2.5">
+            {element}
+          </div>
         </motion.div>
       </AnimatePresence>
       <Footer />
@@ -153,15 +153,10 @@ export async function getServerSideProps(context: any) {
   const { req, query } = context;
   const { method } = req;
 
-  const session = await getSession({ req });
+  let session = await getSession({ req });
 
   if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
+    session = null;
   }
 
   const myHeaders = new Headers();

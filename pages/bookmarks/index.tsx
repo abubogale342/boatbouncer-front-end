@@ -12,18 +12,29 @@ import Link from "next/link";
 import Offer from "@/components/offer";
 import Preview from "@/components/offer/preview";
 import Meta from "@/components/layout/meta";
+import Pay from "@/components/pay";
+import Chat from "@/components/chat";
+import { AxiosResponse } from "axios";
+import { useRouter } from "next/router";
 
 export default function Bookmarks(props: any) {
   const { ...user } = props;
   const { data: session } = useSession();
   const { id } = useSelector((state: any) => state.bookmark.bookmarkInfo);
   const [bookmarks, setBookmarks] = useState<any>();
-  const { cancelBooking, acceptOffer, fetchWithAuth, data, loading, error } =
-    useFetcher();
+  const {
+    cancelBooking,
+    acceptOffer,
+    fetchWithAuth,
+    data,
+    loading,
+    error,
+    fetchWithAuthSync,
+  } = useFetcher();
   const [bookingTab, setBookingTab] = useState("renter");
   const [refresh, setRefresh] = useState(false);
-
-  console.log(data);
+  const [chargesEnabled, setchargesEnabled] = useState<Boolean>(false);
+  const router = useRouter();
 
   let element = null;
 
@@ -34,11 +45,7 @@ export default function Bookmarks(props: any) {
   useEffect(() => {
     if (!session?.token) return;
 
-    fetchWithAuth(
-      `http:${process.env.NEXT_PUBLIC_API_URL}/booking${
-        bookingTab === "owner" ? "" : "?isRenter=true"
-      }`,
-    );
+    fetchWithAuth(`/booking${bookingTab === "owner" ? "" : "?isRenter=true"}`);
   }, [bookingTab, session?.token, refresh]);
 
   useEffect(() => {
@@ -51,6 +58,19 @@ export default function Bookmarks(props: any) {
     }
   }, [id, data, session?.token]);
 
+  useEffect(() => {
+    if (bookingTab === "renter") return;
+    if (!session?.token) return;
+
+    fetchWithAuthSync("/user/current")
+      .then((res: AxiosResponse) => {
+        setchargesEnabled(res.data.chargesEnabled);
+      })
+      .catch(() => {
+        setchargesEnabled(false);
+      });
+  }, [bookingTab, session?.token]);
+
   const cancelBookingHn = () => {
     cancelBooking(
       `/booking/cancel/${id}${bookingTab === "owner" ? "" : "?isRenter=true"}`,
@@ -59,9 +79,17 @@ export default function Bookmarks(props: any) {
   };
 
   const acceptOfferHn = (offerId: string) => {
-    acceptOffer(`/offer/accept/${offerId}`).then((response: any) =>
-      console.log(response),
-    );
+    acceptOffer(`/offer/accept/${offerId}`).then((response: any) => {
+      setRefreshHn();
+    });
+  };
+
+  const getPaymentHn = () => {
+    fetchWithAuthSync("/user/stripAccount", {})
+      .then((res: AxiosResponse) => {
+        router.replace(res.data.url);
+      })
+      .catch(() => {});
   };
 
   if (data?.length > 0) {
@@ -157,7 +185,7 @@ export default function Bookmarks(props: any) {
           }`}
         >
           <div
-            className={`flex h-fit w-full flex-wrap gap-x-1.5 gap-y-2.5 ${
+            className={`flex h-fit w-full flex-wrap justify-center gap-x-1.5 gap-y-2.5 ${
               id
                 ? "sm:min-w-[320px] sm:max-w-[50%] md:max-w-[40%] lg:max-w-sm xl:max-w-md "
                 : "w-full flex-row sm:max-w-full md:max-w-full lg:max-w-full xl:max-w-full"
@@ -170,7 +198,7 @@ export default function Bookmarks(props: any) {
               <div className="flex flex-row gap-3 border-b border-solid border-b-slate-200 bg-[#219EBC] px-6 py-2.5 sm:mx-0 sm:rounded-[16px_16px_0px_0px]">
                 Profile Picture User Name
               </div>
-              <div className="flex w-full flex-col lg:flex-row">
+              <div className="flex w-full flex-col items-start gap-8 lg:mb-5 lg:flex-row lg:gap-2">
                 <div className="xl:[45%] flex w-full flex-col bg-[#F8FAFC] lg:w-[52.5%] xl:max-w-xl">
                   <div className="p-6">
                     <p className="font-medium text-[#1C1B1F]">
@@ -191,76 +219,109 @@ export default function Bookmarks(props: any) {
                         className="bg-white px-4"
                       />
                     )}
-                    <div className="flex h-[68px] flex-row items-start justify-center gap-2 rounded-[0px_0px_16px_16px] bg-[#FFB703] py-4">
-                      <AlertDialogs
-                        prompt="Yes, Cancel booking"
-                        data={JSON.stringify(id)}
-                        confirmHandler={cancelBookingHn}
-                        description={
-                          "This action cannot be undone, but we have plenty of options. so, feel free to look for other boats"
-                        }
-                      >
-                        <button className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]">
-                          <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
-                            Cancel Booking
-                          </p>
-                        </button>
-                      </AlertDialogs>
-                      {bookingTab === "owner" &&
-                        user._id === bookmarks.owner._id &&
-                        !bookmarks?.offerId && (
-                          <Offer
-                            bookId={bookmarks._id}
-                            type={bookmarks.type}
-                            boatPrice=""
-                            captainPrice=""
-                            paymentServiceFee=""
-                            departureDate={null}
-                            returnDate={null}
-                            offerType="create"
-                            setRefreshHn={setRefreshHn}
-                          >
-                            <button className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]">
-                              <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
-                                Create an Offer
-                              </p>
-                            </button>
-                          </Offer>
-                        )}
-                      {bookingTab === "owner" &&
-                        user._id === bookmarks.owner._id &&
-                        bookmarks?.offerId && (
-                          <Offer
-                            bookId={bookmarks._id}
-                            type={bookmarks.type}
-                            {...bookmarks.offerId}
-                            offerType="update"
-                            setRefreshHn={setRefreshHn}
-                          >
-                            <button className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]">
-                              <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
-                                Edit Offer
-                              </p>
-                            </button>
-                          </Offer>
-                        )}
-                      {bookingTab === "renter" &&
-                        user._id === bookmarks.renter._id &&
-                        bookmarks?.offerId && (
-                          <button
-                            onClick={() => acceptOfferHn(bookmarks.offerId._id)}
-                            className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]"
-                          >
+                    {bookmarks.status !== "Completed" && (
+                      <div className="flex h-[68px] flex-row items-start justify-center gap-2 rounded-[0px_0px_16px_16px] bg-[#FFB703] py-4">
+                        <AlertDialogs
+                          prompt="Yes, Cancel booking"
+                          data={JSON.stringify(id)}
+                          confirmHandler={cancelBookingHn}
+                          description={
+                            "This action cannot be undone, but we have plenty of options. so, feel free to look for other boats"
+                          }
+                        >
+                          <button className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]">
                             <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
-                              Accept an Offer
+                              Cancel Booking
                             </p>
                           </button>
-                        )}
-                    </div>
+                        </AlertDialogs>
+                        {bookingTab === "owner" &&
+                          user._id === bookmarks.owner._id &&
+                          !bookmarks?.offerId &&
+                          chargesEnabled && (
+                            <Offer
+                              bookId={bookmarks._id}
+                              type={bookmarks.type}
+                              boatPrice=""
+                              captainPrice=""
+                              paymentServiceFee=""
+                              departureDate={null}
+                              returnDate={null}
+                              offerType="create"
+                              setRefreshHn={setRefreshHn}
+                            >
+                              <button className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]">
+                                <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
+                                  Create an Offer
+                                </p>
+                              </button>
+                            </Offer>
+                          )}
+
+                        {bookingTab === "owner" &&
+                          user._id === bookmarks.owner._id &&
+                          !bookmarks?.offerId &&
+                          !chargesEnabled && (
+                            <button
+                              onClick={getPaymentHn}
+                              className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]"
+                            >
+                              <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
+                                Get Payment
+                              </p>
+                            </button>
+                          )}
+
+                        {bookingTab === "owner" &&
+                          user._id === bookmarks.owner._id &&
+                          bookmarks?.offerId && (
+                            <Offer
+                              bookId={bookmarks._id}
+                              type={bookmarks.type}
+                              {...bookmarks.offerId}
+                              offerType="update"
+                              setRefreshHn={setRefreshHn}
+                            >
+                              <button className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]">
+                                <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
+                                  Edit Offer
+                                </p>
+                              </button>
+                            </Offer>
+                          )}
+                        {bookingTab === "renter" &&
+                          user._id === bookmarks.renter._id &&
+                          bookmarks?.offerId &&
+                          (bookmarks.offerId.status === "Processing" ? (
+                            <Pay bookmarks={bookmarks}>
+                              <button className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]">
+                                <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
+                                  Pay to complete
+                                </p>
+                              </button>
+                            </Pay>
+                          ) : (
+                            <button
+                              onClick={() =>
+                                acceptOfferHn(bookmarks.offerId._id)
+                              }
+                              className="box-border flex h-9 flex-row items-center justify-center gap-2 rounded-lg border border-solid border-white bg-white px-[14px] py-2 shadow-[0px_1px_2px_rgba(16,24,40,0.05)]"
+                            >
+                              <p className="whitespace-nowrap text-sm font-medium leading-5 text-[#219EBC]">
+                                Accept an Offer
+                              </p>
+                            </button>
+                          ))}
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="xl:[55%] flex w-full lg:w-[47.5%]">
-                  Chat Between renter and owner
+                <div className="xl:[55%] lg:min-h-parent flex h-96 w-full lg:w-[47.5%] lg:pt-6">
+                  <Chat
+                    bookmarks={bookmarks}
+                    user={user}
+                    bookingTab={bookingTab}
+                  />
                 </div>
               </div>
             </div>

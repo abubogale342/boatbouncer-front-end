@@ -69,32 +69,36 @@ const SearchResults = ({ boats, total }: { boats: any; total: number }) => {
   return (
     <Fragment>
       {element}
-      <hr className="h-px w-full bg-black" />
-      <div className="mx-6 my-5 flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <p className="text-lg">
-          Page {pageNo} | ({total} results)
-        </p>
-        <div className="flex items-center gap-3">
-          <button
-            onClick={prevPage}
-            className={`rounded-lg border px-5 py-1.5 text-lg font-medium ${
-              pageNo === 1 ? "opacity-40" : ""
-            }`}
-            disabled={pageNo === 1}
-          >
-            Previous
-          </button>
-          <button
-            onClick={nextPage}
-            className={`rounded-lg border px-5 py-1.5 text-lg font-medium ${
-              pageNo * PAGE_SIZE >= total ? "opacity-40" : ""
-            }`}
-            disabled={pageNo * PAGE_SIZE >= total}
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      {total > 10 && (
+        <>
+          <hr className="h-px w-full bg-black" />
+          <div className="mx-6 my-5 flex flex-col items-center justify-between gap-4 sm:flex-row">
+            <p className="text-lg">
+              Page {pageNo} | ({total} results)
+            </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={prevPage}
+                className={`rounded-lg border px-5 py-1.5 text-lg font-medium ${
+                  pageNo === 1 ? "opacity-40" : ""
+                }`}
+                disabled={pageNo === 1}
+              >
+                Previous
+              </button>
+              <button
+                onClick={nextPage}
+                className={`rounded-lg border px-5 py-1.5 text-lg font-medium ${
+                  pageNo * PAGE_SIZE >= total ? "opacity-40" : ""
+                }`}
+                disabled={pageNo * PAGE_SIZE >= total}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </Fragment>
   );
 };
