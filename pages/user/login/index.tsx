@@ -11,10 +11,10 @@ function index() {
   };
 
   return (
-    <>
+    <div className="h-screen overflow-hidden">
       <Meta title="login" />
       <Login handleSubmit={submitHandler} />;
-    </>
+    </div>
   );
 }
 

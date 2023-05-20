@@ -10,10 +10,10 @@ function index() {
   };
 
   return (
-    <>
+    <div className="h-screen overflow-hidden">
       <Meta title="register" />
       <Regsiter handleSubmit={submitHandler} />;
-    </>
+    </div>
   );
 }
 
