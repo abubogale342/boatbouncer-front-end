@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
 import home from "public/home.svg";
+import { HomeIcon } from "@/components/shared/icons/home";
 
 export default function Home(props: any) {
   const [searchVal, setSearchVal] = useState("");
@@ -16,22 +17,8 @@ export default function Home(props: any) {
 
   return (
     <main className="flex min-h-screen flex-col">
-      <div
-        className="relative h-screen bg-cover bg-right"
-        style={{ backgroundImage: `url("/home.svg")` }}
-      >
-        {/* <Image
-          layout="fill"
-          className="pointer-events-none object-cover object-center"
-          src={home}
-          alt={""}
-          loading="lazy"
-        /> */}
-        {/* <Image
-          src={home}
-          alt=""
-          className="z-1 fixed right-0 top-0 h-screen w-screen"
-        /> */}
+      <div className="relative h-screen bg-cover bg-right">
+        <div className="absolute right-0 top-0 -z-10">{HomeIcon}</div>
         <Header {...props} page="home"></Header>
 
         <motion.div className="absolute left-1/2 top-1/2 m-0 w-4/5 -translate-x-1/2 -translate-y-1/2 md:w-2/3">

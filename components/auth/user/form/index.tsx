@@ -37,10 +37,19 @@ type Props = {
     id?: string | undefined | null;
   };
   page: String | null | undefined;
+  setStep: (step: number) => void;
+  step: number;
 };
 
-function Form({ handleSubmit, type, initialValues, page }: Props) {
-  const [step, setStep] = useState(1);
+function Form({
+  handleSubmit,
+  type,
+  initialValues,
+  page,
+  setStep,
+  step,
+}: Props) {
+  // const [step, setStep] = useState(1);
   // const { executeRecaptcha } = useGoogleReCaptcha();
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -94,7 +103,6 @@ function Form({ handleSubmit, type, initialValues, page }: Props) {
         );
 
         if (page === "update") {
-          console.log("finalValues", finalValues);
           if (!finalValues.password) {
             delete finalValues.password;
           }
@@ -124,7 +132,10 @@ function Form({ handleSubmit, type, initialValues, page }: Props) {
       }) => (
         <form onSubmit={handleSubmit} onChange={() => setErrorMessage("")}>
           {step === 1 && (
-            <motion.div>
+            <motion.div
+              animate={{ x: [100, 0] }}
+              transition={{ duration: 0.25 }}
+            >
               <div className="mb-5 flex flex-col">
                 <label
                   htmlFor="usernameInput"
@@ -293,7 +304,10 @@ function Form({ handleSubmit, type, initialValues, page }: Props) {
             </motion.div>
           )}
           {step === 2 && (
-            <motion.div>
+            <motion.div
+              animate={{ x: [-100, 0] }}
+              transition={{ duration: 0.25 }}
+            >
               <div className="mb-5 grid grid-cols-2 items-end">
                 <div className="mr-2 flex flex-col">
                   <label
@@ -376,31 +390,6 @@ function Form({ handleSubmit, type, initialValues, page }: Props) {
             <div className="text-center text-red-500">{errorMessage}</div>
           )}
 
-          <div className="mt-6 flex flex-row gap-6">
-            <button
-              type="button"
-              disabled={step === 1}
-              onClick={() => setStep(1)}
-              className={`w-full rounded-md py-1 text-center font-medium text-white ${
-                step === 1 ? "bg-cyan-200" : "bg-cyan-600"
-              }`}
-            >
-              Prev
-            </button>
-            <button
-              type="button"
-              disabled={step === 2 || Object.keys(errors).length > 0}
-              onClick={() => setStep(2)}
-              className={`w-full rounded-md ${
-                step === 2 || Object.keys(errors).length > 0
-                  ? "bg-cyan-200"
-                  : "bg-cyan-600"
-              } py-1 text-center font-medium text-white`}
-            >
-              Next
-            </button>
-          </div>
-
           <div className="mt-6 flex w-full justify-center text-center">
             <div
               id="recaptcha-container"
@@ -412,14 +401,6 @@ function Form({ handleSubmit, type, initialValues, page }: Props) {
             className={`mt-6 rounded-md text-center ${
               Object.keys(errors).length > 0 ? "bg-cyan-200" : "bg-cyan-600"
             }`}
-            // initial={{ opacity: 0, scale: 0.5 }}
-            // whileHover={{ scale: Object.keys(errors).length > 0 ? 1 : 1.025 }}
-            // whileTap={{ scale: Object.keys(errors).length > 0 ? 1 : 0.75 }}
-            // animate={{
-            //   opacity: 1,
-            //   scale: 1,
-            // }}
-            // transition={{ duration: 0.25 }}
           >
             <button
               type="submit"
