@@ -37,8 +37,8 @@ type Props = {
     id?: string | undefined | null;
   };
   page: String | null | undefined;
-  setStep: (step: number) => void;
-  step: number;
+  setStep?: (step: number) => void;
+  step?: number;
 };
 
 function Form({
@@ -413,7 +413,7 @@ function Form({
                   values.newPassword &&
                   values.phoneNumber &&
                   values.userName
-                ) && setStep(1)
+                ) && setStep?.(1)
               }
               className={`w-full py-3 font-medium text-white`}
               disabled={Object.keys(errors).length > 0}
