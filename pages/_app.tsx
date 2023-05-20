@@ -40,12 +40,7 @@ export default function MyApp({
         <Provider store={store}>
           <Elements stripe={stripePromise}>
             <ErrorBoundary>
-              <div
-                className={`${cx(
-                  sfPro.variable,
-                  inter.variable,
-                )} h-screen overflow-y-clip`}
-              >
+              <div className={`${cx(sfPro.variable, inter.variable)}`}>
                 <Component {...pageProps} />
               </div>
             </ErrorBoundary>

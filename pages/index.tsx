@@ -4,8 +4,6 @@ import { IncomingMessage } from "http";
 import { getSession } from "next-auth/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import Image from "next/image";
-import home from "public/home.svg";
 import { HomeIcon } from "@/components/shared/icons/home";
 
 export default function Home(props: any) {
@@ -16,10 +14,12 @@ export default function Home(props: any) {
   };
 
   return (
-    <main className="flex min-h-screen flex-col">
-      <div className="relative h-screen bg-cover bg-right">
-        <div className="absolute right-0 top-0 -z-10">{HomeIcon}</div>
-        <Header {...props} page="home"></Header>
+    <main className="flex flex-col overflow-hidden">
+      <div className="relative left-0 right-0 top-0">
+        {HomeIcon}
+        <div className="absolute left-0 right-0 top-0">
+          <Header {...props} page="home"></Header>
+        </div>
 
         <motion.div className="absolute left-1/2 top-1/2 m-0 w-4/5 -translate-x-1/2 -translate-y-1/2 md:w-2/3">
           <motion.p className="text-center text-4xl font-bold md:text-6xl">

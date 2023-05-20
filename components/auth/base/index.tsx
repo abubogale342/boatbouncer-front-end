@@ -7,6 +7,7 @@ import boat from "../../../public/boat.png";
 import logo from "../../../public/logo.svg";
 import { BoatImg } from "@/components/shared/icons/logo";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 function BaseLayout({
   children,
@@ -22,13 +23,15 @@ function BaseLayout({
   setStep?: (step: number) => void;
 }) {
   return (
-    <div className="h-screen  overflow-y-clip">
+    <div className="h-screen overflow-hidden">
       <motion.div className="m-0 flex w-full flex-row items-center p-0">
         <div className="grid h-screen max-h-screen flex-grow grid-cols-1 gap-0">
           <div className="flex flex-col gap-0  overflow-y-scroll [scrollbar-width:'none'] [-ms-overflow-y-style:'none'] [&::-webkit-scrollbar]:hidden">
             <header className="h-fit self-start">
               <div className="flex items-center pb-3 pl-3 pt-3 sm:pl-8 sm:pt-8">
-                <Image src={logo} alt="logo" />
+                <Link href="/">
+                  <Image src={logo} alt="logo" />
+                </Link>
               </div>
             </header>
             <div className="mx-4 overflow-y-scroll [scrollbar-width:'none'] [-ms-overflow-y-style:'none'] [&::-webkit-scrollbar]:hidden">

@@ -4,7 +4,7 @@ import Icon from "./icons/icon";
 
 export default function Footer() {
   return (
-    <footer className="mt-auto hidden bg-slate-800 px-6 pb-6 pl-16 pt-12 md:block">
+    <footer className="mt-auto hidden w-screen bg-slate-800 px-6 pb-6 pl-16 pt-12 md:block">
       <div className="mx-auto mb-12 flex flex-col items-start gap-12 text-white md:flex-row md:gap-6">
         <div className="flex flex-col font-manrope">
           <Icon className="fill-white" />
