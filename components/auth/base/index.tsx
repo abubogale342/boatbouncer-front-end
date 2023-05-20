@@ -18,8 +18,8 @@ function BaseLayout({
   children: React.ReactNode;
   action: String;
   prompt: String;
-  step: number;
-  setStep: (step: number) => void;
+  step?: number;
+  setStep?: (step: number) => void;
 }) {
   return (
     <div className="h-screen  overflow-y-clip">
@@ -44,7 +44,7 @@ function BaseLayout({
                         <button
                           type="button"
                           disabled={step === 1}
-                          onClick={() => setStep(1)}
+                          onClick={() => setStep?.(1)}
                           className={`${step === 1 ? "hidden" : ""}`}
                         >
                           <ArrowLeft />
@@ -52,7 +52,7 @@ function BaseLayout({
                         <button
                           type="button"
                           disabled={step === 2}
-                          onClick={() => setStep(2)}
+                          onClick={() => setStep?.(2)}
                           className={`${step === 2 ? "hidden " : ""}`}
                         >
                           <ArrowRight />
