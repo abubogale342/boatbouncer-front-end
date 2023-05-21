@@ -17,12 +17,12 @@ export default function Search(props: any) {
   if (data) {
     element = (
       <div
-        className={`mx-4 grid w-full grid-cols-1 gap-6 sm:mx-12 ${
-          data.owner === user._id ? "" : "sm:grid-cols-[4fr_3fr] md:mx-24"
+        className={`mx-4 grid w-full grid-cols-1 gap-6 sm:mx-6 ${
+          data.owner === user._id ? "" : "md:mx-6 md:grid-cols-[4fr_3fr]"
         }`}
       >
         <div>
-          <Carousel images={[data?.imageUrls?.[0], data?.imageUrls?.[0]]} />
+          <Carousel images={data?.imageUrls} />
           {data.owner === user._id && (
             <p className="mt-1 text-center text-lg italic">
               Note: Since you are creator of this boat, you can&apos;t book for
@@ -48,7 +48,7 @@ export default function Search(props: any) {
           </ul>
         </div>
         {data.owner !== user._id && (
-          <div className="mx-auto hidden w-full sm:block">
+          <div className="mx-auto w-full sm:block">
             <BookingForm data={data} user={user} />
           </div>
         )}
@@ -129,7 +129,7 @@ export async function getServerSideProps(context: any) {
 
   try {
     data = await fetch(
-      `http:${process.env.NEXT_PUBLIC_API_URL}/boat/${params.index}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/boat/${params.index}`,
       requestOptions,
     );
 

@@ -28,7 +28,7 @@ const Chat = ({
   const conversation = bookmarks.conversationId;
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5000", {
+    const newSocket = io(`${process.env.NEXT_PUBLIC_BASE_API_URL}`, {
       extraHeaders: {
         Authorization: "Bearer " + token,
       },

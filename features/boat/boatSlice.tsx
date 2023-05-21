@@ -9,6 +9,7 @@ const initialState = {
     model: "",
     year: 2023,
     length: 100,
+    captained: false,
     amenities: [],
     imageUrls: "",
     location: {
@@ -69,9 +70,15 @@ export const boatSlice = createSlice({
         state.boatInfo.amenities = filteredState;
       }
     },
+
+    updateCaptainedList: (state: any, { payload: { key, value } }) => {
+      state.boatInfo.captained = value;
+    },
+
     updateImageUrls: (state: any, { payload: imageUrl }) => {
       state.boatInfo.imageUrls = imageUrl;
     },
+
     updateSubCategory: (state: any, { payload: { key, value } }) => {
       state.boatInfo.subCategory = value;
     },
@@ -108,6 +115,7 @@ export const {
   updateImageUrls,
   updateSubCategory,
   resetSubCategories,
+  updateCaptainedList,
   setBoatInfo,
   setEditableBoat,
   resetBoat,

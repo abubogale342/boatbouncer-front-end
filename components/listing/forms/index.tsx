@@ -51,14 +51,14 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
           features: Boolean(boatInfo.features),
           securityAllowance: boatInfo.securityAllowance,
           pricing: boatInfo.pricing,
+          captained: boatInfo.captained,
         }}
         onSubmit={(values, { setSubmitting }) => {
           let finalValues = {
             ...boatInfo,
-            imageUrls: [boatInfo.imageUrls],
+            imageUrls: boatInfo.imageUrls,
             subCategory: [boatInfo.subCategory],
             securityAllowance: `${boatInfo.securityAllowance} USD`,
-            captained: true,
           };
 
           if (editableBoat) {

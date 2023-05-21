@@ -53,7 +53,7 @@ function useFetcher() {
 
   async function cancelBooking(path: string, book: any) {
     let deleteBooking = await Axios.put(path);
-    if (deleteBooking.statusText == "OK") {
+    if (deleteBooking.status == 200) {
       let filteredData = data.filter((d: any) => d._id !== book._id);
       const filteredIndex = data.findIndex((d: any) => d._id === book._id);
       setData(filteredData);

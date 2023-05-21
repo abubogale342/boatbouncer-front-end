@@ -21,7 +21,9 @@ const GalleryForm = ({
   const boatInfo = useSelector((state: any) => state.boat.boatInfo);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [files, setFiles] = useState<any[]>([{ url: boatInfo.imageUrls }]);
+  const [files, setFiles] = useState<any[]>(
+    boatInfo.imageUrls ? [{ url: boatInfo.imageUrls }] : [],
+  );
   const dispatch = useDispatch();
 
   const { fetchWithAuthSync } = useFetcher();
@@ -44,8 +46,13 @@ const GalleryForm = ({
       .then((response) => {
         setLoading(false);
         setError(null);
-        if (response.data?.uploadedFiles?.[0]?.secureUrl) {
-          let imageUrl = response.data?.uploadedFiles?.[0]?.secureUrl;
+        if (
+          response.data?.uploadedFiles?.length &&
+          response.data?.uploadedFiles?.length > 0
+        ) {
+          let imageUrl = response.data?.uploadedFiles?.map(
+            (file: any) => file?.secureUrl,
+          );
 
           dispatch(updateImageUrls(imageUrl));
           setFiles(response.data.uploadedFiles);
@@ -72,8 +79,12 @@ const GalleryForm = ({
         >
           {loading ? (
             <LoadingSpinner />
-          ) : !!files?.[0]?.url ? (
-            <img className="max-w-xs" src={files[0].url} alt="" />
+          ) : files.length > 0 ? (
+            <div className="flex flex-col gap-2">
+              {files.map((file, index) => (
+                <img className="max-w-xs" key={index} src={file.url} alt="" />
+              ))}
+            </div>
           ) : (
             <div>
               <UploadCloud size="20" className="mb-6 rounded-3xl bg-gray-50" />
@@ -84,6 +95,7 @@ const GalleryForm = ({
           )}
         </label>
         <input
+          multiple
           type="file"
           id="pictures"
           name="imageUrls"

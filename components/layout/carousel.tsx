@@ -43,7 +43,7 @@ export default function Carousel({ images }: { images: any }) {
                   key={index}
                   src={image}
                   alt=""
-                  className="animate-fadeIn relative mx-auto hidden h-full w-fit max-w-[100%] md:block xl:w-auto"
+                  className="animate-fadeIn relative mx-auto h-full w-fit max-w-[100%] md:block xl:w-auto"
                   style={{ objectFit: "cover" }}
                   object-fit="cover"
                 />

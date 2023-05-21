@@ -1,5 +1,6 @@
 import {
   updateAmenitiesList,
+  updateCaptainedList,
   updateFeaturesList,
 } from "features/boat/boatSlice";
 import { Formik } from "formik";
@@ -31,6 +32,10 @@ const FeatureForm = ({
 
   const updateAmenitiesLists = (key: string, value: boolean) => {
     dispatch(updateAmenitiesList({ key, value }));
+  };
+
+  const updateCaptainsLists = (key: string, value: boolean) => {
+    dispatch(updateCaptainedList({ key, value }));
   };
 
   const handleAnemitiesChange = (checked: boolean) => {
@@ -123,6 +128,36 @@ const FeatureForm = ({
 
         {errors.amenities && touched.amenities && (
           <p className="text-red-500">{errors.amenities as string}</p>
+        )}
+      </div>
+
+      <div className="mt-10 pl-4 pr-4">
+        <p className="text-xl font-semibold text-gray-900">Captained</p>
+        <hr className="my-4 h-px border-0 bg-gray-200" />
+
+        <div className="flex flex-row items-center gap-2 pb-4 pr-10">
+          <input
+            type="checkbox"
+            className="border border-solid border-gray-300 text-base text-gray-500 focus:border-sky-500 focus:outline-none focus:ring-sky-500"
+            onBlur={handleBlur}
+            id="captained"
+            name="captained"
+            checked={values.captained}
+            onChange={(event) => {
+              handleChange(event);
+              updateCaptainsLists("captained", event.target.checked);
+            }}
+          />
+          <label
+            className="text-sm  font-medium text-gray-700"
+            htmlFor="captained"
+          >
+            Captained
+          </label>
+        </div>
+
+        {errors.captained && touched.captained && (
+          <p className="text-red-500">{errors.captained as string}</p>
         )}
       </div>
     </div>

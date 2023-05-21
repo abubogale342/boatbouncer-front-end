@@ -119,7 +119,7 @@ const BookingForm = ({ data, user }: IProps) => {
         <div>
           <label
             htmlFor="type"
-            className="mb-2 block text-sm font-medium text-gray-900"
+            className="mb-2 block text-sm font-medium text-gray-900 dark:text-[white]"
           >
             Type
           </label>
@@ -134,7 +134,7 @@ const BookingForm = ({ data, user }: IProps) => {
           </select>
 
           {pricingType === "Per Hour" && (
-            <div className="flex flex-row items-center">
+            <div className="flex flex-col items-center justify-center xs:flex-row">
               <DatePicker
                 timeFormat="p"
                 dateFormat="Pp"
@@ -147,7 +147,7 @@ const BookingForm = ({ data, user }: IProps) => {
                 }}
                 filterTime={filterPassedStartTime}
                 placeholderText="Starting Time"
-                className="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className="mx-auto flex justify-center rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               />
               <span className="w-4 text-2xl"> ~ </span>
               <DatePicker
@@ -165,7 +165,7 @@ const BookingForm = ({ data, user }: IProps) => {
                   setDateError("");
                   setEndDate(date);
                 }}
-                className="rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className="mx-auto flex justify-center rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               />
             </div>
           )}
@@ -189,7 +189,7 @@ const BookingForm = ({ data, user }: IProps) => {
 
         <br />
 
-        <div className="grid grid-cols-2 items-center text-zinc-800">
+        <div className="grid grid-cols-2 items-center text-zinc-800 dark:text-[white]">
           <p className="text-xs font-light">Booking Duration</p>
           <p className="text-end">
             <span className="font-medium">
@@ -227,7 +227,7 @@ const BookingForm = ({ data, user }: IProps) => {
           <h5 className="mb-2 text-xs font-bold text-zinc-800 dark:text-white">
             Terms
           </h5>
-          <ul className="flex list-inside list-disc flex-col gap-2 text-xs font-light text-zinc-800">
+          <ul className="flex list-inside list-disc flex-col gap-2 text-xs font-light text-zinc-800 dark:text-[white]">
             <li>Fuel Not Included</li>
             <li>Security Deposit 1000</li>
             <li>Cancelation policy</li>
