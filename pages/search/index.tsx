@@ -173,11 +173,12 @@ export async function getServerSideProps(context: any) {
 
   try {
     data = await fetch(
-      `http:${process.env.NEXT_PUBLIC_API_URL}/boat`,
+      `${process.env.NEXT_PUBLIC_API_URL}/boat`,
       requestOptions,
     );
 
     data = await data.json();
+
     if (!data) {
       error = true;
     }

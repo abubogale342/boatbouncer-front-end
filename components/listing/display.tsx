@@ -30,7 +30,7 @@ const DisplayListings = ({
   useEffect(() => {
     if (!session?.token) return;
     fetchWithAuth(`/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`);
-  }, [session?.token, pageNo]);
+  }, [session?.token, pageNo, dataLength]);
 
   useLayoutEffect(() => {
     window.scrollTo({
@@ -154,7 +154,7 @@ const DisplayListings = ({
         <p className="mb-10 ml-6 mt-4 text-gray-500">
           Track, manage and forecast your Listings.
         </p>
-        <div className="mx-auto flex w-full flex-wrap justify-evenly gap-2">
+        <div className="mx-auto flex w-fit flex-wrap justify-evenly gap-2">
           {displayEl}
         </div>
         {dataLength > 10 && (

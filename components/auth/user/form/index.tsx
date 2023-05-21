@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { formRegisterSchema, formUpdateSchema } from "./schema";
 import { Formik } from "formik";
 import { motion } from "framer-motion";
@@ -6,6 +6,9 @@ import { poster } from "@/lib/utils";
 import { RecaptchaVerifier } from "firebase/auth";
 import { auth } from "@/lib/config";
 import Router from "next/router";
+import useFetcher from "@/lib/hooks/use-axios";
+import { LoadingCircle } from "@/components/shared/icons";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 export const setupRecaptcha = (cb: any) => {
   const recaptcha = new RecaptchaVerifier(
@@ -39,6 +42,7 @@ type Props = {
   page: String | null | undefined;
   setStep?: (step: number) => void;
   step?: number;
+  triggerRefresh?: () => void;
 };
 
 function Form({
@@ -48,10 +52,25 @@ function Form({
   page,
   setStep,
   step,
+  triggerRefresh,
 }: Props) {
   // const [step, setStep] = useState(1);
   // const { executeRecaptcha } = useGoogleReCaptcha();
   const [errorMessage, setErrorMessage] = useState("");
+  const { updateUser } = useFetcher();
+  const [accountStatus, setAccountStatus] = useState({
+    loading: false,
+    error: false,
+    success: false,
+  });
+
+  const accountRef = useRef<HTMLFormElement | null>(null);
+
+  const reset = (timer: number) => {
+    setTimeout(() => {
+      setAccountStatus({ loading: false, error: false, success: false });
+    }, timer);
+  };
 
   const recaptchAfterValidation = async (res: any, credentials: any) => {
     const createdAccount = await poster("user/createAccount", credentials);
@@ -103,13 +122,31 @@ function Form({
         );
 
         if (page === "update") {
+          if (accountRef.current) {
+            accountRef.current.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+              inline: "start",
+            });
+          }
+          setAccountStatus({ loading: true, error: false, success: false });
+
           if (!finalValues.password) {
             delete finalValues.password;
           }
-          // const createdAccount = await poster(
-          //   `user/update/${initialValues.id}`,
-          //   finalValues,
-          // );
+          const updateAccount = await updateUser(
+            `user/${initialValues.id}`,
+            finalValues,
+          );
+
+          if (updateAccount.status == 200) {
+            setAccountStatus({ loading: false, error: false, success: true });
+            triggerRefresh?.();
+            reset(1500);
+          } else {
+            setAccountStatus({ loading: false, error: true, success: false });
+            reset(1500);
+          }
         } else if (page === "register") {
           try {
             await setupRecaptcha((args: any) => {
@@ -130,7 +167,11 @@ function Form({
         handleSubmit,
         isSubmitting,
       }) => (
-        <form onSubmit={handleSubmit} onChange={() => setErrorMessage("")}>
+        <form
+          ref={accountRef}
+          onSubmit={handleSubmit}
+          onChange={() => setErrorMessage("")}
+        >
           {step === 1 && (
             <motion.div
               animate={{ x: [100, 0] }}
@@ -415,9 +456,24 @@ function Form({
                   values.userName
                 ) && setStep?.(1)
               }
-              className={`w-full py-3 font-medium text-white`}
+              className={`flex w-full flex-row-reverse items-center justify-center gap-2 py-3 font-medium text-white`}
               disabled={Object.keys(errors).length > 0}
             >
+              <span>
+                {!accountStatus.error && accountStatus.loading && (
+                  <LoadingCircle />
+                )}
+              </span>
+              <span>
+                {accountStatus.error && !accountStatus.loading && (
+                  <XCircle color="red" />
+                )}
+              </span>
+              <span>
+                {!accountStatus.error &&
+                  !accountStatus.loading &&
+                  accountStatus.success && <CheckCircle2 />}
+              </span>
               {type}
             </button>
           </motion.div>

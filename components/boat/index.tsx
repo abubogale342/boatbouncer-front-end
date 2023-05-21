@@ -39,12 +39,12 @@ const Boat = ({
 
   return (
     <div
-      className={`mx-2 flex h-fit flex-col ${
+      className={`mx-2 flex h-fit w-fit flex-col ${
         page === "listing" ? "sm:flex-row" : ""
       } ${
         id && id == _id
           ? "relative order-first w-full flex-col border-[3px] border-[#219EBC] transition-[border-color] duration-1000 sm:flex-row"
-          : "w-full border-zinc-100 transition-[border-color] duration-1000"
+          : "w-fit border-zinc-100 transition-[border-color] duration-1000"
       } ${
         _id && " cursor-pointer "
       } gap-0 rounded-2xl border border-solid p-2 sm:ml-5 md:ml-10`}
@@ -112,7 +112,7 @@ const Boat = ({
               <span>4-8 Hours Rental</span>
             </li>
             <li className="whitespace-nowrap rounded-2xl bg-orange-50 px-2 py-1 text-orange-700">
-              <span>Captioned</span>
+              <span>Captained</span>
             </li>
           </ul>
         )}

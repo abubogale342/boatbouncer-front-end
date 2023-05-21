@@ -16,6 +16,7 @@ import Pay from "@/components/pay";
 import Chat from "@/components/chat";
 import { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
+import { CircularProgress } from "@mui/material";
 
 export default function Bookmarks(props: any) {
   const { ...user } = props;
@@ -122,9 +123,9 @@ export default function Bookmarks(props: any) {
   if (loading) {
     element = (
       <div className="h-60 w-full">
-        <h1 className="whitespace-nowrap text-center text-2xl text-gray-700">
-          Loading...
-        </h1>
+        <div className="flex h-full w-full items-center justify-center">
+          <CircularProgress color="inherit" size="12.5vh" />
+        </div>
       </div>
     );
   }

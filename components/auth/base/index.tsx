@@ -42,7 +42,7 @@ function BaseLayout({
                     variants={FADE_DOWN_ANIMATION_VARIANTS}
                   >
                     <Balancer>{action}</Balancer>
-                    {action == "Sign up" && (
+                    {(action == "Sign up" || action == "Update Profile") && (
                       <>
                         <button
                           type="button"

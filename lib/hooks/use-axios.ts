@@ -44,9 +44,10 @@ function useFetcher() {
 
   async function deleteBoat(path: string, boat: any) {
     let deleteBoat = await Axios.delete(path);
-    if (deleteBoat.statusText == "OK") {
+    if (deleteBoat.status == 200) {
       let filteredData = data.filter((d: any) => d._id !== boat._id);
       setData(filteredData);
+      setDataLength(filteredData.length);
     }
   }
 
@@ -115,6 +116,10 @@ function useFetcher() {
     return Axios.put(path, body);
   }
 
+  function updateUser(path: string, body: any) {
+    return Axios.put(path, body);
+  }
+
   function acceptOffer(path: string) {
     return Axios.put(path);
   }
@@ -138,6 +143,7 @@ function useFetcher() {
     acceptOffer,
     updateBoat,
     deleteBoat,
+    updateUser,
     dataLength,
     setData,
     loading,
