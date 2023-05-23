@@ -5,6 +5,7 @@ import Image from "next/image";
 import React from "react";
 import boat from "../../../public/boat.png";
 import logo from "../../../public/logo.svg";
+import logo2 from "../../../public/Boat Bouncer Logo 1.png";
 import { BoatImg } from "@/components/shared/icons/logo";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -26,15 +27,28 @@ function BaseLayout({
     <div className="h-screen overflow-hidden">
       <motion.div className="m-0 flex w-full flex-row items-center p-0">
         <div className="grid h-screen max-h-screen flex-grow grid-cols-1 gap-0">
-          <div className="flex flex-col gap-0  overflow-y-scroll [scrollbar-width:'none'] [-ms-overflow-y-style:'none'] [&::-webkit-scrollbar]:hidden">
+          <div className="flex flex-col gap-0  overflow-y-scroll [-ms-overflow-y-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden">
             <header className="h-fit self-start">
               <div className="flex items-center pb-3 pl-3 pt-3 sm:pl-8 sm:pt-8">
-                <Link href="/">
-                  <Image src={logo} alt="logo" />
+                <Link
+                  href="/"
+                  className="flex flex-row items-center gap-[10px]"
+                >
+                  <Image
+                    className={`ml-5 rounded-full md:ml-12`}
+                    src={logo2}
+                    width={35}
+                    height={35}
+                    alt=""
+                  />{" "}
+                  <p className="flex items-center text-xs font-extrabold leading-[15px] text-[#219EBC]">
+                    Boatbouncer
+                  </p>
+                  {/* <Image src={logo} alt="logo" /> */}
                 </Link>
               </div>
             </header>
-            <div className="mx-4 overflow-y-scroll [scrollbar-width:'none'] [-ms-overflow-y-style:'none'] [&::-webkit-scrollbar]:hidden">
+            <div className="mx-4 overflow-y-scroll [-ms-overflow-y-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden">
               <div className="flex justify-center">
                 <motion.div className="h-max w-max">
                   <motion.h1

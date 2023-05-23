@@ -6,7 +6,15 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 const PAGE_SIZE = 10;
 
-const SearchResults = ({ boats, total }: { boats: any; total: number }) => {
+const SearchResults = ({
+  boats,
+  total,
+  checked,
+}: {
+  boats: any;
+  total: number;
+  checked: boolean;
+}) => {
   const [pageNo, setPageNo] = useState(1);
   const { data: session } = useSession();
 
@@ -68,7 +76,15 @@ const SearchResults = ({ boats, total }: { boats: any; total: number }) => {
 
   return (
     <Fragment>
-      {element}
+      <div
+        className={`flex w-full flex-row flex-wrap justify-around gap-x-3 gap-y-5 ${
+          checked
+            ? "h-screen overflow-y-scroll [-ms-overflow-y-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden"
+            : ""
+        }`}
+      >
+        {element}
+      </div>
       {total > 10 && (
         <>
           <hr className="h-px w-full bg-black" />

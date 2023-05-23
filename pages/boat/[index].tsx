@@ -104,15 +104,10 @@ export default function Search(props: any) {
 export async function getServerSideProps(context: any) {
   const { req, params } = context;
 
-  const session = await getSession({ req });
+  let session = await getSession({ req });
 
   if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
+    session = null;
   }
 
   const myHeaders = new Headers();

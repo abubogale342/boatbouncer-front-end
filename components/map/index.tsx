@@ -78,7 +78,7 @@ export default function Map({}: IProps) {
       <div
         className="mb-10 ml-5 mr-10"
         ref={mapContainer}
-        style={{ height: "42.5vh" }}
+        style={{ height: "100vh", width: "100%" }}
       />
     </div>
   );

@@ -1,13 +1,21 @@
 import Image from "next/image";
 import icon from "../../public/icon.svg";
 import Icon from "./icons/icon";
+import logo2 from "public/Boat Bouncer Logo 1.png";
 
 export default function Footer() {
   return (
     <footer className="mt-auto hidden w-screen bg-slate-800 px-6 pb-6 pl-16 pt-12 md:block">
       <div className="mx-auto mb-12 flex flex-col items-start gap-12 text-white md:flex-row md:gap-6">
         <div className="flex flex-col font-manrope">
-          <Icon className="fill-white" />
+          {/* <Icon className="fill-white" /> */}
+          <Image
+            className="mb-2 rounded-full"
+            src={logo2}
+            width={35}
+            height={35}
+            alt=""
+          />{" "}
           <p className="mb-3 text-xl font-bold">BOAT BOUNCER</p>
           <p className="text-base font-medium opacity-40">
             Welcome to BoatBouncer, your premier destination for boat rentals

@@ -3,6 +3,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import Icon from "./icons/icon";
+import logo from "public/Boat Bouncer Logo 1.png";
 import Image from "next/image";
 
 export default function Header(props: any) {
@@ -10,10 +11,19 @@ export default function Header(props: any) {
     <header>
       <nav className="flex h-16 items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-          <Icon
+          {/* <Icon
             className={`ml-5 ${
               props?.page ? "fill-white" : "fill-cyan-600"
             } md:ml-12`}
+          /> */}
+          <Image
+            className={`ml-5 rounded-full ${
+              props?.page ? "fill-white" : "fill-cyan-600"
+            } md:ml-12`}
+            src={logo}
+            width={35}
+            height={35}
+            alt=""
           />
           <p
             className={`${
