@@ -124,7 +124,6 @@ export default function AutofillCheckoutDemo({ page }: { page: string }) {
   const handleRetrieve = useCallback(
     (res: AddressAutofillRetrieveResponse) => {
       const feature = res.features[0];
-      console.log("feature", feature);
       setFeature(feature);
       setShowMinimap(true);
       setShowFormExpanded(true);

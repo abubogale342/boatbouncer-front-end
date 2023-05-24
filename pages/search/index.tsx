@@ -75,7 +75,7 @@ export default function Search(props: any) {
 
         <div className="mx-4 mt-6 flex flex-col items-center justify-between gap-4 sm:mr-10 sm:mt-3 sm:flex-row sm:gap-20 md:gap-28 lg:gap-60">
           <Suspense fallback="Loading. . .">
-            <AddressAutoFill />
+            <AddressAutoFill page={props?.page} />
           </Suspense>
           <div className="ml-auto flex flex-row items-center gap-7">
             <label className="relative hidden w-28 cursor-pointer items-center sm:inline-flex">
