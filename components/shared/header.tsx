@@ -53,7 +53,7 @@ export default function Header(props: any) {
 
               <DropdownMenu.Portal>
                 <DropdownMenu.Content
-                  className="DropdownMenuContent"
+                  className="DropdownMenuContent z-10"
                   sideOffset={5}
                 >
                   <DropdownMenu.Item className="flex flex-row gap-3 py-3 pl-4 pr-8">
