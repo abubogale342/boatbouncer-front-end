@@ -20,7 +20,6 @@ const AddressAutoFill = dynamic(() => import("../../components/search"), {
 export default function Search(props: any) {
   const { data, error, ...user } = props;
 
-  const [searchVal, setSearchVal] = useState("");
   const [checked, setChecked] = useState(false);
 
   const handleMapViewChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -35,9 +34,9 @@ export default function Search(props: any) {
     );
   }
 
-  if (data?.data && data?.total === 0) {
+  if (!data || (data?.data && data?.total === 0)) {
     element = (
-      <div className="text-center">
+      <div className="py-10 text-center">
         <h1 className="text-2xl text-gray-700">
           There are no results that match your search
         </h1>
@@ -149,7 +148,7 @@ export async function getServerSideProps(context: any) {
 
   try {
     data = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/boat`,
+      `${process.env.NEXT_PUBLIC_API_URL}/boat?address=${query.query}`,
       requestOptions,
     );
 

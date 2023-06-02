@@ -16,12 +16,17 @@ function BaseLayout({
   prompt,
   step,
   setStep,
+  mandatory,
 }: {
   children: React.ReactNode;
   action: String;
   prompt: String;
   step?: number;
   setStep?: (step: number) => void;
+  mandatory?: {
+    errors: boolean;
+    values: boolean;
+  };
 }) {
   return (
     <div className="h-screen overflow-hidden">
@@ -35,7 +40,7 @@ function BaseLayout({
                   className="flex flex-row items-center gap-[10px]"
                 >
                   <Image
-                    className={`ml-5 rounded-full md:ml-12`}
+                    className={`rounded-full`}
                     src={logo2}
                     width={35}
                     height={35}
@@ -56,26 +61,6 @@ function BaseLayout({
                     variants={FADE_DOWN_ANIMATION_VARIANTS}
                   >
                     <Balancer>{action}</Balancer>
-                    {(action == "Sign up" || action == "Update Profile") && (
-                      <>
-                        <button
-                          type="button"
-                          disabled={step === 1}
-                          onClick={() => setStep?.(1)}
-                          className={`${step === 1 ? "hidden" : ""}`}
-                        >
-                          <ArrowLeft />
-                        </button>
-                        <button
-                          type="button"
-                          disabled={step === 2}
-                          onClick={() => setStep?.(2)}
-                          className={`${step === 2 ? "hidden " : ""}`}
-                        >
-                          <ArrowRight />
-                        </button>
-                      </>
-                    )}
                   </motion.h1>
                   <motion.p
                     className="mb-8 text-gray-900"

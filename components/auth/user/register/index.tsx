@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BaseLayout from "../../base";
 import Balancer from "react-wrap-balancer";
 import { Google } from "@/components/shared/icons";
@@ -11,11 +11,25 @@ type Props = {
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 };
 
+type step = {
+  errors: boolean;
+  values: boolean;
+};
+
 function Register({ handleSubmit }: Props) {
   const [step, setSteps] = useState(1);
 
+  const [mandatoryStep, setMandatoryStep] = useState({
+    errors: false,
+    values: false,
+  });
+
   function setStep(step: number) {
     setSteps(step);
+  }
+
+  function setMandatory(obj: step) {
+    setMandatoryStep(obj);
   }
 
   const initialValues = {
@@ -39,11 +53,13 @@ function Register({ handleSubmit }: Props) {
       prompt="Create your account"
       step={step}
       setStep={setSteps}
+      mandatory={mandatoryStep}
     >
       <Form
         handleSubmit={handleSubmit}
         type="Create account"
         initialValues={initialValues}
+        setMandatory={setMandatory}
         page="register"
         step={step}
         setStep={setStep}

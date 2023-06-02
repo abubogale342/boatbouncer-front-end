@@ -61,6 +61,8 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
             securityAllowance: `${boatInfo.securityAllowance} USD`,
           };
 
+          console.log("finalValues", finalValues);
+
           if (editableBoat) {
             let difference = objectDiff(editableBoat, boatInfo);
 
@@ -103,7 +105,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
           setValues,
         }) => {
           return (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="sm:mx-10 md:mx-20">
               <div className="flex flex-col items-start justify-between gap-4 px-4 sm:flex-row sm:items-center">
                 <div className="flex flex-col items-start">
                   <h2 className="text-3xl font-medium text-gray-900">
@@ -155,8 +157,8 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                 </div>
               </div>
 
-              <hr className="mt-6 h-px border-0 bg-gray-200 sm:mt-0" />
-              <div className="flex flex-col sm:flex-row">
+              {/* <hr className="mt-6 h-px border-0 bg-gray-200 sm:mt-0" /> */}
+              <div className="flex flex-col lg:flex-row">
                 <BasicInfos
                   {...{
                     values,
@@ -173,7 +175,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                   className="hidden w-px bg-gray-200 sm:block"
                   decorative
                   orientation="vertical"
-                  style={{ margin: "0 15px" }}
+                  style={{ margin: "25x 15px" }}
                 />
 
                 <div>

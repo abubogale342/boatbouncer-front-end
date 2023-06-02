@@ -1,20 +1,20 @@
-import { SearchBox } from "@mapbox/search-js-react";
-import { SearchBoxRetrieveResponse } from "@mapbox/search-js-core";
+import { AddressAutofill } from "@mapbox/search-js-react";
+import { AddressAutofillRetrieveResponse } from "@mapbox/search-js-core";
 
 import { useState } from "react";
 
 const Search = ({ page }: { page?: string }) => {
   const [searchVal, setSearchVal] = useState("");
-  // const [feature, setFeature] = useState<string | undefined>();
 
-  const handleChange = (value: string) => {
-    setSearchVal(value);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchVal(event.target.value);
   };
 
-  const handleRetrieve = (res: SearchBoxRetrieveResponse) => {
+  const handleRetrieve = (res: AddressAutofillRetrieveResponse) => {
     const feature = res.features[0];
-    // setFeature(feature.properties.address);
-    setSearchVal(feature.properties.address);
+    let place_name = feature.properties.address_line1 ?? "";
+
+    setSearchVal(place_name);
   };
 
   return (
@@ -24,6 +24,7 @@ const Search = ({ page }: { page?: string }) => {
           className="flex w-full items-center"
           action={`/search?query=${searchVal}`}
           method="POST"
+          id="searchForm"
         >
           <label htmlFor="voice-search" className="sr-only">
             Search
@@ -45,19 +46,30 @@ const Search = ({ page }: { page?: string }) => {
               </svg>
             </div>
 
-            <SearchBox
-              options={{ country: "us" }}
+            <AddressAutofill
+              onRetrieve={handleRetrieve}
+              accessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+              options={{ country: "US" }}
               theme={{
                 variables: {
                   borderRadius: "8px",
                   padding: "16px 40px 16px 64px",
                 },
               }}
-              accessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-              onChange={handleChange}
-              onRetrieve={handleRetrieve}
-              value={searchVal}
-            />
+            >
+              <input
+                name="address"
+                autoComplete="address-line1"
+                value={searchVal}
+                onChange={handleChange}
+                className={`${
+                  page == "home"
+                    ? "block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 pr-16 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                    : "block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                }`}
+                placeholder="Where would you like to travel ;)"
+              />
+            </AddressAutofill>
           </div>
           <button
             type="submit"

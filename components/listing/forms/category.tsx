@@ -33,9 +33,9 @@ const CategoryForm = ({
   };
 
   return (
-    <div className="mt-6 px-4">
+    <div className="mt-0 px-4">
       <p className="text-xl font-semibold text-gray-900">Category</p>
-      <hr className="mt-3 h-px border-0 bg-gray-200" />
+      <hr className="mb-4 mt-2 h-px border-0 bg-gray-200" />
 
       <div className="flex flex-col">
         <label htmlFor="category" className="mb-2 text-xs text-gray-700">

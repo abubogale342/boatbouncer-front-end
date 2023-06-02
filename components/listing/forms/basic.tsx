@@ -2,8 +2,14 @@ import {
   updateBasicInfoField,
   updateLocationField,
 } from "features/boat/boatSlice";
+import dynamic from "next/dynamic";
 import { useDispatch } from "react-redux";
 import { useDebouncedCallback } from "use-debounce";
+
+const AddressAutoFill = dynamic(() => import("./searchAutofill"), {
+  suspense: true,
+  ssr: false,
+});
 
 const BasicInfo = ({
   values,
@@ -28,16 +34,16 @@ const BasicInfo = ({
     dispatch(updateBasicInfoField({ key, value }));
   }, 500);
 
-  const updateLocationFields = useDebouncedCallback((key, value) => {
+  const updateLocationFields = (key: string, value: string) => {
     dispatch(updateLocationField({ key, value }));
-  }, 500);
+  };
 
   return (
-    <div className="w-full px-4 sm:mt-6 sm:w-1/2">
+    <div className="mt-6 px-4 lg:w-2/3">
       <p className="text-xl font-semibold text-gray-900">Basic Information</p>
       <hr className="mb-6 mt-3 h-px border-0 bg-gray-200" />
-      <div className="mb-4 flex flex-col gap-6">
-        <div className="flex flex-col">
+      <div className="mb-4 flex flex-col gap-6 sm:flex-row">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Boat Name</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
@@ -55,7 +61,7 @@ const BasicInfo = ({
             <p className="text-red-500">{errors.boatName as string}</p>
           )}
         </div>
-        <div className="flex flex-col">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Boat Type</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
@@ -74,8 +80,8 @@ const BasicInfo = ({
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col">
+      <div className="flex flex-col gap-6 sm:flex-row">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Model</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
@@ -93,7 +99,7 @@ const BasicInfo = ({
             <p className="text-red-500">{errors.model as string}</p>
           )}
         </div>
-        <div className="flex flex-col">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Length (ft.)</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
@@ -112,8 +118,8 @@ const BasicInfo = ({
           )}
         </div>
       </div>
-      <div className="mt-4 flex flex-col gap-6">
-        <div className="flex flex-col">
+      <div className="mt-4 flex flex-col gap-6 sm:flex-row">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Manufacturer</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
@@ -130,7 +136,7 @@ const BasicInfo = ({
             <p className="text-red-500">{errors.manufacturer as string}</p>
           )}
         </div>
-        <div className="flex flex-col">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Year</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
@@ -152,7 +158,7 @@ const BasicInfo = ({
         </div>
       </div>
       <hr className="my-6 h-px border-0 bg-gray-200" />
-      <div className="flex flex-col">
+      <div className="flex w-full flex-col">
         <label className="mb-2 text-sm font-medium text-gray-700">
           Description
         </label>
@@ -172,22 +178,20 @@ const BasicInfo = ({
           <p className="text-red-500">{errors.description as string}</p>
         )}
       </div>
-      <div className="mt-4 flex flex-col gap-6">
-        <div className="flex flex-col">
+      <div className="mt-4 flex flex-col gap-6 sm:flex-row">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Address</label>
-          <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
+          <AddressAutoFill
+            name="Address"
             placeholder="Address"
             onBlur={handleBlur}
-            name="address"
-            value={values.address}
-            onChange={(event) => {
-              handleChange(event);
-              updateLocationFields(event.target.name, event.target.value);
-            }}
+            onChange={handleChange}
+            onUpdate={updateLocationFields}
+            values={values}
+            setValues={setValues}
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Zip Code</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
@@ -195,6 +199,7 @@ const BasicInfo = ({
             onBlur={handleBlur}
             name="zipCode"
             value={values.zipCode}
+            autoComplete="postal-code"
             onChange={(event) => {
               handleChange(event);
               updateLocationFields(event.target.name, event.target.value);
@@ -202,14 +207,15 @@ const BasicInfo = ({
           />
         </div>
       </div>
-      <div className="mt-4 flex flex-col gap-6">
-        <div className="flex flex-col">
+      <div className="mt-4 flex flex-col gap-6 sm:flex-row">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">City</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
             placeholder="City"
             onBlur={handleBlur}
             name="city"
+            autoComplete="address-level2"
             value={values.city}
             onChange={(event) => {
               handleChange(event);
@@ -217,12 +223,13 @@ const BasicInfo = ({
             }}
           />
         </div>
-        <div className="flex flex-col">
+        <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">State</label>
           <input
             className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
             placeholder="State"
             onBlur={handleBlur}
+            autoComplete="address-level1"
             name="state"
             value={values.state}
             onChange={(event) => {

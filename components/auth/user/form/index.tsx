@@ -8,7 +8,7 @@ import { auth } from "@/lib/config";
 import Router from "next/router";
 import useFetcher from "@/lib/hooks/use-axios";
 import { LoadingCircle } from "@/components/shared/icons";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
 
 export const setupRecaptcha = (cb: any) => {
   const recaptcha = new RecaptchaVerifier(
@@ -20,6 +20,11 @@ export const setupRecaptcha = (cb: any) => {
   );
 
   recaptcha.render();
+};
+
+type step = {
+  errors: boolean;
+  values: boolean;
 };
 
 type Props = {
@@ -43,6 +48,7 @@ type Props = {
   setStep?: (step: number) => void;
   step?: number;
   triggerRefresh?: () => void;
+  setMandatory?: (obj: step) => void;
 };
 
 function Form({
@@ -53,9 +59,9 @@ function Form({
   setStep,
   step,
   triggerRefresh,
+  setMandatory,
 }: Props) {
-  // const [step, setStep] = useState(1);
-  // const { executeRecaptcha } = useGoogleReCaptcha();
+  const submitFormRef = useRef<HTMLButtonElement | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const { updateUser } = useFetcher();
   const [accountStatus, setAccountStatus] = useState({
@@ -73,13 +79,19 @@ function Form({
   };
 
   const recaptchAfterValidation = async (res: any, credentials: any) => {
+    if (submitFormRef.current) {
+      submitFormRef.current.style.display = "none";
+    }
     const createdAccount = await poster("user/createAccount", credentials);
 
     if (createdAccount.code) {
       setErrorMessage(
-        createdAccount.response.data?.message ||
+        createdAccount.response?.data?.message ||
           createdAccount.response.data?.errors[0]?.msg,
       );
+      if (submitFormRef.current) {
+        submitFormRef.current.style.display = "block";
+      }
     } else {
       setErrorMessage("");
       try {
@@ -149,7 +161,7 @@ function Form({
           }
         } else if (page === "register") {
           try {
-            await setupRecaptcha((args: any) => {
+            setupRecaptcha((args: any) => {
               recaptchAfterValidation(args, finalValues);
             });
           } catch (error) {
@@ -170,7 +182,21 @@ function Form({
         <form
           ref={accountRef}
           onSubmit={handleSubmit}
-          onChange={() => setErrorMessage("")}
+          onChange={() => {
+            setErrorMessage("");
+            setMandatory?.({
+              values: !!(
+                values.confirmPassword &&
+                values.email &&
+                values.firstName &&
+                values.lastName &&
+                values.newPassword &&
+                values.phoneNumber &&
+                values.userName
+              ),
+              errors: Object.keys(errors).length > 0,
+            });
+          }}
         >
           {step === 1 && (
             <motion.div
@@ -438,6 +464,27 @@ function Form({
             ></div>
           </div>
 
+          <>
+            <button
+              type="button"
+              disabled={step === 1}
+              onClick={() => setStep?.(1)}
+              className={`${step === 1 ? "hidden" : ""} w-full`}
+            >
+              <ArrowLeft />
+            </button>
+            <button
+              type="button"
+              disabled={step === 2}
+              onClick={() => setStep?.(2)}
+              className={`${
+                step === 2 ? "hidden " : ""
+              } flex w-full justify-end`}
+            >
+              <ArrowRight />
+            </button>
+          </>
+
           <motion.div
             className={`mt-6 rounded-md text-center ${
               Object.keys(errors).length > 0 ? "bg-cyan-200" : "bg-cyan-600"
@@ -445,6 +492,7 @@ function Form({
           >
             <button
               type="submit"
+              ref={submitFormRef}
               onClick={() =>
                 !(
                   values.confirmPassword &&

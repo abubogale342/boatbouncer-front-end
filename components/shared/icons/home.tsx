@@ -1,5 +1,5 @@
 import Image from "next/image";
-import home from "public/home.png";
+import home from "public/home-min.png";
 
 export const HomeIcon = (
   <Image

@@ -12,7 +12,7 @@ const AddListing = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
       >
         <BoatForm cancelHn={cancelHn} />
 
-        <div className="mt-10 px-4">
+        <div className="mt-4 px-4 sm:mx-10 md:mx-20">
           <p className="text-xl font-semibold text-gray-900">
             Cancelation Policy
           </p>
