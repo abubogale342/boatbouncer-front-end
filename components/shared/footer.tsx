@@ -58,9 +58,9 @@ export default function Footer() {
           2022 BoatBouncer. All rights reserved. -- Privacy Policy - Terms of
           Services
         </p>
-        <p>
+        {/* <p>
           <span>Supported by</span> <span className="font-bold">Startup</span>
-        </p>
+        </p> */}
       </div>
     </footer>
   );
