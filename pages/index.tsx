@@ -8,7 +8,7 @@ import { HomeIcon } from "@/components/shared/icons/home";
 import dynamic from "next/dynamic";
 
 const AddressAutoFill = dynamic(
-  () => import("../components/search").then((mod) => mod.default),
+  () => import("../components/search").then((mod) => mod.Search),
   {
     ssr: false,
   },
