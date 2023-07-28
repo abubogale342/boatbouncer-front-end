@@ -8,7 +8,6 @@ import { HomeIcon } from "@/components/shared/icons/home";
 import dynamic from "next/dynamic";
 
 const AddressAutoFill = dynamic(() => import("../components/search"), {
-  suspense: true,
   ssr: false,
 });
 
