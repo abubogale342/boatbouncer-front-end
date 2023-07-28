@@ -7,9 +7,12 @@ import { Suspense, useState } from "react";
 import { HomeIcon } from "@/components/shared/icons/home";
 import dynamic from "next/dynamic";
 
-const AddressAutoFill = dynamic(() => import("../components/search"), {
-  ssr: false,
-});
+const AddressAutoFill = dynamic(
+  () => import("../components/search").then((mod) => mod.default),
+  {
+    ssr: false,
+  },
+);
 
 export default function Home(props: any) {
   const [searchVal, setSearchVal] = useState("");
