@@ -12,12 +12,10 @@ import { ChangeEvent, useState } from "react";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 
-const AddressAutoFill = dynamic(
-  () => import("../../components/search").then((mod) => mod.Search),
-  {
-    ssr: false,
-  },
-);
+const AddressAutoFill = dynamic(() => import("../../components/search"), {
+  suspense: true,
+  ssr: false,
+});
 
 export default function Search(props: any) {
   const { data, error, ...user } = props;

@@ -74,8 +74,8 @@ export function getter<JSON = any>(path: RequestInfo): Promise<JSON> {
 export function poster(path: string, body?: any) {
   return axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}/${path}`, body)
-    .then((res) => res.data)
-    .catch((err) => err);
+    .then((response) => response.data)
+    .catch((error) => error);
 }
 
 export function objectDiff(obj1: any, obj2: any) {

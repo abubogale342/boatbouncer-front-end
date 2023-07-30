@@ -3,7 +3,7 @@ import { AddressAutofillRetrieveResponse } from "@mapbox/search-js-core";
 
 import { useState } from "react";
 
-export const Search = ({ page }: { page?: string }) => {
+const Search = ({ page }: { page?: string }) => {
   const [searchVal, setSearchVal] = useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,3 +86,5 @@ export const Search = ({ page }: { page?: string }) => {
     </>
   );
 };
+
+export default Search;

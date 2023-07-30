@@ -81,22 +81,23 @@ export const authOptions: NextAuthOptions = {
         credentials: Record<string, string> | undefined,
         req: Pick<RequestInternal, "headers" | "body" | "query" | "method">,
       ) {
-        try {
-          // check user existance
-          if (credentials?.email && credentials?.password) {
-            const login = await poster("user/login", {
-              email: credentials.email,
-              password: credentials.password,
-            });
+        // check user existance
+        if (credentials?.email && credentials?.password) {
+          const login = await poster("user/login", {
+            email: credentials.email,
+            password: credentials.password,
+          });
 
-            if (!login) {
-              throw new Error("error occured, please try again.");
-            }
+          // console.log(login.response.data.message);
+          // console.log(login.response.status);
 
+          if (login._id) {
             return login;
           }
-        } catch (error) {
-          throw new Error("error occured, please try again.");
+
+          if (login.response.status == "401") {
+            throw new Error(login.response.data.message);
+          }
         }
       },
     }),

@@ -37,23 +37,21 @@ function Login({ handleSubmit }: Props) {
         initialValues={{ email: "", password: "" }}
         validationSchema={loginSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          try {
-            const status = await signIn("credentials", {
-              redirect: false,
-              email: values.email,
-              password: values.password,
-              callbackUrl: "/",
+          const status = await signIn("credentials", {
+            redirect: false,
+            email: values.email,
+            password: values.password,
+            callbackUrl: "/",
+          });
+
+          if (status?.ok && status?.url) {
+            setErrorMessage("");
+
+            Router.push({
+              pathname: status?.url,
             });
-
-            if (status?.ok && status?.url) {
-              setErrorMessage("");
-
-              Router.push({
-                pathname: status?.url,
-              });
-            }
-          } catch (error) {
-            setErrorMessage("Error occured,  please try again!");
+          } else {
+            setErrorMessage(status?.error ?? "Unknown error occured");
           }
         }}
       >
@@ -69,9 +67,11 @@ function Login({ handleSubmit }: Props) {
           <form onSubmit={handleSubmit} onChange={() => setErrorMessage("")}>
             <fieldset>
               <div className="mb-5 flex flex-col">
-                <label htmlFor="useremailInput">Email</label>
+                <label htmlFor="useremailInput" className="mb-1">
+                  Email
+                </label>
                 <input
-                  className="rounded-md"
+                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                   name="email"
                   type="email"
                   id="emailInput"
@@ -80,30 +80,32 @@ function Login({ handleSubmit }: Props) {
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
-                <p className="text-red-500">
+                <p className="ml-1 text-sm text-orange-700">
                   {errors.email && touched.email && errors.email}
                 </p>
               </div>
               <div className="flex flex-col">
-                <label htmlFor="passwordInput">Password</label>
+                <label htmlFor="passwordInput" className="mb-1">
+                  Password
+                </label>
                 <input
                   type="password"
                   name="password"
                   id="passwordInput"
-                  className="rounded-md placeholder:text-3xl"
+                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm placeholder:text-3xl"
                   value={values.password}
                   placeholder="......."
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
-                <p className="text-red-500">
+                <p className="ml-1 text-sm text-orange-700">
                   {errors.password && touched.password && errors.password}
                 </p>
               </div>
               <div className="flex flex-row justify-between gap-8">
                 <div className="my-6 flex flex-row items-center gap-1">
                   <input
-                    className="rounded-sm"
+                    className="rounded-sm border-gray-300 outline-none"
                     type="checkbox"
                     id="RememberMeInput"
                     onChange={(e) => setRememberMe(e.target.checked)}
@@ -123,10 +125,10 @@ function Login({ handleSubmit }: Props) {
                 </button>
               </div>
               {errorMessage && (
-                <div className="text-center text-red-500">{errorMessage}</div>
+                <div className="text-center text-red-700">{errorMessage}</div>
               )}
 
-              <div className="cursor-pointer rounded-md bg-cyan-600 text-center">
+              <div className="cursor-pointer rounded-md bg-cyan-600 text-center hover:bg-cyan-700 active:translate-y-[1.5px]">
                 <button
                   type="submit"
                   disabled={isLoading}
@@ -140,7 +142,7 @@ function Login({ handleSubmit }: Props) {
         )}
       </Formik>
 
-      <div className="mt-4 mb-8 rounded-md border-2 border-gray-300 text-center">
+      <div className="mb-8 mt-4 rounded-md border-2 border-gray-300 text-center">
         <button
           className="flex w-full justify-center py-3"
           onClick={signInWithGoogleHandler}

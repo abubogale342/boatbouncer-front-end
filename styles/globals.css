@@ -265,3 +265,7 @@ body::-webkit-scrollbar-thumb:hover {
   border-radius: 1rem;
   color: rgb(53, 53, 53);
 }
+
+.cursor-disabled {
+  cursor: not-allowed;
+}

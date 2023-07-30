@@ -7,8 +7,15 @@ import { RecaptchaVerifier } from "firebase/auth";
 import { auth } from "@/lib/config";
 import Router from "next/router";
 import useFetcher from "@/lib/hooks/use-axios";
-import { LoadingCircle } from "@/components/shared/icons";
-import { ArrowLeft, ArrowRight, CheckCircle2, XCircle } from "lucide-react";
+import { LoadingCircle, LoadingSpinner } from "@/components/shared/icons";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  XCircle,
+} from "lucide-react";
 
 export const setupRecaptcha = (cb: any) => {
   const recaptcha = new RecaptchaVerifier(
@@ -69,6 +76,7 @@ function Form({
     error: false,
     success: false,
   });
+  const [recaptchaLoader, setRecaptchaLoader] = useState(false);
 
   const accountRef = useRef<HTMLFormElement | null>(null);
 
@@ -79,20 +87,13 @@ function Form({
   };
 
   const recaptchAfterValidation = async (res: any, credentials: any) => {
+    setRecaptchaLoader(false);
     if (submitFormRef.current) {
       submitFormRef.current.style.display = "none";
     }
     const createdAccount = await poster("user/createAccount", credentials);
 
-    if (createdAccount.code) {
-      setErrorMessage(
-        createdAccount.response?.data?.message ||
-          createdAccount.response.data?.errors[0]?.msg,
-      );
-      if (submitFormRef.current) {
-        submitFormRef.current.style.display = "block";
-      }
-    } else {
+    if (createdAccount._id) {
       setErrorMessage("");
       try {
         const phoneNumberRes = await poster("user/sendSms", {
@@ -106,6 +107,18 @@ function Form({
         });
       } catch (error) {
         setErrorMessage("Too many attempts, try later.");
+      }
+
+      return;
+    }
+
+    if (createdAccount?.response?.status) {
+      setErrorMessage(
+        createdAccount.response?.data?.message ||
+          createdAccount.response.data?.errors[0]?.msg,
+      );
+      if (submitFormRef.current) {
+        submitFormRef.current.style.display = "block";
       }
     }
   };
@@ -161,6 +174,7 @@ function Form({
           }
         } else if (page === "register") {
           try {
+            setRecaptchaLoader(true);
             setupRecaptcha((args: any) => {
               recaptchAfterValidation(args, finalValues);
             });
@@ -197,13 +211,14 @@ function Form({
               errors: Object.keys(errors).length > 0,
             });
           }}
+          className="relative"
         >
           {step === 1 && (
             <motion.div
               animate={{ x: [100, 0] }}
               transition={{ duration: 0.25 }}
             >
-              <div className="mb-5 flex flex-col">
+              <div className="mb-6 flex flex-col">
                 <label
                   htmlFor="usernameInput"
                   className={`${page === "register" ? "hidden" : ""}`}
@@ -212,7 +227,7 @@ function Form({
                 </label>
                 <input
                   name="userName"
-                  className="w-full rounded-md"
+                  className="w-full rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                   type="text"
                   id="usernameInput"
                   placeholder="Enter your username"
@@ -222,10 +237,12 @@ function Form({
                 />
 
                 {errors.userName && touched.userName && (
-                  <p className="text-red-500">{errors.userName}</p>
+                  <p className="ml-1 text-sm text-orange-700">
+                    {errors.userName}
+                  </p>
                 )}
               </div>
-              <div className="mb-5 grid grid-cols-2">
+              <div className="mb-6 grid grid-cols-2">
                 <div className="mr-2 flex flex-col">
                   <label
                     htmlFor="firstnameInput"
@@ -235,7 +252,7 @@ function Form({
                   </label>
                   <input
                     name="firstName"
-                    className="rounded-md"
+                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     type="text"
                     id="firstnameInput"
                     placeholder="First name"
@@ -245,7 +262,9 @@ function Form({
                   />
 
                   {errors.firstName && touched.firstName && (
-                    <p className="text-red-500">{errors.firstName}</p>
+                    <p className="ml-1 text-sm text-orange-700">
+                      {errors.firstName}
+                    </p>
                   )}
                 </div>
                 <div className="ml-2 flex flex-col">
@@ -257,7 +276,7 @@ function Form({
                   </label>
                   <input
                     name="lastName"
-                    className="rounded-md"
+                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     type="text"
                     id="lastnameInput"
                     placeholder="Last name"
@@ -267,11 +286,13 @@ function Form({
                   />
 
                   {errors.lastName && touched.lastName && (
-                    <p className="text-red-500">{errors.lastName}</p>
+                    <p className="ml-1 text-sm text-orange-700">
+                      {errors.lastName}
+                    </p>
                   )}
                 </div>
               </div>
-              <div className="mb-5 flex flex-col">
+              <div className="mb-6 flex flex-col">
                 <label
                   htmlFor="phoneNumberInput"
                   className={`${page === "register" ? "hidden" : ""}`}
@@ -280,7 +301,7 @@ function Form({
                 </label>
                 <input
                   name="phoneNumber"
-                  className="rounded-md"
+                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                   type="tel"
                   id="phoneNumberInput"
                   placeholder="phone number"
@@ -290,10 +311,12 @@ function Form({
                 />
 
                 {errors.phoneNumber && touched.phoneNumber && (
-                  <p className="text-red-500">{errors.phoneNumber}</p>
+                  <p className="ml-1 text-sm text-orange-700">
+                    {errors.phoneNumber}
+                  </p>
                 )}
               </div>
-              <div className="mb-5 flex flex-col">
+              <div className="mb-6 flex flex-col">
                 <label
                   htmlFor="emailInput"
                   className={`${page === "register" ? "hidden" : ""}`}
@@ -301,7 +324,7 @@ function Form({
                   Email
                 </label>
                 <input
-                  className="rounded-md"
+                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                   name="email"
                   type="email"
                   id="emailInput"
@@ -312,61 +335,61 @@ function Form({
                 />
 
                 {errors.email && touched.email && (
-                  <p className="text-red-500">{errors.email}</p>
+                  <p className="ml-1 text-sm text-orange-700">{errors.email}</p>
                 )}
               </div>
 
-              <div className="mb-5 grid grid-cols-2">
-                <div className="mr-2 flex flex-col">
-                  <label
-                    htmlFor="passwordInput"
-                    className={`${page == "register" ? "hidden" : ""}`}
-                  >
-                    {page === "update" ? "New Password" : "Password"}
-                  </label>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    id="newPasswordInput"
-                    className="rounded-md"
-                    value={values.newPassword}
-                    placeholder={`${
-                      page === "update" ? "New Password" : "Password"
-                    }`}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
+              <div className="mb-6 flex flex-col">
+                <label
+                  htmlFor="passwordInput"
+                  className={`${page == "register" ? "hidden" : ""}`}
+                >
+                  {page === "update" ? "New Password" : "Password"}
+                </label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  id="newPasswordInput"
+                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                  value={values.newPassword}
+                  placeholder={`${
+                    page === "update" ? "New Password" : "Password"
+                  }`}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                />
 
-                  {errors.newPassword && touched.newPassword && (
-                    <p className="text-red-500  ">{errors.newPassword}</p>
+                {errors.newPassword && touched.newPassword && (
+                  <p className="ml-1 text-sm text-orange-700">
+                    {errors.newPassword}
+                  </p>
+                )}
+              </div>
+              <div className="mb-6 flex flex-col">
+                <label
+                  htmlFor="passwordInput"
+                  className={`${page == "register" ? "hidden" : ""}`}
+                >
+                  {page === "update" ? "Confirm Password" : "Retype Password"}
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPasswordInput"
+                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                  value={values.confirmPassword}
+                  placeholder={`confirm password`}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                />
+
+                {!errors.newPassword &&
+                  errors.confirmPassword &&
+                  touched.confirmPassword && (
+                    <p className="ml-1 h-fit text-sm text-orange-700">
+                      {errors.confirmPassword}
+                    </p>
                   )}
-                </div>
-                <div className="ml-2 flex flex-col">
-                  <label
-                    htmlFor="passwordInput"
-                    className={`${page == "register" ? "hidden" : ""}`}
-                  >
-                    {page === "update" ? "Confirm Password" : "Retype Password"}
-                  </label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    id="confirmPasswordInput"
-                    className="rounded-md"
-                    value={values.confirmPassword}
-                    placeholder={`confirm password`}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-
-                  {!errors.newPassword &&
-                    errors.confirmPassword &&
-                    touched.confirmPassword && (
-                      <p className="h-fit text-red-500">
-                        {errors.confirmPassword}
-                      </p>
-                    )}
-                </div>
               </div>
             </motion.div>
           )}
@@ -375,7 +398,7 @@ function Form({
               animate={{ x: [-100, 0] }}
               transition={{ duration: 0.25 }}
             >
-              <div className="mb-5 grid grid-cols-2 items-end">
+              <div className="mb-6 grid grid-cols-2 items-end">
                 <div className="mr-2 flex flex-col">
                   <label
                     htmlFor="stateInput"
@@ -385,7 +408,7 @@ function Form({
                   </label>
                   <input
                     name="state"
-                    className="rounded-md"
+                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     type="text"
                     id="stateInput"
                     placeholder="state"
@@ -403,7 +426,7 @@ function Form({
                   </label>
                   <input
                     name="zipCode"
-                    className="rounded-md"
+                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     type="text"
                     id="zipCodeInput"
                     placeholder="zipCode"
@@ -413,7 +436,7 @@ function Form({
                   />
                 </div>
               </div>
-              <div className="mb-5 grid grid-cols-2 items-end">
+              <div className="mb-6 grid grid-cols-2 items-end">
                 <div className="mr-2 flex flex-col">
                   <label
                     htmlFor="addressInput"
@@ -423,7 +446,7 @@ function Form({
                   </label>
                   <input
                     name="address"
-                    className="rounded-md"
+                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     type="text"
                     id="addressInput"
                     placeholder="address"
@@ -441,7 +464,7 @@ function Form({
                   </label>
                   <input
                     name="city"
-                    className="rounded-md"
+                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     type="text"
                     id="cityInput"
                     placeholder="city"
@@ -454,7 +477,7 @@ function Form({
             </motion.div>
           )}
           {errorMessage && (
-            <div className="text-center text-red-500">{errorMessage}</div>
+            <div className="text-center text-orange-700">{errorMessage}</div>
           )}
 
           <div className="mt-6 flex w-full justify-center text-center">
@@ -469,9 +492,11 @@ function Form({
               type="button"
               disabled={step === 1}
               onClick={() => setStep?.(1)}
-              className={`${step === 1 ? "hidden" : ""} w-full`}
+              className={`${
+                step === 1 ? "hidden" : ""
+              } absolute -left-0 bottom-14 w-fit rounded-full bg-gray-300 px-1 py-1 opacity-60 `}
             >
-              <ArrowLeft />
+              <ChevronLeft />
             </button>
             <button
               type="button"
@@ -479,17 +504,13 @@ function Form({
               onClick={() => setStep?.(2)}
               className={`${
                 step === 2 ? "hidden " : ""
-              } flex w-full justify-end`}
+              } absolute -right-0 bottom-14 ml-auto flex w-fit rounded-full bg-gray-300 px-1 py-1 opacity-60`}
             >
-              <ArrowRight />
+              <ChevronRight />
             </button>
           </>
 
-          <motion.div
-            className={`mt-6 rounded-md text-center ${
-              Object.keys(errors).length > 0 ? "bg-cyan-200" : "bg-cyan-600"
-            }`}
-          >
+          <motion.div className={`mt-6 rounded-md text-center`}>
             <button
               type="submit"
               ref={submitFormRef}
@@ -504,7 +525,9 @@ function Form({
                   values.userName
                 ) && setStep?.(1)
               }
-              className={`flex w-full flex-row-reverse items-center justify-center gap-2 py-3 font-medium text-white`}
+              className={`flex w-full ${
+                Object.keys(errors).length > 0 ? "" : ""
+              } flex-row-reverse items-center justify-center gap-2 rounded-md bg-cyan-600 py-3 font-medium  text-white hover:bg-cyan-700 active:translate-y-[1.5px]`}
               disabled={Object.keys(errors).length > 0}
             >
               <span>
@@ -522,6 +545,7 @@ function Form({
                   !accountStatus.loading &&
                   accountStatus.success && <CheckCircle2 />}
               </span>
+              {recaptchaLoader && <LoadingCircle />}
               {type}
             </button>
           </motion.div>

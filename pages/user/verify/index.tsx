@@ -1,14 +1,17 @@
 import BaseLayout from "@/components/auth/base";
 import Meta from "@/components/layout/meta";
+import { LoadingCircle } from "@/components/shared/icons";
 import { poster } from "@/lib/utils";
 import { Formik } from "formik";
 import Router, { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Index() {
   const router = useRouter();
   const { query } = router;
   const { phoneNumber } = query;
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationError, setVerificationError] = useState<any>(null);
 
   useEffect(() => {
     if (phoneNumber) return;
@@ -32,19 +35,28 @@ function Index() {
         <Formik
           initialValues={{ phoneNumber: phoneNumber, code: "" }}
           onSubmit={async (values, { setSubmitting }) => {
-            try {
-              const verifiedSms = await poster("user/otpVerify", {
-                phoneNumber: values.phoneNumber,
-                verificationCode: values.code,
-              });
+            setIsVerifying(true);
+            setVerificationError(null);
+            const verifiedSms = await poster("user/otpVerify", {
+              phoneNumber: values.phoneNumber,
+              verificationCode: values.code,
+            });
 
-              if (verifiedSms.phoneNumber === phoneNumber) {
-                Router.push({
-                  pathname: "/user/login",
-                });
-              }
-            } catch (error) {
-              console.log(error);
+            if (verifiedSms._id || verifiedSms.phoneNumber == phoneNumber) {
+              setVerificationError(null);
+              Router.push({
+                pathname: "/user/login",
+              });
+              return;
+            }
+
+            if (verifiedSms?.response?.status) {
+              setVerificationError(
+                verifiedSms.response?.data?.message ||
+                  verifiedSms.response.data?.errors[0]?.msg ||
+                  "Error occured, try again",
+              );
+              setIsVerifying(false);
             }
           }}
         >
@@ -57,7 +69,12 @@ function Index() {
             handleSubmit,
             isSubmitting,
           }) => (
-            <form onSubmit={handleSubmit}>
+            <form
+              onSubmit={handleSubmit}
+              onChange={() => {
+                setVerificationError(null);
+              }}
+            >
               <fieldset>
                 <div className="mb-5 flex flex-col">
                   <label htmlFor="useremailInput">Phone Number</label>
@@ -99,11 +116,23 @@ function Index() {
                 <div className="mt-6 rounded-md bg-cyan-600 text-center">
                   <button
                     type="submit"
-                    className="w-full py-3 font-medium text-white"
+                    className="w-full rounded-md py-3 font-medium text-white hover:bg-cyan-700 active:active:translate-y-[1.5px]"
                   >
-                    verify phone number
+                    <span className="flex items-center justify-center gap-1">
+                      {isVerifying ? (
+                        <p>Verifying ...</p>
+                      ) : (
+                        <p>verify phone number</p>
+                      )}
+                      {isVerifying && <LoadingCircle />}
+                    </span>
                   </button>
                 </div>
+                {verificationError && (
+                  <div className="text-center text-orange-700">
+                    {verificationError}
+                  </div>
+                )}
               </fieldset>
             </form>
           )}
