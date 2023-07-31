@@ -77,6 +77,7 @@ function Form({
     success: false,
   });
   const [recaptchaLoader, setRecaptchaLoader] = useState(false);
+  const [recaptchaToken, setRecaptchToken] = useState<String | null>(null);
 
   const accountRef = useRef<HTMLFormElement | null>(null);
 
@@ -87,39 +88,30 @@ function Form({
   };
 
   const recaptchAfterValidation = async (res: any, credentials: any) => {
+    setRecaptchToken(res);
     setRecaptchaLoader(false);
     if (submitFormRef.current) {
       submitFormRef.current.style.display = "none";
     }
-    const createdAccount = await poster("user/createAccount", credentials);
 
-    if (createdAccount._id) {
-      setErrorMessage("");
-      try {
-        const phoneNumberRes = await poster("user/sendSms", {
-          phoneNumber: credentials.phoneNumber,
-          recaptchaToken: res,
-        });
+    const smsResponse = await poster("user/sendSms", {
+      phoneNumber: credentials.phoneNumber,
+      recaptchaToken: res,
+    });
 
-        Router.push({
-          pathname: "/user/verify",
-          query: { ...credentials },
-        });
-      } catch (error) {
-        setErrorMessage("Too many attempts, try later.");
-      }
-
-      return;
+    if (smsResponse._id || smsResponse.phoneNumber == credentials.phoneNumber) {
+      Router.push({
+        pathname: "/user/verify",
+        query: { ...credentials },
+      });
     }
 
-    if (createdAccount?.response?.status) {
+    if (smsResponse?.response?.status) {
       setErrorMessage(
-        createdAccount.response?.data?.message ||
-          createdAccount.response.data?.errors[0]?.msg,
+        smsResponse.response?.data?.message ||
+          smsResponse.response.data?.errors[0]?.msg ||
+          "Error occured, try again",
       );
-      if (submitFormRef.current) {
-        submitFormRef.current.style.display = "block";
-      }
     }
   };
 
@@ -175,9 +167,33 @@ function Form({
         } else if (page === "register") {
           try {
             setRecaptchaLoader(true);
-            setupRecaptcha((args: any) => {
-              recaptchAfterValidation(args, finalValues);
-            });
+            const createdAccount = await poster(
+              "user/createAccount",
+              finalValues,
+            );
+
+            if (createdAccount._id) {
+              setRecaptchaLoader(false);
+
+              setupRecaptcha((args: any) => {
+                recaptchAfterValidation(args, finalValues);
+              });
+
+              setErrorMessage("");
+
+              return;
+            }
+
+            if (createdAccount?.response?.status) {
+              setRecaptchaLoader(false);
+              setErrorMessage(
+                createdAccount.response?.data?.message ||
+                  createdAccount.response.data?.errors[0]?.msg,
+              );
+              if (submitFormRef.current) {
+                submitFormRef.current.style.display = "block";
+              }
+            }
           } catch (error) {
             setErrorMessage("error occured, please try again!");
           }
@@ -514,20 +530,22 @@ function Form({
             <button
               type="submit"
               ref={submitFormRef}
-              onClick={() =>
-                !(
-                  values.confirmPassword &&
-                  values.email &&
-                  values.firstName &&
-                  values.lastName &&
-                  values.newPassword &&
-                  values.phoneNumber &&
-                  values.userName
-                ) && setStep?.(1)
-              }
-              className={`flex w-full ${
-                Object.keys(errors).length > 0 ? "" : ""
-              } flex-row-reverse items-center justify-center gap-2 rounded-md bg-cyan-600 py-3 font-medium  text-white hover:bg-cyan-700 active:translate-y-[1.5px]`}
+              onClick={() => {
+                if (page === "update") {
+                  // add something later
+                } else {
+                  !(
+                    values.confirmPassword &&
+                    values.email &&
+                    values.firstName &&
+                    values.lastName &&
+                    values.newPassword &&
+                    values.phoneNumber &&
+                    values.userName
+                  ) && setStep?.(1);
+                }
+              }}
+              className={`flex w-full flex-row-reverse items-center justify-center gap-2 rounded-md bg-cyan-600 py-3 font-medium  text-white hover:bg-cyan-700 active:translate-y-[1.5px]`}
               disabled={Object.keys(errors).length > 0}
             >
               <span>
@@ -545,8 +563,10 @@ function Form({
                   !accountStatus.loading &&
                   accountStatus.success && <CheckCircle2 />}
               </span>
-              {recaptchaLoader && <LoadingCircle />}
-              {type}
+              <span className="flex items-center justify-center gap-1">
+                {type}
+                {recaptchaLoader && <LoadingCircle />}
+              </span>
             </button>
           </motion.div>
         </form>

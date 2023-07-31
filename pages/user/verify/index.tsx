@@ -79,7 +79,7 @@ function Index() {
                 <div className="mb-5 flex flex-col">
                   <label htmlFor="useremailInput">Phone Number</label>
                   <input
-                    className="rounded-md"
+                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     name="phoneNumber"
                     type="tel"
                     id="phoneNumberInput"
@@ -89,7 +89,7 @@ function Index() {
                     onChange={handleChange}
                     required
                   />
-                  <p className="text-red-500  ">
+                  <p className="ml-1 text-sm text-orange-700 ">
                     {errors.phoneNumber &&
                       touched.phoneNumber &&
                       errors.phoneNumber}
@@ -101,14 +101,14 @@ function Index() {
                     type="text"
                     name="code"
                     id="codeInput"
-                    className="rounded-md"
+                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     value={values.code}
                     placeholder="Enter verification code"
                     onBlur={handleBlur}
                     onChange={handleChange}
                     required
                   />
-                  <p className="text-red-500  ">
+                  <p className="ml-1 text-sm text-orange-700">
                     {errors.code && touched.code && errors.code}
                   </p>
                 </div>
