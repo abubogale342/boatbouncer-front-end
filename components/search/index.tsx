@@ -2,6 +2,12 @@ import { AddressAutofill } from "@mapbox/search-js-react";
 import { AddressAutofillRetrieveResponse } from "@mapbox/search-js-core";
 
 import { useState } from "react";
+import { HomeIcon } from "../shared/icons/home";
+
+const locationIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 opacity-50">
+<path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+</svg>
+`;
 
 const Search = ({ page }: { page?: string }) => {
   const [searchVal, setSearchVal] = useState("");
@@ -49,20 +55,27 @@ const Search = ({ page }: { page?: string }) => {
             <AddressAutofill
               onRetrieve={handleRetrieve}
               accessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-              options={{ country: "US" }}
+              options={{ country: "US", limit: 5 }}
               theme={{
                 variables: {
                   borderRadius: "8px",
-                  padding: "16px 40px 16px 64px",
+                  padding: "16px 40px 16px 24px",
+                },
+                icons: {
+                  close: locationIcon,
+                  question: locationIcon,
+                  marker: locationIcon,
+                  street: locationIcon,
+                  addressMarker: locationIcon,
                 },
               }}
             >
               <input
                 name="address"
-                autoComplete="address-line1"
+                autoComplete="off"
                 value={searchVal}
                 onChange={handleChange}
-                className={`${
+                className={`border-none outline-none placeholder:text-base placeholder:font-normal ${
                   page == "home"
                     ? "block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 pl-10 pr-16 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                     : "block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 pl-10 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500  dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"

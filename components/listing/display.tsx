@@ -40,8 +40,8 @@ const DisplayListings = ({
   }, [pageNo]);
 
   let displayEl = (
-    <motion.p className="mr-4 flex h-14 items-center justify-center text-3xl text-red-500">
-      You have added no listings so far.
+    <motion.p className="mx-2 flex h-14 items-center justify-center text-center text-2xl text-red-500">
+      You have no listings added.
     </motion.p>
   );
 
@@ -85,7 +85,7 @@ const DisplayListings = ({
 
   if (error) {
     displayEl = (
-      <p className="mr-4 h-12 items-center justify-center text-3xl text-red-500">
+      <p className="mr-4 h-12 items-center justify-center text-3xl text-orange-700">
         Error fetching your listings
       </p>
     );
@@ -146,12 +146,12 @@ const DisplayListings = ({
           </p>
           <button
             onClick={addNewListingHn}
-            className="flex flex-row items-center gap-1 rounded-lg bg-cyan-600 px-1 py-2 text-sm  font-medium text-white sm:gap-2 sm:px-3"
+            className="flex flex-row items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 text-sm font-medium text-white hover:bg-cyan-700 active:translate-y-[1.5px] sm:gap-2 sm:px-3"
           >
             <Plus size="20" /> Add New Listing
           </button>
         </div>
-        <p className="mb-10 ml-6 mt-4 text-gray-500">
+        <p className="mb-6 ml-6 mt-4 text-gray-500">
           Track, manage and forecast your Listings.
         </p>
         <div className="mx-auto flex w-fit flex-wrap justify-evenly gap-2">

@@ -61,8 +61,6 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
             securityAllowance: `${boatInfo.securityAllowance} USD`,
           };
 
-          console.log("finalValues", finalValues);
-
           if (editableBoat) {
             let difference = objectDiff(editableBoat, boatInfo);
 
@@ -132,7 +130,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                   </button>
                   <button
                     type="submit"
-                    className="flex flex-row items-center justify-center gap-2 rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white sm:w-fit"
+                    className="flex flex-row items-center justify-center gap-2 rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700 active:translate-y-[1.5px] sm:w-fit"
                   >
                     <Save size="20" />{" "}
                     {!loading ? (
