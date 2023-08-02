@@ -107,7 +107,9 @@ const GalleryForm = ({
           className="invisible"
         />
         {errors.imageUrls && touched.imageUrls && (
-          <p className="text-red-500">{errors.imageUrls as string}</p>
+          <p className="ml-1 text-sm text-orange-700">
+            {errors.imageUrls as string}
+          </p>
         )}
       </div>
     </div>

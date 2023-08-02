@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+[type="tel"]:focus,
+[type="email"]:focus,
+[type="password"]:focus {
+  --tw-ring-color: none;
+  background-color: white;
+}
+
+input[type="text"],
+input[type="tel"],
+input[type="email"],
+input[type="password"] {
+  background-color: white;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active,
+input:-webkit-autofill:focus {
+  background-color: #ffffff !important;
+  color: black !important;
+  /* -webkit-box-shadow: 0 0 0 1000px white inset !important; */
+  -webkit-text-fill-color: black !important;
+  font-size: 1.1rem;
+}
+
+.phone-input:focus {
+  -webkit-box-shadow: 0 0 0 1000px #e8f0fe inset !important;
+}
+
+.phone-input:valid {
+  -webkit-box-shadow: 0 0 0 1000px #e8f0fe inset !important;
+}
+
 @layer utilities {
   .min-h-parent {
     min-height: -webkit-fill-available;

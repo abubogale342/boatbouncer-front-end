@@ -95,8 +95,12 @@ export const authOptions: NextAuthOptions = {
             return login;
           }
 
-          if (login.response.status == "401") {
+          if (login?.response?.status == "401") {
             throw new Error(login.response.data.message);
+          }
+
+          if (!login.status) {
+            throw new Error("Seems connection error, please try again!");
           }
         }
       },

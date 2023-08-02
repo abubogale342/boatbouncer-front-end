@@ -94,7 +94,9 @@ const FeatureForm = ({
         </div>
 
         {errors.features && touched.features && (
-          <p className="text-red-500">{errors.features as string}</p>
+          <p className="ml-1 text-sm text-orange-700">
+            {errors.features as string}
+          </p>
         )}
       </div>
 
@@ -130,7 +132,9 @@ const FeatureForm = ({
         </div>
 
         {errors.amenities && touched.amenities && (
-          <p className="text-red-500">{errors.amenities as string}</p>
+          <p className="ml-1 text-sm text-orange-700">
+            {errors.amenities as string}
+          </p>
         )}
       </div>
 
@@ -160,7 +164,9 @@ const FeatureForm = ({
         </div>
 
         {errors.captained && touched.captained && (
-          <p className="text-red-500">{errors.captained as string}</p>
+          <p className="ml-1 text-sm text-orange-700">
+            {errors.captained as string}
+          </p>
         )}
       </div>
     </div>

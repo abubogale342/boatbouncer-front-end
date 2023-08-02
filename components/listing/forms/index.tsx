@@ -13,6 +13,7 @@ import Router from "next/router";
 import { objectDiff } from "@/lib/utils";
 import { useState } from "react";
 import BasicInfos from "./basic";
+import { SaveIcon } from "@/components/shared/icons/save";
 
 const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
   const boatInfo = useSelector((state: any) => state.boat.boatInfo);
@@ -132,10 +133,11 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                     type="submit"
                     className="flex flex-row items-center justify-center gap-2 rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700 active:translate-y-[1.5px] sm:w-fit"
                   >
-                    <Save size="20" />{" "}
+                    {/* <Save size="20" />{" "} */}
+                    <SaveIcon />
                     {!loading ? (
                       !data ? (
-                        <p>Save Listing</p>
+                        <p className="font-inter">Save Listing</p>
                       ) : (
                         <p className="flex flex-row items-center gap-px">
                           Successfully Saved <CheckCircle2 />
@@ -148,7 +150,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                     )}
                   </button>
                   {error && (
-                    <p className="absolute -bottom-6 right-1/3 text-end text-base text-red-500 sm:right-3">
+                    <p className="absolute -bottom-6 right-1/3 text-end text-base text-orange-700 sm:right-3">
                       Error occured!
                     </p>
                   )}

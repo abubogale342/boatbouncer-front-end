@@ -64,7 +64,9 @@ const CategoryForm = ({
           ))}
         </select>
         {errors.category && touched.category && (
-          <p className="text-red-500">{errors.category as string}</p>
+          <p className="ml-1 text-sm text-orange-700">
+            {errors.category as string}
+          </p>
         )}
       </div>
       {categories.filter(
@@ -97,7 +99,9 @@ const CategoryForm = ({
               ))}
           </select>
           {errors.subCategory && touched.subCategory && (
-            <p className="text-red-500">{errors.subCategory as string}</p>
+            <p className="ml-1 text-sm text-orange-700">
+              {errors.subCategory as string}
+            </p>
           )}
         </div>
       )}

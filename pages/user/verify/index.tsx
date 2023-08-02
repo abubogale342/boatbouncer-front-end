@@ -57,6 +57,11 @@ function Index() {
                   "Error occured, try again",
               );
               setIsVerifying(false);
+              return;
+            }
+
+            if (!verifiedSms.status) {
+              setVerificationError("Seems connection error, please try again!");
             }
           }}
         >
@@ -86,14 +91,14 @@ function Index() {
                     placeholder="Enter your phone number"
                     value={phoneNumber}
                     onBlur={handleBlur}
-                    onChange={handleChange}
+                    // onChange={handleChange}
                     required
                   />
-                  <p className="ml-1 text-sm text-orange-700 ">
+                  {/* <p className="ml-1 text-sm text-orange-700 ">
                     {errors.phoneNumber &&
                       touched.phoneNumber &&
                       errors.phoneNumber}
-                  </p>
+                  </p> */}
                 </div>
                 <div className="flex flex-col">
                   <label htmlFor="codeInput">Code</label>

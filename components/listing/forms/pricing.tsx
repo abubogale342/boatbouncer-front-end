@@ -48,7 +48,9 @@ const PricingForm = ({
           </select>
         </div>
         {errors.securityAllowance && touched.securityAllowance && (
-          <p className="text-red-500">{errors.securityAllowance as string}</p>
+          <p className="ml-1 text-sm text-orange-700">
+            {errors.securityAllowance as string}
+          </p>
         )}
       </div>
     </div>

@@ -151,7 +151,7 @@ const DisplayListings = ({
             <Plus size="20" /> Add New Listing
           </button>
         </div>
-        <p className="mb-6 ml-6 mt-4 text-gray-500">
+        <p className="mb-6 ml-6 mt-1 text-gray-500">
           Track, manage and forecast your Listings.
         </p>
         <div className="mx-auto flex w-fit flex-wrap justify-evenly gap-2">

@@ -45,8 +45,9 @@ const BasicInfo = ({
       <div className="mb-4 flex flex-col gap-6 sm:flex-row">
         <div className="flex w-full flex-col">
           <label className="mb-2 text-xs text-gray-700">Boat Name</label>
+          {/* border bg-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] rounded-lg border-solid border-[#D0D5DD] */}
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
+            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] focus:border-sky-500  focus:outline-none focus:ring-sky-500"
             placeholder="boatName"
             onBlur={handleBlur}
             name="boatName"
@@ -58,7 +59,9 @@ const BasicInfo = ({
             }}
           />
           {errors.boatName && touched.boatName && (
-            <p className="text-red-500">{errors.boatName as string}</p>
+            <p className="ml-1 text-sm text-orange-700">
+              {errors.boatName as string}
+            </p>
           )}
         </div>
         <div className="flex w-full flex-col">
@@ -76,7 +79,9 @@ const BasicInfo = ({
             }}
           />
           {errors.boatType && touched.boatType && (
-            <p className="text-red-500">{errors.boatType as string}</p>
+            <p className="ml-1 text-sm text-orange-700">
+              {errors.boatType as string}
+            </p>
           )}
         </div>
       </div>
@@ -96,7 +101,9 @@ const BasicInfo = ({
             }}
           />
           {errors.model && touched.model && (
-            <p className="text-red-500">{errors.model as string}</p>
+            <p className="ml-1 text-sm text-orange-700">
+              {errors.model as string}
+            </p>
           )}
         </div>
         <div className="flex w-full flex-col">
@@ -114,7 +121,9 @@ const BasicInfo = ({
             }}
           />
           {errors.length && touched.length && (
-            <p className="text-red-500">{errors.length as string}</p>
+            <p className="ml-1 text-sm text-orange-700">
+              {errors.length as string}
+            </p>
           )}
         </div>
       </div>
@@ -133,7 +142,9 @@ const BasicInfo = ({
             }}
           />
           {errors.manufacturer && touched.manufacturer && (
-            <p className="text-red-500">{errors.manufacturer as string}</p>
+            <p className="ml-1 text-sm text-orange-700">
+              {errors.manufacturer as string}
+            </p>
           )}
         </div>
         <div className="flex w-full flex-col">
@@ -153,7 +164,9 @@ const BasicInfo = ({
             }}
           />
           {errors.year && touched.year && (
-            <p className="text-red-500">{errors.year as string}</p>
+            <p className="ml-1 text-sm text-orange-700">
+              {errors.year as string}
+            </p>
           )}
         </div>
       </div>
@@ -175,7 +188,9 @@ const BasicInfo = ({
           rows={5}
         />
         {errors.description && touched.description && (
-          <p className="text-red-500">{errors.description as string}</p>
+          <p className="ml-1 text-sm text-orange-700">
+            {errors.description as string}
+          </p>
         )}
       </div>
       <div className="mt-4 flex flex-col gap-6 sm:flex-row">

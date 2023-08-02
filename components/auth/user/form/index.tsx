@@ -7,27 +7,11 @@ import { RecaptchaVerifier } from "firebase/auth";
 import { auth } from "@/lib/config";
 import Router from "next/router";
 import useFetcher from "@/lib/hooks/use-axios";
-import { LoadingCircle, LoadingSpinner } from "@/components/shared/icons";
-import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  XCircle,
-} from "lucide-react";
-
-export const setupRecaptcha = (cb: any) => {
-  const recaptcha = new RecaptchaVerifier(
-    "recaptcha-container",
-    {
-      callback: cb,
-    },
-    auth,
-  );
-
-  recaptcha.render();
-};
+import { LoadingCircle } from "@/components/shared/icons";
+import { CheckCircle2, XCircle } from "lucide-react";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import startsWith from "lodash.startswith";
 
 type step = {
   errors: boolean;
@@ -77,7 +61,6 @@ function Form({
     success: false,
   });
   const [recaptchaLoader, setRecaptchaLoader] = useState(false);
-  const [recaptchaToken, setRecaptchToken] = useState<String | null>(null);
 
   const accountRef = useRef<HTMLFormElement | null>(null);
 
@@ -87,23 +70,49 @@ function Form({
     }, timer);
   };
 
+  const setupRecaptcha = (cb: any) => {
+    const recaptcha = new RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        callback: cb,
+      },
+      auth,
+    );
+
+    recaptcha
+      .render()
+      .then(() => {
+        setTimeout(() => {
+          setRecaptchaLoader(false);
+        }, 750);
+      })
+      .catch(() => {
+        setErrorMessage("unable to render recaptcha");
+      });
+    // setRecaptchaLoader(false);
+  };
+
   const recaptchAfterValidation = async (res: any, credentials: any) => {
-    setRecaptchToken(res);
     setRecaptchaLoader(false);
     if (submitFormRef.current) {
       submitFormRef.current.style.display = "none";
     }
 
     const smsResponse = await poster("user/sendSms", {
-      phoneNumber: credentials.phoneNumber,
+      phoneNumber: `+${credentials.phoneNumber}`,
       recaptchaToken: res,
     });
 
-    if (smsResponse._id || smsResponse.phoneNumber == credentials.phoneNumber) {
+    if (
+      smsResponse._id ||
+      smsResponse.phoneNumber == `+${credentials.phoneNumber}`
+    ) {
       Router.push({
         pathname: "/user/verify",
         query: { ...credentials },
       });
+
+      return;
     }
 
     if (smsResponse?.response?.status) {
@@ -112,8 +121,20 @@ function Form({
           smsResponse.response.data?.errors[0]?.msg ||
           "Error occured, try again",
       );
+      return;
+    }
+
+    if (!smsResponse.status) {
+      setErrorMessage("Seems connection error, please try again!");
     }
   };
+
+  function returnClass(error: Boolean) {
+    return [
+      `text-blue-gray-700 shadow-none placeholder-shown:border-gray-300 z-5 border-t-transparent placeholder-shown:border-t-blue-gray-200 disabled:bg-blue-gray-50 peer h-full w-full rounded-md border border-gray-300 px-3 py-2.5 font-sans font-normal shadow-sm outline-none outline outline-0 drop-shadow-sm transition-all placeholder:text-base placeholder-shown:border focus:border-2 focus:border-cyan-600 focus:border-t-transparent focus:outline-0 disabled:border-0 outline-none focus:outline-none active:outline-none`,
+      `before:content[' '] after:content[' '] z-10 before:border-gray-300 after:border-gray-300 peer-placeholder-shown:text-blue-gray-500 peer-disabled:peer-placeholder-shown:text-blue-gray-500 pointer-events-none absolute -top-1.5 left-0 flex h-full w-full select-none text-xs font-normal leading-tight text-gray-400 transition-all before:pointer-events-none before:mr-1 before:mt-[6.5px] before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-l before:border-t before:transition-all after:pointer-events-none after:ml-1 after:mt-[6.5px] after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-r after:border-t after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-xs peer-focus:leading-tight peer-focus:text-cyan-600 peer-focus:before:border-l-2 peer-focus:before:border-t-2 peer-focus:before:border-cyan-600 peer-focus:after:border-r-2 peer-focus:after:border-t-2 peer-focus:after:border-cyan-600 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent`,
+    ];
+  }
 
   return (
     <Formik
@@ -129,7 +150,7 @@ function Form({
             lastName: values.lastName,
             userName: values.userName,
             address: values.address,
-            phoneNumber: values.phoneNumber,
+            phoneNumber: `+${values.phoneNumber}`,
             state: values.state,
             city: values.city,
             email: values.email,
@@ -173,8 +194,6 @@ function Form({
             );
 
             if (createdAccount._id) {
-              setRecaptchaLoader(false);
-
               setupRecaptcha((args: any) => {
                 recaptchAfterValidation(args, finalValues);
               });
@@ -194,6 +213,10 @@ function Form({
                 submitFormRef.current.style.display = "block";
               }
             }
+
+            if (!createdAccount.status) {
+              setErrorMessage("Seems connection error, please try again!");
+            }
           } catch (error) {
             setErrorMessage("error occured, please try again!");
           }
@@ -204,6 +227,7 @@ function Form({
         values,
         errors,
         touched,
+        setValues,
         handleChange,
         handleBlur,
         handleSubmit,
@@ -234,182 +258,209 @@ function Form({
               animate={{ x: [100, 0] }}
               transition={{ duration: 0.25 }}
             >
-              <div className="mb-6 flex flex-col">
-                <label
-                  htmlFor="usernameInput"
-                  className={`${page === "register" ? "hidden" : ""}`}
-                >
-                  User name
-                </label>
+              <div className="relative mb-7 h-11 w-full">
                 <input
                   name="userName"
-                  className="w-full rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
-                  type="text"
-                  id="usernameInput"
-                  placeholder="Enter your username"
+                  className={
+                    returnClass(!!(errors.userName && touched.userName))[0]
+                  }
+                  placeholder=" "
                   onBlur={handleBlur}
                   value={values.userName}
                   onChange={handleChange}
                 />
+                <label
+                  className={`${
+                    returnClass(!!(errors.userName && touched.userName))[1]
+                  }`}
+                >
+                  Username
+                </label>
 
                 {errors.userName && touched.userName && (
-                  <p className="ml-1 text-sm text-orange-700">
+                  <p className="ml-1 text-xs text-orange-700">
                     {errors.userName}
                   </p>
                 )}
               </div>
-              <div className="mb-6 grid grid-cols-2">
-                <div className="mr-2 flex flex-col">
-                  <label
-                    htmlFor="firstnameInput"
-                    className={`${page === "register" ? "hidden" : ""}`}
-                  >
-                    First name
-                  </label>
+
+              <div className="mb-7 grid w-full grid-cols-2 gap-2">
+                <div className="relative h-11 w-full">
                   <input
                     name="firstName"
-                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
-                    type="text"
-                    id="firstnameInput"
-                    placeholder="First name"
+                    className={
+                      returnClass(!!(errors.firstName && touched.firstName))[0]
+                    }
+                    placeholder=" "
                     value={values.firstName}
                     onBlur={handleBlur}
                     onChange={handleChange}
                   />
+                  <label
+                    className={`${
+                      returnClass(!!(errors.firstName && touched.firstName))[1]
+                    }`}
+                  >
+                    First name
+                  </label>
 
                   {errors.firstName && touched.firstName && (
-                    <p className="ml-1 text-sm text-orange-700">
+                    <p className="text-xs text-orange-700">
                       {errors.firstName}
                     </p>
                   )}
                 </div>
-                <div className="ml-2 flex flex-col">
-                  <label
-                    htmlFor="lastnameInput"
-                    className={`${page === "register" ? "hidden" : ""}`}
-                  >
-                    Last name
-                  </label>
+                <div className="relative h-11 w-full">
                   <input
                     name="lastName"
-                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
-                    type="text"
-                    id="lastnameInput"
-                    placeholder="Last name"
+                    className={
+                      returnClass(!!(errors.lastName && touched.lastName))[0]
+                    }
+                    placeholder=" "
                     value={values.lastName}
                     onBlur={handleBlur}
                     onChange={handleChange}
                   />
+                  <label
+                    className={`${
+                      returnClass(!!(errors.lastName && touched.lastName))[1]
+                    }`}
+                  >
+                    Last name
+                  </label>
 
                   {errors.lastName && touched.lastName && (
-                    <p className="ml-1 text-sm text-orange-700">
+                    <p className="ml-1 text-xs text-orange-700">
                       {errors.lastName}
                     </p>
                   )}
                 </div>
               </div>
-              <div className="mb-6 flex flex-col">
-                <label
-                  htmlFor="phoneNumberInput"
-                  className={`${page === "register" ? "hidden" : ""}`}
-                >
-                  Phone number
-                </label>
-                <input
-                  name="phoneNumber"
-                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
-                  type="tel"
-                  id="phoneNumberInput"
-                  placeholder="phone number"
+
+              <div className="relative mb-7 flex h-11 flex-col">
+                <PhoneInput
+                  country={"us"}
                   value={values.phoneNumber}
                   onBlur={handleBlur}
-                  onChange={handleChange}
+                  onChange={(value) => {
+                    setValues({ ...values, phoneNumber: value });
+                  }}
+                  inputProps={{
+                    name: "phoneNumber",
+                    type: "tel",
+                  }}
+                  containerStyle={{
+                    boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
+                    background: "white",
+                    zIndex: "100",
+                    borderRadius: "6px",
+                  }}
+                  inputStyle={{
+                    boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
+                    height: "44px",
+                    width: "100%",
+                    fontSize: "1.1rem",
+                    borderRadius: "6px",
+                  }}
+                  inputClass="phone-input"
                 />
 
                 {errors.phoneNumber && touched.phoneNumber && (
-                  <p className="ml-1 text-sm text-orange-700">
+                  <p className="ml-1 text-xs text-orange-700">
                     {errors.phoneNumber}
                   </p>
                 )}
               </div>
-              <div className="mb-6 flex flex-col">
-                <label
-                  htmlFor="emailInput"
-                  className={`${page === "register" ? "hidden" : ""}`}
-                >
-                  Email
-                </label>
+
+              <div className="relative mb-7 flex flex-col">
                 <input
-                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                  className={returnClass(!!(errors.email && touched.email))[0]}
                   name="email"
                   type="email"
-                  id="emailInput"
-                  placeholder="Enter your email"
+                  placeholder=" "
                   value={values.email}
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
+                <label
+                  className={`${
+                    returnClass(!!(errors.email && touched.email))[1]
+                  }`}
+                >
+                  Email
+                </label>
 
                 {errors.email && touched.email && (
-                  <p className="ml-1 text-sm text-orange-700">{errors.email}</p>
+                  <p className="ml-1 text-xs text-orange-700">{errors.email}</p>
                 )}
               </div>
 
-              <div className="mb-6 flex flex-col">
-                <label
-                  htmlFor="passwordInput"
-                  className={`${page == "register" ? "hidden" : ""}`}
-                >
-                  {page === "update" ? "New Password" : "Password"}
-                </label>
+              <div className="relative mb-7 flex flex-col">
                 <input
                   type="password"
                   name="newPassword"
-                  id="newPasswordInput"
-                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                  className={
+                    returnClass(
+                      !!(errors.newPassword && touched.newPassword),
+                    )[0]
+                  }
                   value={values.newPassword}
-                  placeholder={`${
-                    page === "update" ? "New Password" : "Password"
-                  }`}
+                  placeholder=" "
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
+                <label
+                  className={`${
+                    returnClass(
+                      !!(errors.newPassword && touched.newPassword),
+                    )[1]
+                  }`}
+                >
+                  {page === "update" ? "New Password" : "Password"}
+                </label>
 
                 {errors.newPassword && touched.newPassword && (
-                  <p className="ml-1 text-sm text-orange-700">
+                  <p className="ml-1 text-xs text-orange-700">
                     {errors.newPassword}
                   </p>
                 )}
               </div>
-              <div className="mb-6 flex flex-col">
-                <label
-                  htmlFor="passwordInput"
-                  className={`${page == "register" ? "hidden" : ""}`}
-                >
-                  {page === "update" ? "Confirm Password" : "Retype Password"}
-                </label>
+
+              <div className="relative mb-5 flex flex-col">
                 <input
                   type="password"
                   name="confirmPassword"
-                  id="confirmPasswordInput"
-                  className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                  className={
+                    returnClass(
+                      !!(errors.confirmPassword && touched.confirmPassword),
+                    )[0]
+                  }
                   value={values.confirmPassword}
-                  placeholder={`confirm password`}
+                  placeholder=" "
                   onBlur={handleBlur}
                   onChange={handleChange}
                 />
+                <label
+                  className={`${
+                    returnClass(
+                      !!(errors.confirmPassword && touched.confirmPassword),
+                    )[1]
+                  }`}
+                >
+                  {page === "update" ? "Confirm Password" : "Re-type Password"}
+                </label>
 
                 {!errors.newPassword &&
                   errors.confirmPassword &&
                   touched.confirmPassword && (
-                    <p className="ml-1 h-fit text-sm text-orange-700">
+                    <p className="ml-1 h-fit text-xs text-orange-700">
                       {errors.confirmPassword}
                     </p>
                   )}
               </div>
             </motion.div>
           )}
-          {step === 2 && (
+          {/* {step === 2 && (
             <motion.div
               animate={{ x: [-100, 0] }}
               transition={{ duration: 0.25 }}
@@ -418,13 +469,17 @@ function Form({
                 <div className="mr-2 flex flex-col">
                   <label
                     htmlFor="stateInput"
-                    className={`${page === "register" ? "hidden" : ""}`}
+                    className={`${
+                      returnClass(!!(errors.userName && touched.userName))[1]
+                    }`}
                   >
                     State
                   </label>
                   <input
                     name="state"
-                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                    className={
+                      returnClass(!!(errors.userName && touched.userName))[0]
+                    }
                     type="text"
                     id="stateInput"
                     placeholder="state"
@@ -436,13 +491,17 @@ function Form({
                 <div className="ml-2 flex flex-col">
                   <label
                     htmlFor="zipCodeInput"
-                    className={`${page === "register" ? "hidden" : ""}`}
+                    className={`${
+                      returnClass(!!(errors.userName && touched.userName))[1]
+                    }`}
                   >
                     Zip code
                   </label>
                   <input
                     name="zipCode"
-                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                    className={
+                      returnClass(!!(errors.userName && touched.userName))[0]
+                    }
                     type="text"
                     id="zipCodeInput"
                     placeholder="zipCode"
@@ -456,13 +515,17 @@ function Form({
                 <div className="mr-2 flex flex-col">
                   <label
                     htmlFor="addressInput"
-                    className={`${page === "register" ? "hidden" : ""}`}
+                    className={`${
+                      returnClass(!!(errors.userName && touched.userName))[1]
+                    }`}
                   >
                     Address
                   </label>
                   <input
                     name="address"
-                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                    className={
+                      returnClass(!!(errors.userName && touched.userName))[0]
+                    }
                     type="text"
                     id="addressInput"
                     placeholder="address"
@@ -474,13 +537,17 @@ function Form({
                 <div className="ml-2 flex flex-col">
                   <label
                     htmlFor="cityInput"
-                    className={`${page === "register" ? "hidden" : ""}`}
+                    className={`${
+                      returnClass(!!(errors.userName && touched.userName))[1]
+                    }`}
                   >
                     City
                   </label>
                   <input
                     name="city"
-                    className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
+                    className={
+                      returnClass(!!(errors.userName && touched.userName))[0]
+                    }
                     type="text"
                     id="cityInput"
                     placeholder="city"
@@ -491,19 +558,19 @@ function Form({
                 </div>
               </div>
             </motion.div>
-          )}
+          )} */}
           {errorMessage && (
             <div className="text-center text-orange-700">{errorMessage}</div>
           )}
 
-          <div className="mt-6 flex w-full justify-center text-center">
+          <div className="flex w-full justify-center text-center">
             <div
               id="recaptcha-container"
               className="flex w-full justify-center"
             ></div>
           </div>
 
-          <>
+          {/* <>
             <button
               type="button"
               disabled={step === 1}
@@ -524,9 +591,9 @@ function Form({
             >
               <ChevronRight />
             </button>
-          </>
+          </> */}
 
-          <motion.div className={`mt-6 rounded-md text-center`}>
+          <motion.div className={`mt-4 rounded-md text-center`}>
             <button
               type="submit"
               ref={submitFormRef}
