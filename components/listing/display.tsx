@@ -12,6 +12,7 @@ import {
   setEditableBoat,
 } from "features/boat/boatSlice";
 import AlertDialogs from "../shared/alertDialog";
+import { CircularProgress } from "@mui/material";
 
 const PAGE_SIZE = 10;
 
@@ -80,7 +81,11 @@ const DisplayListings = ({
   };
 
   if (loading || (!data && !error)) {
-    displayEl = <Skeleton />;
+    displayEl = (
+      <div className="my-auto flex w-full items-center justify-center text-cyan-600">
+        <CircularProgress color="inherit" size="7.5vh" />
+      </div>
+    );
   }
 
   if (error) {
@@ -139,6 +144,7 @@ const DisplayListings = ({
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -10, opacity: 0 }}
         transition={{ duration: 0.2 }}
+        className="md:mx-10 lg:mx-20"
       >
         <div className="ml-6 mr-4 flex flex-row items-center justify-between">
           <p className="text-xl font-medium text-gray-900 sm:text-3xl">
@@ -146,7 +152,7 @@ const DisplayListings = ({
           </p>
           <button
             onClick={addNewListingHn}
-            className="flex flex-row items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 text-sm font-medium text-white hover:bg-cyan-700 active:translate-y-[1.5px] sm:gap-2 sm:px-3"
+            className="flex flex-row items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 font-inter text-sm font-medium text-white shadow-sm drop-shadow-sm hover:bg-cyan-700 active:translate-y-[1.5px] sm:gap-2 sm:px-3"
           >
             <Plus size="20" /> Add New Listing
           </button>

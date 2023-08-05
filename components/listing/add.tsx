@@ -11,13 +11,6 @@ const AddListing = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
         transition={{ duration: 0.2 }}
       >
         <BoatForm cancelHn={cancelHn} />
-
-        <div className="mt-4 px-4 sm:mx-10 md:mx-20">
-          <p className="text-xl font-semibold text-gray-900">
-            Cancelation Policy
-          </p>
-          <hr className="mt-3 h-px border-0 bg-gray-200" />
-        </div>
       </motion.div>
     </AnimatePresence>
   );

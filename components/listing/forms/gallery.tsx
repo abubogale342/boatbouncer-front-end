@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { UploadCloud } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import useFetcher from "@/lib/hooks/use-axios";
-import { LoadingSpinner } from "@/components/shared/icons";
+import { LoadingCircle, LoadingSpinner } from "@/components/shared/icons";
+import { CircularProgress } from "@mui/material";
 
 const GalleryForm = ({
   values,
@@ -70,15 +71,17 @@ const GalleryForm = ({
   return (
     <div className="mt-0 px-4">
       <p className="text-xl font-semibold text-gray-900">Gallery</p>
-      <hr className="my-3 h-px border-0 bg-gray-200" />
+      <hr className="mb-6 mt-3 h-px border-0 bg-gray-200" />
 
       <div className="w-full">
         <label
           htmlFor="pictures"
-          className="flex flex-col items-center rounded-lg border p-10"
+          className="flex flex-col items-center justify-center rounded-lg border p-10 shadow-sm drop-shadow-sm"
         >
           {loading ? (
-            <LoadingSpinner />
+            <div className="my-auto flex w-full items-center justify-center text-cyan-600">
+              <CircularProgress color="inherit" size="7.5vh" />
+            </div>
           ) : files.length > 0 ? (
             <div className="flex flex-col gap-2">
               {files.map((file, index) => (
@@ -86,11 +89,16 @@ const GalleryForm = ({
               ))}
             </div>
           ) : (
-            <div>
-              <UploadCloud size="40" className="mb-6 rounded-3xl bg-gray-50" />
-              <p>Click to upload</p>
-              <p>SVG, PNG, JPG or GIF</p>
-              <p>(max. 800x400px)</p>
+            <div className="flex flex-col items-center">
+              <div className="mb-3 flex w-fit items-center justify-center rounded-full bg-gray-50 p-[10px]">
+                <UploadCloud className="h-10 w-10 rounded-full bg-gray-100 p-[10px]" />
+              </div>
+              <p className="mb-1 text-center text-sm font-medium text-cyan-600">
+                Click to upload
+              </p>
+              <p className="text-center text-xs">
+                SVG, PNG, JPG or GIF (max. 800x400px)
+              </p>
             </div>
           )}
         </label>

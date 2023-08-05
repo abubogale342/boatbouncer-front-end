@@ -105,13 +105,13 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
         }) => {
           return (
             <form onSubmit={handleSubmit} className="sm:mx-10 md:mx-20">
-              <div className="flex flex-col items-start justify-between gap-4 px-4 sm:flex-row sm:items-center">
-                <div className="flex flex-col items-start">
+              <div className="mb-4 flex flex-col items-start justify-between gap-4 px-4 sm:flex-row sm:items-center lg:mb-6">
+                <div className="flex flex-col items-start gap-0">
                   <h2 className="text-3xl font-medium text-gray-900">
                     {editableBoat ? "Update Your" : "Add New"} Listing
                   </h2>
                   {!editableBoat && (
-                    <p className="text-base text-gray-500">
+                    <p className="text-gray-500">
                       Add a new listing to your listings
                     </p>
                   )}
@@ -124,16 +124,15 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                   )}
                   <button
                     type="button"
-                    className="rounded-lg border border-solid border-gray-200 px-4 py-2 text-center text-sm font-medium text-gray-700 sm:w-fit"
+                    className="rounded-lg border border-solid border-gray-200  px-[14px] py-2 text-center text-sm font-medium text-gray-700 shadow-sm drop-shadow-sm sm:w-fit"
                     onClick={() => cancelHn(false)}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="flex flex-row items-center justify-center gap-2 rounded-lg bg-cyan-600 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-700 active:translate-y-[1.5px] sm:w-fit"
+                    className="flex flex-row items-center justify-center gap-2 rounded-lg bg-cyan-600 px-[14px] py-2 text-sm font-medium text-white shadow-sm drop-shadow-sm hover:bg-cyan-700 active:translate-y-[1.5px] sm:w-fit"
                   >
-                    {/* <Save size="20" />{" "} */}
                     <SaveIcon />
                     {!loading ? (
                       !data ? (
@@ -158,28 +157,9 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
               </div>
 
               {/* <hr className="mt-6 h-px border-0 bg-gray-200 sm:mt-0" /> */}
-              <div className="flex flex-col lg:flex-row">
-                <BasicInfos
-                  {...{
-                    values,
-                    errors,
-                    touched,
-                    handleChange,
-                    handleBlur,
-                    handleSubmit,
-                    setValues,
-                  }}
-                />
-
-                <Separator.Root
-                  className="hidden w-px bg-gray-200 sm:block"
-                  decorative
-                  orientation="vertical"
-                  style={{ margin: "25x 15px" }}
-                />
-
-                <div>
-                  <FeatureForm
+              <div className="flex flex-col lg:w-full lg:flex-row lg:gap-7">
+                <div className="w-full lg:w-[55%]">
+                  <BasicInfos
                     {...{
                       values,
                       errors,
@@ -199,6 +179,22 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                       handleChange,
                       handleBlur,
                       handleSubmit,
+                    }}
+                  />
+                </div>
+
+                <div className="block w-px bg-gray-200"></div>
+
+                <div className="lg:w-[45%]">
+                  <FeatureForm
+                    {...{
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      setValues,
                     }}
                   />
 
@@ -224,6 +220,12 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                       handleSubmit,
                     }}
                   />
+                  <div className="mt-4 px-4">
+                    <p className="text-xl font-semibold text-gray-900">
+                      Cancelation Policy
+                    </p>
+                    <hr className="mt-3 h-px w-full border-0 bg-gray-200" />
+                  </div>
                 </div>
               </div>
             </form>

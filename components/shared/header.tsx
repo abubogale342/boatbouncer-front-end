@@ -2,7 +2,6 @@ import avatar from "../../public/empty-profile-picture.png";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import Icon from "./icons/icon";
 import logo from "public/Boat Bouncer Logo 1.png";
 import Image from "next/image";
 
@@ -11,11 +10,6 @@ export default function Header(props: any) {
     <header>
       <nav className="flex h-16 items-center justify-between">
         <div className="flex flex-row items-center gap-2">
-          {/* <Icon
-            className={`ml-5 ${
-              props?.page ? "fill-white" : "fill-cyan-600"
-            } md:ml-12`}
-          /> */}
           <Image
             className={`ml-5 rounded-full ${
               props?.page ? "fill-white" : "fill-cyan-600"
@@ -41,7 +35,7 @@ export default function Header(props: any) {
             </button>
 
             <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild>
+              <DropdownMenu.Trigger asChild className="border border-gray-200">
                 <Image
                   className="h-10 w-10 cursor-pointer rounded-full border-2 border-gray-400 text-white"
                   src={props?.user?.image || avatar}
@@ -56,7 +50,7 @@ export default function Header(props: any) {
                   className="DropdownMenuContent z-10"
                   sideOffset={5}
                 >
-                  <DropdownMenu.Item className="flex flex-row gap-3 py-3 pl-4 pr-8">
+                  <DropdownMenu.Item className="dropdown-header flex flex-row gap-3 py-3 pl-4 pr-8">
                     <Image
                       className="h-10 w-10 rounded-full border-2 border-gray-400 text-white"
                       src={props?.user?.image || avatar}
@@ -79,7 +73,7 @@ export default function Header(props: any) {
                   </DropdownMenu.Item>
                   <hr className="mt-1 h-px border-0 bg-gray-200" />
                   <Link href="/bookmarks">
-                    <DropdownMenu.Item className="dropDownItem py-3 pl-4 text-sm text-gray-700">
+                    <DropdownMenu.Item className="dropDownItem py-3 pl-4 font-inter text-sm text-gray-700">
                       Bookings
                     </DropdownMenu.Item>
                   </Link>
@@ -103,11 +97,12 @@ export default function Header(props: any) {
                       Edit Profile
                     </DropdownMenu.Item>
                   </Link>
+                  <hr className="mt-1 h-px border-0 bg-gray-200" />
                   <button
                     onClick={() => signOut()}
                     className="dropDownItem w-full text-start"
                   >
-                    <DropdownMenu.Item className="py-3 pl-4 text-sm text-gray-700">
+                    <DropdownMenu.Item className="dropdown-footer py-3 pl-4 text-sm text-gray-700">
                       Log out
                     </DropdownMenu.Item>
                   </button>

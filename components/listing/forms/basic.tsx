@@ -1,3 +1,4 @@
+import { returnClass } from "@/components/shared/styles/input";
 import {
   updateBasicInfoField,
   updateLocationField,
@@ -6,7 +7,7 @@ import dynamic from "next/dynamic";
 import { useDispatch } from "react-redux";
 import { useDebouncedCallback } from "use-debounce";
 
-const AddressAutoFill = dynamic(() => import("./searchAutofill"), {
+const AddressAutoFill = dynamic(async () => await import("./searchAutofill"), {
   suspense: true,
   ssr: false,
 });
@@ -39,16 +40,14 @@ const BasicInfo = ({
   };
 
   return (
-    <div className="mt-6 px-4 lg:w-2/3">
+    <div className="w-full px-4">
       <p className="text-xl font-semibold text-gray-900">Basic Information</p>
       <hr className="mb-6 mt-3 h-px border-0 bg-gray-200" />
-      <div className="mb-4 flex flex-col gap-6 sm:flex-row">
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">Boat Name</label>
-          {/* border bg-white shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] rounded-lg border-solid border-[#D0D5DD] */}
+      <div className="mb-8 flex flex-col items-center gap-6 sm:flex-row">
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 shadow-[0px_1px_2px_0px_rgba(16,24,40,0.05)] focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="boatName"
+            className={returnClass(!!(errors.boatName && touched.boatName))[0]}
+            placeholder=" "
             onBlur={handleBlur}
             name="boatName"
             type="text"
@@ -58,17 +57,22 @@ const BasicInfo = ({
               updateBasicFields(event.target.name, event.target.value);
             }}
           />
+          <label
+            className={returnClass(!!(errors.boatName && touched.boatName))[1]}
+          >
+            Boat Name
+          </label>
           {errors.boatName && touched.boatName && (
             <p className="ml-1 text-sm text-orange-700">
               {errors.boatName as string}
             </p>
           )}
         </div>
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">Boat Type</label>
+
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="boat type"
+            className={returnClass(!!(errors.boatType && touched.boatType))[0]}
+            placeholder=" "
             onBlur={handleBlur}
             name="boatType"
             type="text"
@@ -78,6 +82,12 @@ const BasicInfo = ({
               updateBasicFields(event.target.name, event.target.value);
             }}
           />
+          <label
+            className={returnClass(!!(errors.boatType && touched.boatType))[1]}
+          >
+            Boat Type
+          </label>
+
           {errors.boatType && touched.boatType && (
             <p className="ml-1 text-sm text-orange-700">
               {errors.boatType as string}
@@ -85,12 +95,12 @@ const BasicInfo = ({
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-6 sm:flex-row">
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">Model</label>
+
+      <div className="mb-8 flex flex-col items-center gap-6 sm:flex-row">
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="Model"
+            className={returnClass(!!(errors.model && touched.model))[0]}
+            placeholder=" "
             type="text"
             onBlur={handleBlur}
             name="model"
@@ -100,17 +110,19 @@ const BasicInfo = ({
               updateBasicFields(event.target.name, event.target.value);
             }}
           />
+          <label className={returnClass(!!(errors.model && touched.model))[1]}>
+            Model
+          </label>
           {errors.model && touched.model && (
             <p className="ml-1 text-sm text-orange-700">
               {errors.model as string}
             </p>
           )}
         </div>
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">Length (ft.)</label>
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="length"
+            className={returnClass(!!(errors.length && touched.length))[0]}
+            placeholder=" "
             type="number"
             onBlur={handleBlur}
             name="length"
@@ -120,6 +132,11 @@ const BasicInfo = ({
               updateBasicFields(event.target.name, event.target.value);
             }}
           />
+          <label
+            className={returnClass(!!(errors.length && touched.length))[1]}
+          >
+            Length (ft.)
+          </label>
           {errors.length && touched.length && (
             <p className="ml-1 text-sm text-orange-700">
               {errors.length as string}
@@ -127,12 +144,12 @@ const BasicInfo = ({
           )}
         </div>
       </div>
-      <div className="mt-4 flex flex-col gap-6 sm:flex-row">
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">Manufacturer</label>
+
+      <div className="mb-8 flex flex-col items-center gap-6 sm:flex-row">
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="Manufacturer"
+            className={returnClass(!!(errors.length && touched.length))[0]}
+            placeholder=" "
             onBlur={handleBlur}
             name="manufacturer"
             value={values.manufacturer}
@@ -141,17 +158,23 @@ const BasicInfo = ({
               updateBasicFields(event.target.name, event.target.value);
             }}
           />
+          <label
+            className={
+              returnClass(!!(errors.manufacturer && touched.manufacturer))[1]
+            }
+          >
+            Manufacturer
+          </label>
           {errors.manufacturer && touched.manufacturer && (
             <p className="ml-1 text-sm text-orange-700">
               {errors.manufacturer as string}
             </p>
           )}
         </div>
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">Year</label>
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="Year"
+            className={returnClass(!!(errors.year && touched.year))[0]}
+            placeholder=" "
             onBlur={handleBlur}
             type="number"
             min={year - 150}
@@ -163,6 +186,9 @@ const BasicInfo = ({
               updateBasicFields(event.target.name, event.target.value);
             }}
           />
+          <label className={returnClass(!!(errors.year && touched.year))[1]}>
+            Year
+          </label>
           {errors.year && touched.year && (
             <p className="ml-1 text-sm text-orange-700">
               {errors.year as string}
@@ -170,14 +196,15 @@ const BasicInfo = ({
           )}
         </div>
       </div>
-      <hr className="my-6 h-px border-0 bg-gray-200" />
-      <div className="flex w-full flex-col">
-        <label className="mb-2 text-sm font-medium text-gray-700">
-          Description
-        </label>
+
+      <hr className="mb-8 mt-8 h-px border-0 bg-gray-200" />
+
+      <div className="relative mb-6 w-full">
         <textarea
-          className="mb-4 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-          placeholder="Enter a description"
+          className={`${
+            returnClass(!!(errors.year && touched.year))[0]
+          } description-text px-[14px] py-[10px]`}
+          placeholder=" "
           onBlur={handleBlur}
           name="description"
           value={values.description}
@@ -187,30 +214,30 @@ const BasicInfo = ({
           }}
           rows={5}
         />
+        <label className={returnClass(!!(errors.year && touched.year))[1]}>
+          Add description
+        </label>
         {errors.description && touched.description && (
           <p className="ml-1 text-sm text-orange-700">
             {errors.description as string}
           </p>
         )}
       </div>
-      <div className="mt-4 flex flex-col gap-6 sm:flex-row">
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">Address</label>
-          <AddressAutoFill
-            name="Address"
-            placeholder="Address"
-            onBlur={handleBlur}
-            onChange={handleChange}
-            onUpdate={updateLocationFields}
-            values={values}
-            setValues={setValues}
-          />
-        </div>
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">Zip Code</label>
+
+      <div className="mb-6 flex flex-col gap-6 sm:flex-row">
+        <AddressAutoFill
+          name="Address"
+          placeholder=" "
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onUpdate={updateLocationFields}
+          values={values}
+          setValues={setValues}
+        />
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="Zip Code"
+            className={returnClass(!!(errors.year && touched.year))[0]}
+            placeholder=" "
             onBlur={handleBlur}
             name="zipCode"
             value={values.zipCode}
@@ -220,14 +247,15 @@ const BasicInfo = ({
               updateLocationFields(event.target.name, event.target.value);
             }}
           />
+          <label className={returnClass()[1]}>Zip Code</label>
         </div>
       </div>
-      <div className="mt-4 flex flex-col gap-6 sm:flex-row">
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">City</label>
+
+      <div className="mb-6 flex flex-col gap-6 sm:flex-row">
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="City"
+            className={returnClass()[0]}
+            placeholder=" "
             onBlur={handleBlur}
             name="city"
             autoComplete="address-level2"
@@ -237,12 +265,12 @@ const BasicInfo = ({
               updateLocationFields(event.target.name, event.target.value);
             }}
           />
+          <label className={returnClass()[1]}>City</label>
         </div>
-        <div className="flex w-full flex-col">
-          <label className="mb-2 text-xs text-gray-700">State</label>
+        <div className="relative h-11 w-full">
           <input
-            className="h-11 rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="State"
+            className={returnClass()[0]}
+            placeholder=" "
             onBlur={handleBlur}
             autoComplete="address-level1"
             name="state"
@@ -252,6 +280,7 @@ const BasicInfo = ({
               updateLocationFields(event.target.name, event.target.value);
             }}
           />
+          <label className={returnClass()[1]}>State</label>
         </div>
       </div>
     </div>

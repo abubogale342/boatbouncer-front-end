@@ -9,9 +9,10 @@ import Router from "next/router";
 import useFetcher from "@/lib/hooks/use-axios";
 import { LoadingCircle } from "@/components/shared/icons";
 import { CheckCircle2, XCircle } from "lucide-react";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
+import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import startsWith from "lodash.startswith";
+import { returnClass } from "@/components/shared/styles/input";
 
 type step = {
   errors: boolean;
@@ -84,7 +85,7 @@ function Form({
       .then(() => {
         setTimeout(() => {
           setRecaptchaLoader(false);
-        }, 750);
+        }, 1000);
       })
       .catch(() => {
         setErrorMessage("unable to render recaptcha");
@@ -103,13 +104,10 @@ function Form({
       recaptchaToken: res,
     });
 
-    if (
-      smsResponse._id ||
-      smsResponse.phoneNumber == `+${credentials.phoneNumber}`
-    ) {
+    if (smsResponse._id || smsResponse.phoneNumber == credentials.phoneNumber) {
       Router.push({
         pathname: "/user/verify",
-        query: { ...credentials },
+        query: { ...credentials, recaptchaToken: res },
       });
 
       return;
@@ -129,13 +127,6 @@ function Form({
     }
   };
 
-  function returnClass(error: Boolean) {
-    return [
-      `text-blue-gray-700 shadow-none placeholder-shown:border-gray-300 z-5 border-t-transparent placeholder-shown:border-t-blue-gray-200 disabled:bg-blue-gray-50 peer h-full w-full rounded-md border border-gray-300 px-3 py-2.5 font-sans font-normal shadow-sm outline-none outline outline-0 drop-shadow-sm transition-all placeholder:text-base placeholder-shown:border focus:border-2 focus:border-cyan-600 focus:border-t-transparent focus:outline-0 disabled:border-0 outline-none focus:outline-none active:outline-none`,
-      `before:content[' '] after:content[' '] z-10 before:border-gray-300 after:border-gray-300 peer-placeholder-shown:text-blue-gray-500 peer-disabled:peer-placeholder-shown:text-blue-gray-500 pointer-events-none absolute -top-1.5 left-0 flex h-full w-full select-none text-xs font-normal leading-tight text-gray-400 transition-all before:pointer-events-none before:mr-1 before:mt-[6.5px] before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-l before:border-t before:transition-all after:pointer-events-none after:ml-1 after:mt-[6.5px] after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-r after:border-t after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-xs peer-focus:leading-tight peer-focus:text-cyan-600 peer-focus:before:border-l-2 peer-focus:before:border-t-2 peer-focus:before:border-cyan-600 peer-focus:after:border-r-2 peer-focus:after:border-t-2 peer-focus:after:border-cyan-600 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent`,
-    ];
-  }
-
   return (
     <Formik
       initialValues={initialValues}
@@ -150,7 +141,7 @@ function Form({
             lastName: values.lastName,
             userName: values.userName,
             address: values.address,
-            phoneNumber: `+${values.phoneNumber}`,
+            phoneNumber: values.phoneNumber,
             state: values.state,
             city: values.city,
             email: values.email,
@@ -260,6 +251,7 @@ function Form({
             >
               <div className="relative mb-7 h-11 w-full">
                 <input
+                  type="text"
                   name="userName"
                   className={
                     returnClass(!!(errors.userName && touched.userName))[0]
@@ -287,6 +279,7 @@ function Form({
               <div className="mb-7 grid w-full grid-cols-2 gap-2">
                 <div className="relative h-11 w-full">
                   <input
+                    type="text"
                     name="firstName"
                     className={
                       returnClass(!!(errors.firstName && touched.firstName))[0]
@@ -312,6 +305,7 @@ function Form({
                 </div>
                 <div className="relative h-11 w-full">
                   <input
+                    type="text"
                     name="lastName"
                     className={
                       returnClass(!!(errors.lastName && touched.lastName))[0]
@@ -339,30 +333,15 @@ function Form({
 
               <div className="relative mb-7 flex h-11 flex-col">
                 <PhoneInput
-                  country={"us"}
+                  type="tel"
+                  name="phoneNumber"
+                  placeholder="phone number"
+                  defaultCountry="US"
                   value={values.phoneNumber}
                   onBlur={handleBlur}
                   onChange={(value) => {
                     setValues({ ...values, phoneNumber: value });
                   }}
-                  inputProps={{
-                    name: "phoneNumber",
-                    type: "tel",
-                  }}
-                  containerStyle={{
-                    boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
-                    background: "white",
-                    zIndex: "100",
-                    borderRadius: "6px",
-                  }}
-                  inputStyle={{
-                    boxShadow: "0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
-                    height: "44px",
-                    width: "100%",
-                    fontSize: "1.1rem",
-                    borderRadius: "6px",
-                  }}
-                  inputClass="phone-input"
                 />
 
                 {errors.phoneNumber && touched.phoneNumber && (

@@ -61,19 +61,19 @@ const FeatureForm = ({
 
   return (
     <div>
-      <div className="mt-6 pl-4">
+      <div className="pl-4">
         <p className="text-xl font-semibold text-gray-900">Features</p>
-        <hr className="mb-4 mt-2 h-px border-0 bg-gray-200" />
+        <hr className="mb-6 mt-3 h-px border-0 bg-gray-200" />
 
         <div className="flex flex-row flex-wrap">
           {featureLists.map((feature) => (
             <div
-              className="flex flex-row items-center gap-2 pb-2 pr-10"
+              className="flex flex-row items-center gap-2 rounded pb-2 pr-10"
               key={feature.id}
             >
               <input
+                className="appearance-none focus:ring-0"
                 type="checkbox"
-                className="border border-solid border-gray-300 text-base text-gray-500 focus:border-sky-500 focus:outline-none focus:ring-sky-500"
                 onBlur={handleBlur}
                 name="features"
                 id={feature.id}
@@ -84,7 +84,7 @@ const FeatureForm = ({
                 }}
               />
               <label
-                className="text-sm  font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700"
                 htmlFor={feature.id}
               >
                 {feature.id}
@@ -94,7 +94,7 @@ const FeatureForm = ({
         </div>
 
         {errors.features && touched.features && (
-          <p className="ml-1 text-sm text-orange-700">
+          <p className="my-1 ml-1 text-sm text-orange-700">
             {errors.features as string}
           </p>
         )}
@@ -106,12 +106,12 @@ const FeatureForm = ({
         <div className="flex flex-row flex-wrap">
           {amenitiesLists.map((amenity) => (
             <div
-              className="flex flex-row items-center gap-2 pb-4 pr-10"
+              className="mb-4 flex flex-row items-center gap-2 pr-10"
               key={amenity.id}
             >
               <input
+                className="appearance-none focus:ring-0"
                 type="checkbox"
-                className="border border-solid border-gray-300 text-base text-gray-500 focus:border-sky-500 focus:outline-none focus:ring-sky-500"
                 onBlur={handleBlur}
                 name="amenities"
                 id={amenity.id}
@@ -122,7 +122,7 @@ const FeatureForm = ({
                 }}
               />
               <label
-                className="text-sm  font-medium text-gray-700"
+                className="text-sm font-medium text-gray-700"
                 htmlFor={amenity.id}
               >
                 {amenity.id}
@@ -132,7 +132,7 @@ const FeatureForm = ({
         </div>
 
         {errors.amenities && touched.amenities && (
-          <p className="ml-1 text-sm text-orange-700">
+          <p className="my-1 ml-1 text-sm text-orange-700">
             {errors.amenities as string}
           </p>
         )}
@@ -145,7 +145,7 @@ const FeatureForm = ({
         <div className="flex flex-row items-center gap-2 pb-4 pr-10">
           <input
             type="checkbox"
-            className="border border-solid border-gray-300 text-base text-gray-500 focus:border-sky-500 focus:outline-none focus:ring-sky-500"
+            className="appearance-none focus:ring-0"
             onBlur={handleBlur}
             id="captained"
             name="captained"

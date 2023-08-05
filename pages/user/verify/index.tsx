@@ -16,7 +16,7 @@ function Index() {
   useEffect(() => {
     if (phoneNumber) return;
     Router.push({
-      pathname: "/404",
+      pathname: "/user/login",
     });
   }, [phoneNumber]);
 
@@ -92,6 +92,7 @@ function Index() {
                     value={phoneNumber}
                     onBlur={handleBlur}
                     // onChange={handleChange}
+                    readOnly
                     required
                   />
                   {/* <p className="ml-1 text-sm text-orange-700 ">
@@ -118,10 +119,15 @@ function Index() {
                   </p>
                 </div>
 
-                <div className="mt-6 rounded-md bg-cyan-600 text-center">
+                <div className="mt-6 ">
+                  {verificationError && (
+                    <div className="text-center text-orange-700">
+                      {verificationError}
+                    </div>
+                  )}
                   <button
                     type="submit"
-                    className="w-full rounded-md py-3 font-medium text-white hover:bg-cyan-700 active:active:translate-y-[1.5px]"
+                    className="w-full rounded-md bg-cyan-600 py-3 text-center font-medium text-white hover:bg-cyan-700 active:active:translate-y-[1.5px]"
                   >
                     <span className="flex items-center justify-center gap-1">
                       {isVerifying ? (
@@ -132,12 +138,13 @@ function Index() {
                       {isVerifying && <LoadingCircle />}
                     </span>
                   </button>
-                </div>
-                {verificationError && (
-                  <div className="text-center text-orange-700">
-                    {verificationError}
+                  <div className="flex items-center justify-center">
+                    <p></p>
+                    <button className="mt-5 text-center text-base font-semibold not-italic leading-6 tracking-[0.5px] text-cyan-600">
+                      Resend code
+                    </button>
                   </div>
-                )}
+                </div>
               </fieldset>
             </form>
           )}

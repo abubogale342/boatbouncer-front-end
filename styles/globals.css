@@ -2,29 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+/* [type="text"],
 [type="tel"]:focus,
 [type="email"]:focus,
 [type="password"]:focus {
-  --tw-ring-color: none;
+  --tw-ring-color: none !important;
   background-color: white;
-}
+} */
 
+select,
+input[type="number"],
 input[type="text"],
 input[type="tel"],
 input[type="email"],
 input[type="password"] {
   background-color: white;
+  --tw-ring-color: none !important;
 }
 
-input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:active,
 input:-webkit-autofill:focus {
   background-color: #ffffff !important;
   color: black !important;
-  /* -webkit-box-shadow: 0 0 0 1000px white inset !important; */
+  -webkit-box-shadow: 0 0 0 1000px #e8f0fe inset !important;
   -webkit-text-fill-color: black !important;
   font-size: 1.1rem;
+}
+
+textarea:focus,
+input[type="number"]:focus,
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  -webkit-box-shadow: 0 0 0 1000px #e8f0fe inset !important;
+}
+
+.PhoneInputCountry {
+  width: 3rem;
+  margin-right: auto;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.PhoneInput {
+  border-radius: 6px;
+  border: 1px solid var(--gray-300, #d0d5dd);
+  box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  height: 44px;
+}
+
+.PhoneInputInput {
+  /* border-radius: 8px; */
+  border: 1px solid var(--gray-300, #d0d5dd);
+  border-top: none;
+  border-bottom: none;
+  /* border-right: none; */
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-right: #d0d5dd;
+}
+
+.PhoneInputInput:focus {
+  border: 1px solid #219ebc;
+}
+
+input[value]:not([value=""]) {
+  -webkit-box-shadow: 0 0 0 1000px #e8f0fe inset !important;
 }
 
 .phone-input:focus {
@@ -33,6 +78,24 @@ input:-webkit-autofill:focus {
 
 .phone-input:valid {
   -webkit-box-shadow: 0 0 0 1000px #e8f0fe inset !important;
+}
+
+.description-text:not(:empty) {
+  background-color: #ffffff !important;
+  color: black !important;
+  -webkit-box-shadow: 0 0 0 1000px #e8f0fe inset !important;
+  -webkit-text-fill-color: black !important;
+  font-size: 1.1rem;
+}
+
+input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--blue-green, #219ebc);
+  background: var(--primary-50, #f9f5ff);
+  padding: 0.125rem;
+  fill: none;
 }
 
 @layer utilities {
@@ -107,7 +170,9 @@ body::-webkit-scrollbar-thumb:hover {
 
 .dropDownItem:hover {
   background-color: rgba(0, 0, 0, 0.025);
+  /* background-color: #344054; */
   border: none !important;
+  outline: none;
 }
 
 .link-hover:hover:focus {
@@ -118,11 +183,14 @@ body::-webkit-scrollbar-thumb:hover {
 .DropdownMenuSubContent {
   /* min-width: 220px; */
   background-color: white;
-  border-radius: 6px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
   font-weight: 400;
   font-size: 14px;
   color: #344054;
   padding: 5px;
+  margin-right: 1rem;
+  margin-top: 1.25rem;
   box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35),
     0px 10px 20px -15px rgba(22, 23, 24, 0.2);
   animation-duration: 400ms;
@@ -179,6 +247,15 @@ body::-webkit-scrollbar-thumb:hover {
 .DropdownMenuSubTrigger[data-highlighted] {
   background-color: var(--violet9);
   color: var(--violet1);
+}
+
+.dropdown-header,
+.dropdown-footer {
+  outline: none;
+}
+
+.DropdownMenuArrow {
+  display: none !important;
 }
 
 .DropdownMenuLabel {

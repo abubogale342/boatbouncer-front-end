@@ -42,7 +42,7 @@ function Update({ handleSubmit }: Props) {
   }, [session?.token, refresh]);
 
   let formEl = (
-    <div className="flex h-[40vh] w-full items-center justify-center">
+    <div className="flex h-[30vh] w-full items-center justify-center text-cyan-600">
       <CircularProgress color="inherit" size="12.5vh" />
     </div>
   );

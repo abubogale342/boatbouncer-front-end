@@ -1,8 +1,8 @@
 import * as Yup from "yup";
 
 export const formUpdateSchema = Yup.object().shape({
-  boatName: Yup.string().required("Boat Name is required"),
-  boatType: Yup.string().required("Boat Type is required"),
+  boatName: Yup.string().required("Boat name is required"),
+  boatType: Yup.string().required("Boat type is required"),
   description: Yup.string().required("Description is required"),
   manufacturer: Yup.string().required("Manufacturer is required"),
   model: Yup.string().required("Model is required"),
@@ -15,8 +15,8 @@ export const formUpdateSchema = Yup.object().shape({
   category: Yup.string().required("Category is required"),
   subCategory: Yup.string().required("SubCategory is required"),
   features: Yup.bool()
-    .oneOf([true], "feature is required")
-    .required("feature is required"),
-  securityAllowance: Yup.string().required("SecurityAllowance is required"),
+    .oneOf([true], "Feature is required")
+    .required("Feature is required"),
+  securityAllowance: Yup.string().required("Security allowance is required"),
   pricing: Yup.mixed().required("Pricing is required"),
 });

@@ -1,8 +1,13 @@
 export const featureLists = [
   { id: "Buckinghamshire" },
   { id: "Metal" },
-  { id: "Bike" },
+  { id: "implement Auto array" },
+  { id: "panel" },
+  { id: "Garden JSON Rustic" },
   { id: "Internal" },
+  { id: "Borders" },
+  { id: "Cheese" },
+  { id: "Bike" },
 ];
 
 export const amenitiesLists = [

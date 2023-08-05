@@ -9,10 +9,13 @@ import home from "public/home.png";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 
-const AddressAutoFill = dynamic(() => import("../components/search"), {
-  suspense: true,
-  ssr: false,
-});
+const AddressAutoFill = dynamic(
+  async () => await import("../components/search"),
+  {
+    suspense: true,
+    ssr: false,
+  },
+);
 
 export default function Home(props: any) {
   const [searchVal, setSearchVal] = useState("");

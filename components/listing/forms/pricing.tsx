@@ -2,6 +2,7 @@ import { Formik } from "formik";
 import { updateBasicInfoField } from "features/boat/boatSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useDebouncedCallback } from "use-debounce";
+import { returnClass } from "@/components/shared/styles/input";
 
 const PricingForm = ({
   values,
@@ -26,14 +27,15 @@ const PricingForm = ({
   return (
     <div className="mt-4 px-4">
       <p className="text-xl font-semibold text-gray-900">Set Pricing</p>
-      <hr className="mb-4 mt-2 h-px border-0 bg-gray-200" />
+      <hr className="mb-6 mt-3 h-px border-0 bg-gray-200" />
 
-      <div className="flex flex-col">
-        <label className="mb-2 text-xs text-gray-700">Security Allowance</label>
-        <div className="flex  flex-row gap-0">
+      <div className="flex w-full flex-row">
+        <div className="relative flex w-full flex-row gap-0">
           <input
-            className="h-11 w-full rounded-s-lg border border-r-0 border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-            placeholder="security allowance"
+            className={`${
+              returnClass()[0]
+            } rounded-e-none focus:rounded-e-none`}
+            placeholder=" "
             onBlur={handleBlur}
             name="securityAllowance"
             value={values.securityAllowance}
@@ -42,17 +44,29 @@ const PricingForm = ({
               updateBasicFields(event.target.name, event.target.value);
             }}
           />
-          <select className="rounded-e-lg border border-l-0 border-solid border-gray-300 pl-2 text-base focus:border-sky-500  focus:outline-none focus:ring-sky-500">
+          <label className={returnClass()[1]}>Security Allowance</label>
+        </div>
+        <div className="relative w-24">
+          <select
+            className={`${
+              returnClass()[0]
+            } w-fit rounded-s-none focus:rounded-s-none`}
+          >
             <option>USD</option>
             <option>EUR</option>
           </select>
+          <label
+            className={`${
+              returnClass()[1]
+            } rounded-s-none focus:rounded-s-none`}
+          ></label>
         </div>
-        {errors.securityAllowance && touched.securityAllowance && (
-          <p className="ml-1 text-sm text-orange-700">
-            {errors.securityAllowance as string}
-          </p>
-        )}
       </div>
+      {errors.securityAllowance && touched.securityAllowance && (
+        <p className="ml-1 text-sm text-orange-700">
+          {errors.securityAllowance as string}
+        </p>
+      )}
     </div>
   );
 };

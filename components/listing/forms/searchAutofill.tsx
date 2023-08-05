@@ -2,6 +2,8 @@ import { AddressAutofill } from "@mapbox/search-js-react";
 import { AddressAutofillRetrieveResponse } from "@mapbox/search-js-core";
 
 import { useState } from "react";
+import { returnClass } from "@/components/shared/styles/input";
+import { icons } from "@/components/shared/locationIcon";
 
 const SearchAutofill = ({
   page,
@@ -49,27 +51,35 @@ const SearchAutofill = ({
   };
 
   return (
-    <>
+    <div className="w-full">
       {process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN && (
-        <div className="relative w-full">
-          <AddressAutofill
-            onRetrieve={handleRetrieve}
-            accessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-            options={{ country: "US" }}
-          >
+        <AddressAutofill
+          onRetrieve={handleRetrieve}
+          accessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+          options={{ country: "US" }}
+          theme={{
+            variables: {
+              borderRadius: "8px",
+              padding: "16px 40px 16px 24px",
+            },
+            icons: icons,
+          }}
+        >
+          <div className="relative h-11">
             <input
               name={name}
               autoComplete="address-line1"
               value={searchVal}
-              className="h-11 w-full rounded-lg border border-solid border-gray-300 pl-2 text-base text-gray-500 focus:border-sky-500  focus:outline-none focus:ring-sky-500"
-              placeholder={placeholder}
+              className={returnClass()[0]}
+              placeholder=" "
               onBlur={onBlur}
               onChange={(event) => handleChange(event)}
             />
-          </AddressAutofill>
-        </div>
+            <label className={returnClass()[1]}>Address</label>
+          </div>
+        </AddressAutofill>
       )}
-    </>
+    </div>
   );
 };
 
