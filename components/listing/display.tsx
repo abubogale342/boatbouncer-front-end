@@ -40,11 +40,7 @@ const DisplayListings = ({
     });
   }, [pageNo]);
 
-  let displayEl = (
-    <motion.p className="mx-2 flex h-14 items-center justify-center text-center text-2xl text-red-500">
-      You have no listings added.
-    </motion.p>
-  );
+  let displayEl = null;
 
   const nextPage = () => {
     setPageNo((page) => page + 1);
@@ -57,8 +53,6 @@ const DisplayListings = ({
   const editListingHandler = (boat: any) => {
     let boatFields = {
       ...boat,
-      imageUrls: boat.imageUrls[0],
-      subCategory: boat.subCategory[0],
       securityAllowance: boat.securityAllowance.split(" ")[0],
     };
 
@@ -88,6 +82,21 @@ const DisplayListings = ({
     );
   }
 
+  if (
+    !error &&
+    !loading &&
+    data &&
+    data.length &&
+    data.length === 0 &&
+    pageNo === 1
+  ) {
+    displayEl = (
+      <motion.p className="mx-2 flex h-14 items-center justify-center text-center text-2xl text-red-500">
+        You have no listings added.
+      </motion.p>
+    );
+  }
+
   if (error) {
     displayEl = (
       <p className="mr-4 h-12 items-center justify-center text-3xl text-orange-700">
@@ -107,6 +116,7 @@ const DisplayListings = ({
         key={boat._id}
         boatImg={boat.imageUrls[0]}
         location={boat.location}
+        captained={boat.captained}
       >
         <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
           <div className="flex flex-row gap-2">
@@ -146,7 +156,7 @@ const DisplayListings = ({
         transition={{ duration: 0.2 }}
         className="md:mx-10 lg:mx-20"
       >
-        <div className="ml-6 mr-4 flex flex-row items-center justify-between">
+        <div className="flex flex-row items-center justify-between">
           <p className="text-xl font-medium text-gray-900 sm:text-3xl">
             My Listings
           </p>
@@ -157,12 +167,10 @@ const DisplayListings = ({
             <Plus size="20" /> Add New Listing
           </button>
         </div>
-        <p className="mb-6 ml-6 mt-1 text-gray-500">
+        <p className="mb-6 mt-1 text-gray-500">
           Track, manage and forecast your Listings.
         </p>
-        <div className="mx-auto flex w-fit flex-wrap justify-evenly gap-2">
-          {displayEl}
-        </div>
+        <div className="md mx-auto flex w-fit flex-wrap gap-6">{displayEl}</div>
         {dataLength > 10 && (
           <div className="mx-6 my-5 flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-lg">

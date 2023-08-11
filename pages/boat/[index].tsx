@@ -2,12 +2,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import Carousel from "@/components/layout/carousel";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, XCircle } from "lucide-react";
 import { getSession } from "next-auth/react";
 import { Fragment } from "react";
 import Link from "next/link";
 import BookingForm from "@/components/booking/form";
 import Meta from "@/components/layout/meta";
+import Reviews from "@/components/reviews";
+
+const SPECS = ["year", "length", "model", "manufacturer"];
 
 export default function Search(props: any) {
   const { data, error, ...user } = props;
@@ -46,12 +49,47 @@ export default function Search(props: any) {
               </span>
             ))}
           </ul>
+
+          <br />
+          <h1 className="mb-2 text-lg font-bold">Specifications</h1>
+          <ul className="ml-1 flex flex-col flex-wrap gap-5">
+            {SPECS?.map((item: string, index: number) => (
+              <Fragment key={index}>
+                <div className="relative grid w-fit grid-cols-[180px_auto]">
+                  <div className="absolute bottom-0 h-0.5 w-full bg-gray-600"></div>
+                  <p className="text-lg text-gray-600">{`${
+                    item[0].toUpperCase() + item.slice(1)
+                  }`}</p>
+                  <p className="font-medium text-gray-900">{data[item]}</p>
+                </div>
+              </Fragment>
+            ))}
+          </ul>
+          <br />
+          <div className="flex flex-row items-center gap-2">
+            <p className="text-lg font-bold text-gray-900">Captained</p>
+            {data.captained ? (
+              <CheckCircle2 color="green" size="32" />
+            ) : (
+              <XCircle color="red" size="32" />
+            )}
+          </div>
+
+          <div className="mt-10 flex flex-row flex-wrap gap-6">
+            <Reviews />
+            <Reviews />
+            <Reviews />
+            <Reviews />
+            <Reviews />
+            <Reviews />
+          </div>
         </div>
         {data.owner !== user._id && (
           <div className="mx-auto w-full sm:block">
             <BookingForm data={data} user={user} />
           </div>
         )}
+        <br />
       </div>
     );
   }
@@ -89,7 +127,6 @@ export default function Search(props: any) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="my-6 sm:my-12"
         >
           <div className="flex w-full flex-wrap justify-evenly gap-x-1.5 gap-y-2.5">
             {element}

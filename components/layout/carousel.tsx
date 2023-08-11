@@ -25,7 +25,7 @@ export default function Carousel({ images }: { images: any }) {
 
   return (
     <div className="relative">
-      <div className="relative m-auto flex h-[45vh] w-full overflow-hidden">
+      <div className="relative m-auto flex h-[82.5vh] w-full overflow-hidden rounded-lg shadow-sm drop-shadow-sm">
         <AiFillLeftCircle
           onClick={handlePrevSlide}
           className="absolute inset-y-1/2 left-4 z-20 m-auto cursor-pointer text-5xl text-white opacity-90 sm:left-5"
@@ -39,13 +39,12 @@ export default function Carousel({ images }: { images: any }) {
           {images.map((image: string, index: number) => {
             if (index === currentSlide) {
               return (
-                <img
+                <Image
                   key={index}
                   src={image}
+                  fill
                   alt=""
-                  className="animate-fadeIn relative mx-auto h-full w-fit max-w-[100%] md:block xl:w-auto"
-                  style={{ objectFit: "cover" }}
-                  object-fit="cover"
+                  className="animate-fadeIn relative mx-auto h-full w-fit max-w-[100%] object-cover md:block xl:w-auto"
                 />
               );
             }
@@ -58,7 +57,7 @@ export default function Carousel({ images }: { images: any }) {
         />
       </div>
 
-      <div className="absolute inset-x-1/2 bottom-4 z-20">
+      {/* <div className="absolute inset-x-1/2 bottom-4 z-20">
         <div className="relative flex w-fit justify-center rounded-full bg-white p-2">
           {images.map((_: any, index: number) => {
             return (
@@ -76,7 +75,7 @@ export default function Carousel({ images }: { images: any }) {
             );
           })}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

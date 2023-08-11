@@ -1,5 +1,5 @@
 import React from "react";
-import Regsiter from "@/components/auth/user/register";
+import Register from "@/components/auth/user/register";
 import { getSession } from "next-auth/react";
 import { IncomingMessage } from "http";
 import Meta from "@/components/layout/meta";
@@ -12,7 +12,7 @@ function index() {
   return (
     <div className="h-screen overflow-hidden">
       <Meta title="register" />
-      <Regsiter handleSubmit={submitHandler} />;
+      <Register handleSubmit={submitHandler} />;
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+const initialState: any = {
   boatInfo: {
     boatName: "",
     boatType: "",
@@ -11,7 +11,7 @@ const initialState = {
     length: 100,
     captained: false,
     amenities: [],
-    imageUrls: "",
+    imageUrls: ["", "", "", "", "", ""],
     location: {
       address: "",
       city: "",
@@ -22,16 +22,12 @@ const initialState = {
       latitude: null,
       longitude: null,
     },
-    category: "",
-    subCategory: "",
+    category: [],
+    subCategory: [],
     features: "",
     securityAllowance: "",
-    pricing: [
-      {
-        type: "Per Hour",
-        min: 1,
-      },
-    ],
+    pricing: [],
+    currency: "USD",
   },
   editableBoat: null,
   bookmarks: null,
@@ -57,7 +53,7 @@ export const boatSlice = createSlice({
         state.boatInfo.features = "";
       }
     },
-    updateCategory: (state: any, { payload: { key, value } }) => {
+    updateCategory: (state: any, { payload: value }) => {
       state.boatInfo.category = value;
     },
     updateAmenitiesList: (state: any, { payload: { key, value } }) => {
@@ -70,16 +66,18 @@ export const boatSlice = createSlice({
         state.boatInfo.amenities = filteredState;
       }
     },
-
     updateCaptainedList: (state: any, { payload: { key, value } }) => {
       state.boatInfo.captained = value;
     },
-
-    updateImageUrls: (state: any, { payload: imageUrl }) => {
-      state.boatInfo.imageUrls = imageUrl;
+    updateSecurityAllowance: (state: any, { payload: value }) => {
+      state.boatInfo.securityAllowance = value;
     },
-
-    updateSubCategory: (state: any, { payload: { key, value } }) => {
+    updateImageUrls: (state: any, { payload: { key, imageUrl } }) => {
+      let updatedImageUrls = state.boatInfo.imageUrls;
+      updatedImageUrls[key] = imageUrl;
+      state.boatInfo.imageUrls = updatedImageUrls;
+    },
+    updateSubCategory: (state: any, { payload: value }) => {
       state.boatInfo.subCategory = value;
     },
     resetSubCategories: (state) => {
@@ -101,6 +99,28 @@ export const boatSlice = createSlice({
     resetBookmarks: (state) => {
       state.bookmarks = initialState.bookmarks;
     },
+    updateCurrency: (state, { payload: currency }) => {
+      state.currency = currency;
+    },
+    updatePricing: (state, { payload: { type, action, value, min = 1 } }) => {
+      if (action) {
+        let index = state.boatInfo.pricing.findIndex(
+          (priceType: any) => priceType.type === type,
+        );
+        let updatedPricing = state.boatInfo.pricing;
+        if (index !== -1) {
+          updatedPricing[index] = { ...updatedPricing[index], value, min };
+        } else {
+          updatedPricing = [...state.boatInfo.pricing, { type, value, min }];
+        }
+        state.boatInfo.pricing = updatedPricing;
+      } else {
+        let updatedPricing = state.boatInfo.pricing.filter(
+          (priceType: any) => priceType.type !== type,
+        );
+        state.boatInfo.pricing = updatedPricing;
+      }
+    },
   },
 });
 
@@ -114,6 +134,7 @@ export const {
   updateAmenitiesList,
   updateImageUrls,
   updateSubCategory,
+  updateCurrency,
   resetSubCategories,
   updateCaptainedList,
   setBoatInfo,
@@ -121,6 +142,8 @@ export const {
   resetBoat,
   setBookmarks,
   resetBookmarks,
+  updatePricing,
+  updateSecurityAllowance,
 } = boatSlice.actions;
 
 export default boatSlice.reducer;

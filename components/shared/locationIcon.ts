@@ -9,4 +9,5 @@ export const icons = {
   marker: locationIcon,
   street: locationIcon,
   addressMarker: locationIcon,
+  search: locationIcon,
 };

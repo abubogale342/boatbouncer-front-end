@@ -12,14 +12,17 @@ const Boat = ({
   location,
   status,
   start,
+  checked,
   end,
   renterPrice,
   type,
   _id,
+  captained,
 }: {
   page: string;
   children: React.ReactNode;
   boatImg: string | undefined | null;
+  checked?: boolean;
   location:
     | {
         address: string;
@@ -33,13 +36,14 @@ const Boat = ({
   renterPrice?: number;
   type?: string;
   _id?: string;
+  captained?: boolean;
 }) => {
   const dispatch = useDispatch();
   const { id } = useSelector((state: any) => state.bookmark.bookmarkInfo);
 
   return (
     <div
-      className={`flex h-fit w-fit flex-col ${
+      className={`flex h-full w-fit flex-col justify-between shadow-sm drop-shadow-sm ${
         page === "listing" ? "sm:flex-row" : ""
       } ${
         id && id == _id
@@ -60,17 +64,17 @@ const Boat = ({
           <img
             src={boatImg}
             alt=""
-            className="mx-auto mb-2 h-auto max-w-xs rounded-2xl sm:h-auto sm:w-auto"
+            className={`mx-auto mb-2 h-full max-w-xs rounded-2xl object-cover sm:h-full sm:w-full`}
           />
         ) : (
           <Image
             src={FavouriteImage}
             alt=""
-            className="mx-auto mb-2 h-auto max-w-xs rounded-2xl sm:h-auto sm:w-auto"
+            className="mx-full mb-2 h-full max-w-xs rounded-2xl sm:h-full sm:w-full"
           />
         ))}
 
-      <div className="p-2">
+      <div className="h-fit p-2">
         <div className="flex flex-row items-center justify-between">
           {page !== "bookmarks" ? (
             <p className="text-xs font-light text-zinc-900">
@@ -110,7 +114,7 @@ const Boat = ({
               <span>4-8 Hours Rental</span>
             </li>
             <li className="whitespace-nowrap rounded-2xl bg-orange-50 px-2 py-1 text-orange-700">
-              <span>Captained</span>
+              <span>{captained ? "Captained" : ""}</span>
             </li>
           </ul>
         )}

@@ -45,7 +45,12 @@ const SearchResults = ({
   if (pageNo === 1) {
     element = boats.map((boat: any) => (
       <Link key={boat._id} href={`/boat/${boat._id}`}>
-        <Boat page="" boatImg={boat.imageUrls[0]} location={boat.location}>
+        <Boat
+          page=""
+          checked={checked}
+          boatImg={boat.imageUrls[0]}
+          location={boat.location}
+        >
           {""}
         </Boat>
       </Link>
@@ -77,9 +82,9 @@ const SearchResults = ({
   return (
     <Fragment>
       <div
-        className={`flex w-full flex-row flex-wrap justify-around gap-x-3 gap-y-5 ${
+        className={`flex w-full flex-row flex-wrap gap-6 ${
           checked
-            ? "h-screen overflow-y-scroll [-ms-overflow-y-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden"
+            ? "overflow-y-scroll [-ms-overflow-y-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden"
             : ""
         }`}
       >

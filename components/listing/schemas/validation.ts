@@ -11,12 +11,15 @@ export const formUpdateSchema = Yup.object().shape({
   amenities: Yup.array()
     .min(1, "Amenities is required")
     .required("Amenities is required"),
-  imageUrls: Yup.string().required("Image  upload is required"),
-  category: Yup.string().required("Category is required"),
-  subCategory: Yup.string().required("SubCategory is required"),
+  imageUrls: Yup.string().required("First image  upload is required"),
+  category: Yup.array()
+    .min(1, "Category is required")
+    .required("Category is required"),
+  subCategory: Yup.array(),
   features: Yup.bool()
     .oneOf([true], "Feature is required")
     .required("Feature is required"),
-  securityAllowance: Yup.string().required("Security allowance is required"),
-  pricing: Yup.mixed().required("Pricing is required"),
+  securityAllowance: Yup.number().required("Security allowance is required"),
+  pricing: Yup.mixed(),
+  currency: Yup.string().required("currency is required"),
 });

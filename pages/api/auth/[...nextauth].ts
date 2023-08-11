@@ -83,7 +83,7 @@ export const authOptions: NextAuthOptions = {
       ) {
         // check user existance
         if (credentials?.email && credentials?.password) {
-          const login = await poster("user/login", {
+          const login = await poster("/user/login", {
             email: credentials.email,
             password: credentials.password,
           });

@@ -7,7 +7,6 @@ import GalleryForm from "./gallery";
 import CategoryForm from "./category";
 import PricingForm from "./pricing";
 import useFetcher from "@/lib/hooks/use-axios";
-import * as Separator from "@radix-ui/react-separator";
 import { LoadingDots } from "@/components/shared/icons";
 import Router from "next/router";
 import { objectDiff } from "@/lib/utils";
@@ -42,7 +41,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
           year: boatInfo.year,
           length: boatInfo.length,
           amenities: boatInfo.amenities,
-          imageUrls: boatInfo.imageUrls,
+          imageUrls: boatInfo.imageUrls[0],
           city: boatInfo.location.city,
           state: boatInfo.location.state,
           address: boatInfo.location.address,
@@ -51,15 +50,15 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
           subCategory: boatInfo.subCategory,
           features: Boolean(boatInfo.features),
           securityAllowance: boatInfo.securityAllowance,
-          pricing: boatInfo.pricing,
           captained: boatInfo.captained,
+          currency: boatInfo.currency,
         }}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values: any, { setSubmitting }: { setSubmitting: any }) => {
           let finalValues = {
             ...boatInfo,
             imageUrls: boatInfo.imageUrls,
-            subCategory: [boatInfo.subCategory],
-            securityAllowance: `${boatInfo.securityAllowance} USD`,
+            subCategory: boatInfo.subCategory,
+            securityAllowance: `${boatInfo.securityAllowance} ${boatInfo.currency}`,
           };
 
           if (editableBoat) {
@@ -76,15 +75,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                 setChagesMade(false);
               }, 2000);
             } else {
-              updateBoat(`boat/${editableBoat._id}`, {
-                ...difference,
-                ...(difference.imageUrls && {
-                  imageUrls: [difference.imageUrls],
-                }),
-                ...(difference.subCategory && {
-                  subCategory: [difference.subCategory],
-                }),
-              });
+              updateBoat(`boat/${editableBoat._id}`, finalValues);
             }
           } else {
             fetchWithAuth("/boat", finalValues);
@@ -102,6 +93,14 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
           handleBlur,
           handleSubmit,
           setValues,
+        }: {
+          values: any;
+          errors: any;
+          touched: any;
+          handleChange: any;
+          handleBlur: any;
+          handleSubmit: any;
+          setValues: any;
         }) => {
           return (
             <form onSubmit={handleSubmit} className="sm:mx-10 md:mx-20">
@@ -157,8 +156,8 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
               </div>
 
               {/* <hr className="mt-6 h-px border-0 bg-gray-200 sm:mt-0" /> */}
-              <div className="flex flex-col lg:w-full lg:flex-row lg:gap-7">
-                <div className="w-full lg:w-[55%]">
+              <div className="flex flex-col lg:w-full lg:flex-row lg:gap-4">
+                <div className="w-full lg:w-[57.5%]">
                   <BasicInfos
                     {...{
                       values,
@@ -185,7 +184,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
 
                 <div className="block w-px bg-gray-200"></div>
 
-                <div className="lg:w-[45%]">
+                <div className="lg:w-[42.5%]">
                   <FeatureForm
                     {...{
                       values,

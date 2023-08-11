@@ -206,9 +206,11 @@ function Form({
             }
 
             if (!createdAccount.status) {
+              setRecaptchaLoader(false);
               setErrorMessage("Seems connection error, please try again!");
             }
           } catch (error) {
+            setRecaptchaLoader(false);
             setErrorMessage("error occured, please try again!");
           }
         }

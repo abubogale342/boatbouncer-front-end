@@ -31,9 +31,12 @@ const BasicInfo = ({
   const currentDate = new Date();
   const year = currentDate.getFullYear();
 
-  const updateBasicFields = useDebouncedCallback((key, value) => {
-    dispatch(updateBasicInfoField({ key, value }));
-  }, 500);
+  const updateBasicFields = useDebouncedCallback(
+    (key: string, value: string) => {
+      dispatch(updateBasicInfoField({ key, value }));
+    },
+    500,
+  );
 
   const updateLocationFields = (key: string, value: string) => {
     dispatch(updateLocationField({ key, value }));
@@ -226,12 +229,13 @@ const BasicInfo = ({
 
       <div className="mb-6 flex flex-col gap-6 sm:flex-row">
         <AddressAutoFill
-          name="Address"
+          name="address"
           placeholder=" "
           onBlur={handleBlur}
           onChange={handleChange}
           onUpdate={updateLocationFields}
           values={values}
+          value={values.address}
           setValues={setValues}
         />
         <div className="relative h-11 w-full">

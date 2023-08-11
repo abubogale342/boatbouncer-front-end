@@ -3,19 +3,21 @@ import Map from "@/components/map";
 import SearchResults from "@/components/searchResults";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
-import { AddressAutofill } from "@mapbox/search-js-react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Filter } from "lucide-react";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
+import { Filter } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
-const AddressAutoFill = dynamic(() => import("../../components/search"), {
-  suspense: true,
-  ssr: false,
-});
+const AddressAutoFill = dynamic(
+  async () => await import("../../components/search"),
+  {
+    suspense: true,
+    ssr: false,
+  },
+);
 
 export default function Search(props: any) {
   const { data, error, ...user } = props;
@@ -64,7 +66,7 @@ export default function Search(props: any) {
     <div className="relative flex min-h-screen w-full flex-col">
       <Meta title="Search" />
 
-      <div className="sticky left-0 right-0 top-0 z-10 bg-white pb-2 shadow-md">
+      <div className="sticky left-0 right-0 top-0 z-10 bg-white pb-2 shadow-sm">
         <Header {...user}>
           <Link href="/" className="ml-6 text-sm font-bold text-cyan-600">
             Home
@@ -109,7 +111,7 @@ export default function Search(props: any) {
             </div>
           )}
           <div
-            className={`mt-3 w-full ${
+            className={`m-6 w-full ${
               data && data?.data && data?.data?.length > 0 && checked
                 ? "hidden lg:block lg:w-[67vw]"
                 : "lg:w-[100vw]"
@@ -127,6 +129,8 @@ export default function Search(props: any) {
 export async function getServerSideProps(context: any) {
   const { req, query } = context;
   const { method } = req;
+
+  let queryString = new URLSearchParams(query).toString();
 
   let session = await getSession({ req });
 
@@ -148,7 +152,7 @@ export async function getServerSideProps(context: any) {
 
   try {
     data = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/boat?address=${query.query}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/boat?${queryString}`,
       requestOptions,
     );
 

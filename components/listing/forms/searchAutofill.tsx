@@ -12,6 +12,7 @@ const SearchAutofill = ({
   onBlur,
   onChange,
   onUpdate,
+  value,
   values,
   setValues,
 }: {
@@ -21,10 +22,11 @@ const SearchAutofill = ({
   onBlur?: any;
   onChange?: any;
   onUpdate?: any;
+  value?: any;
   values?: any;
   setValues?: any;
 }) => {
-  const [searchVal, setSearchVal] = useState("");
+  const [searchVal, setSearchVal] = useState(value);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchVal(event.target.value);
@@ -33,6 +35,8 @@ const SearchAutofill = ({
   const handleRetrieve = (res: AddressAutofillRetrieveResponse) => {
     const feature = res.features[0];
     let place_name = feature.properties.address_line1 ?? "";
+
+    console.log(feature.properties);
 
     setValues({
       ...values,
@@ -73,7 +77,7 @@ const SearchAutofill = ({
               className={returnClass()[0]}
               placeholder=" "
               onBlur={onBlur}
-              onChange={(event) => handleChange(event)}
+              onChange={handleChange}
             />
             <label className={returnClass()[1]}>Address</label>
           </div>

@@ -5,10 +5,24 @@ import {
   updateCategory,
   updateSubCategory,
 } from "features/boat/boatSlice";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { categories } from "./data";
-import { Select, Option } from "@material-tailwind/react";
+import { categories, subCategories } from "./data";
 import { returnClass } from "@/components/shared/styles/input";
+import { Theme, useTheme } from "@mui/material/styles";
+
+import {
+  Box,
+  Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 
 const CategoryForm = ({
   values,
@@ -24,14 +38,36 @@ const CategoryForm = ({
   handleBlur: any;
 }) => {
   const dispatch = useDispatch();
+  const theme = useTheme();
 
-  const updateCategories = (key: string, value: string) => {
-    dispatch(resetSubCategories());
-    dispatch(updateCategory({ key, value }));
+  const MenuProps = {
+    PaperProps: {
+      style: {
+        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+        width: 250,
+      },
+    },
   };
 
-  const updateSubCategories = (key: string, value: string) => {
-    dispatch(updateSubCategory({ key, value }));
+  function getStyles(
+    name: string,
+    categoryName: readonly string[],
+    theme: Theme,
+  ) {
+    return {
+      fontWeight:
+        categoryName.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+
+  const updateCategories = (value?: string) => {
+    dispatch(updateCategory(value));
+  };
+
+  const updateSubCategories = (value: string) => {
+    dispatch(updateSubCategory(value));
   };
 
   return (
@@ -40,24 +76,48 @@ const CategoryForm = ({
       <hr className="mb-6 mt-3 h-px border-0 bg-gray-200" />
 
       <div className="relative w-full">
-        <select
-          id="category"
-          name="category"
-          className={returnClass()[0]}
-          defaultValue={values.category ?? categories[0].id}
-          onChange={(event) => {
-            handleChange(event);
-            updateCategories(event?.target.name, event?.target.value);
-          }}
-        >
-          <option value="">Select Category</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.id}
-            </option>
-          ))}
-        </select>
-        <label className={returnClass()[1]}>Choose you category</label>
+        <FormControl sx={{ width: "100%" }}>
+          <InputLabel id="demo-multiple-chip-label">Categories</InputLabel>
+          <Select
+            id="category"
+            name="category"
+            className="!shadow-sm !drop-shadow-sm"
+            multiple
+            value={values.category}
+            onChange={(event) => {
+              handleChange(event);
+              updateCategories(event.target.value);
+            }}
+            onBlur={handleBlur}
+            input={
+              <OutlinedInput id="select-multiple-chip" label="Categories" />
+            }
+            renderValue={(selected) => (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 0.5,
+                }}
+              >
+                {selected.map((value: any) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {categories.map((category) => (
+              <MenuItem
+                key={category}
+                value={category}
+                style={getStyles(category, values.category, theme)}
+              >
+                {category}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
 
       {errors.category && touched.category && (
@@ -66,40 +126,53 @@ const CategoryForm = ({
         </p>
       )}
 
-      {categories.filter(
-        (category) => category.id === values.category,
-      )?.[0] && (
-        <div className="ml-2 flex flex-row">
-          <div className="ml-3 mt-3 w-px bg-cyan-600"></div>
-          <div className="relative ml-3 mt-4 w-full">
-            <select
-              name="subCategory"
+      <div className="mt-5 flex flex-row">
+        <div className="w-7"></div>
+        <div className="relative w-full">
+          <FormControl sx={{ width: "100%" }}>
+            <InputLabel className="!shadow-sm !drop-shadow-sm">
+              Subcategory
+            </InputLabel>
+            <Select
               id="subCategory"
-              className={returnClass()[0]}
+              name="subCategory"
+              className="!shadow-sm !drop-shadow-sm active:!border-cyan-600"
+              multiple
+              value={values.subCategory}
               onChange={(event) => {
                 handleChange(event);
-                updateSubCategories(event.target.name, event.target.value);
+                updateSubCategories(event.target.value);
               }}
-              defaultValue={values.subCategory ?? ""}
+              onBlur={handleBlur}
+              input={<OutlinedInput label="subCategories" />}
+              renderValue={(selected) => (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 0.5,
+                  }}
+                >
+                  {selected.map((value: any) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
             >
-              <option value="">Select Sub Category</option>
-              {categories
-                .filter((category) => category.id === values.category)?.[0]
-                ?.subCategories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.id}
-                  </option>
-                ))}
-            </select>
-            <label className={returnClass()[1]}></label>
-            {errors.subCategory && touched.subCategory && (
-              <p className="ml-1 text-sm text-orange-700">
-                {errors.subCategory as string}
-              </p>
-            )}
-          </div>
+              {subCategories.map((category) => (
+                <MenuItem
+                  key={category}
+                  value={category}
+                  style={getStyles(category, values.subCategory, theme)}
+                >
+                  {category}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
-      )}
+      </div>
     </div>
   );
 };
