@@ -3,11 +3,8 @@ import Balancer from "react-wrap-balancer";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
-import boat from "../../../public/boat.png";
-import logo from "../../../public/logo.svg";
-import logo2 from "../../../public/Boat Bouncer Logo 1.png";
+import logo2 from "../../../public/boatbouncer-favicon.png";
 import { BoatImg } from "@/components/shared/icons/logo";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 function BaseLayout({

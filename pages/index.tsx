@@ -3,14 +3,15 @@ import Header from "@/components/shared/header";
 import { IncomingMessage } from "http";
 import { getSession } from "next-auth/react";
 import { motion } from "framer-motion";
-import { Suspense, useState, useEffect, useRef } from "react";
+import { Suspense, useRef } from "react";
 import home from "public/home.png";
 
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import Meta from "@/components/layout/meta";
 
 const AddressAutoFill = dynamic(
-  async () => await import("../components/search"),
+  async () => await import("../components/search/home"),
   {
     suspense: true,
     ssr: false,
@@ -18,12 +19,7 @@ const AddressAutoFill = dynamic(
 );
 
 export default function Home(props: any) {
-  const [searchVal, setSearchVal] = useState("");
   const mainRef = useRef<HTMLElement | null>(null);
-
-  const handleChange = (event: any) => {
-    setSearchVal(event.target.value);
-  };
 
   return (
     <main
@@ -31,6 +27,7 @@ export default function Home(props: any) {
       className="flex flex-col overflow-hidden opacity-0 transition-opacity duration-[0.3s]"
       id="mainPage"
     >
+      <Meta title="Home" />
       <div className="relative left-0 right-0 top-0">
         <Image
           alt=""

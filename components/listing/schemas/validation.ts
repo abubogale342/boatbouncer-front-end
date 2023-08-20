@@ -20,6 +20,27 @@ export const formUpdateSchema = Yup.object().shape({
     .oneOf([true], "Feature is required")
     .required("Feature is required"),
   securityAllowance: Yup.number().required("Security allowance is required"),
-  pricing: Yup.mixed(),
+  pricing: Yup.array()
+    .length(2)
+    .of(
+      Yup.object().shape({
+        type: Yup.string().required(),
+        value: Yup.number().min(1).required(),
+        min: Yup.number().min(1).required(),
+      }),
+    )
+    .required("Both Per Hour and Per Day value are required"),
   currency: Yup.string().required("currency is required"),
+  latLng: Yup.object()
+    .shape({
+      latitude: Yup.number().required(
+        "select specific address of your boat from <strong>dropdown<strong>",
+      ),
+      longitude: Yup.number().required(
+        "select specific address of your boat from <strong>dropdown<strong>",
+      ),
+    })
+    .required(
+      "select specific address of your boat from <strong>dropdown<strong>",
+    ),
 });

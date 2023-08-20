@@ -10,6 +10,32 @@
   background-color: white;
 } */
 
+.mapbox-search-box {
+  height: 3.5rem !important;
+  border-radius: 2rem !important;
+  border: none !important;
+  background-color: white !important;
+  padding: auto 2rem !important;
+  font-size: large !important;
+}
+
+.mapbox-search {
+  height: 2.75rem !important;
+  border-radius: 0.5rem !important;
+  border: none !important;
+  background-color: white !important;
+  padding: auto 2rem !important;
+  font-size: large !important;
+}
+
+.mapbox-search-box::placeholder {
+  font-size: 1.1rem !important;
+}
+
+.mapbox-search::placeholder {
+  font-size: 1.1rem !important;
+}
+
 select,
 input[type="number"],
 input[type="text"],
@@ -170,6 +196,55 @@ body::-webkit-scrollbar-thumb:hover {
 
 .chat::-webkit-scrollbar-thumb:hover {
   background: hsl(120, 2%, 38%);
+}
+
+.boat-list::-webkit-scrollbar {
+  width: 0.25em;
+  height: 0.25em;
+}
+
+.boat-list::-webkit-scrollbar-track {
+  background: hsl(240, 11%, 89%);
+  border-radius: 100vw;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.boat-list::-webkit-scrollbar-thumb {
+  background: hsl(120, 4%, 56%);
+  border: 0.06725em solid hsl(120, 3%, 40%);
+  border-radius: 100vw;
+}
+
+.boat-list::-webkit-scrollbar-thumb:hover {
+  background: hsl(120, 2%, 38%);
+}
+
+.marker-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  border-radius: 8px;
+  height: 2rem;
+  padding: 0rem 0.5rem 0rem 0rem;
+  border: #219ebc 1px solid;
+  box-shadow: 1px 1px#d0d5dd;
+}
+
+.active_div {
+  z-index: 100 !important;
+  height: 2.5rem !important;
+}
+
+.marker-image {
+  height: 100%;
+  width: auto;
+}
+
+.marker-p {
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .dropDownItem:hover {

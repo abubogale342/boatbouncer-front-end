@@ -12,8 +12,8 @@ const SearchResults = ({
   checked,
 }: {
   boats: any;
-  total: number;
-  checked: boolean;
+  total?: number;
+  checked?: boolean;
 }) => {
   const [pageNo, setPageNo] = useState(1);
   const { data: session } = useSession();
@@ -44,12 +44,18 @@ const SearchResults = ({
 
   if (pageNo === 1) {
     element = boats.map((boat: any) => (
-      <Link key={boat._id} href={`/boat/${boat._id}`}>
+      <Link key={boat._id} href={`/boat/${boat._id}`} target="_blank">
         <Boat
           page=""
           checked={checked}
           boatImg={boat.imageUrls[0]}
+          boatImgs={boat.imageUrls}
           location={boat.location}
+          pricing={boat.pricing}
+          boatName={boat.boatName}
+          currency={boat.currency}
+          captained={boat.captained}
+          markerId={boat._id}
         >
           {""}
         </Boat>
@@ -63,8 +69,18 @@ const SearchResults = ({
 
   if (pageNo !== 1 && !loading && data) {
     element = data.map((boat: any) => (
-      <Link key={boat._id} href={`/boat/${boat._id}`}>
-        <Boat page="" boatImg={boat.imageUrls} location={boat.location}>
+      <Link key={boat._id} href={`/boat/${boat._id}`} target="_blank">
+        <Boat
+          page=""
+          boatImg={boat.imageUrls}
+          boatImgs={boat.imageUrls}
+          location={boat.location}
+          pricing={boat.pricing}
+          boatName={boat.boatName}
+          currency={boat.currency}
+          captained={boat.captained}
+          markerId={boat._id}
+        >
           {""}
         </Boat>
       </Link>
@@ -82,15 +98,15 @@ const SearchResults = ({
   return (
     <Fragment>
       <div
-        className={`flex w-full flex-row flex-wrap gap-6 ${
+        className={`grid w-full gap-6 pb-2.5 ${
           checked
-            ? "overflow-y-scroll [-ms-overflow-y-style:'none'] [scrollbar-width:'none'] [&::-webkit-scrollbar]:hidden"
-            : ""
+            ? "overflow-y-scroll [-ms-overflow-y-style:'none'] [scrollbar-width:'none'] lg:grid-cols-2 [&::-webkit-scrollbar]:hidden"
+            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
         }`}
       >
         {element}
       </div>
-      {total > 10 && (
+      {total && total > 10 && (
         <>
           <hr className="h-px w-full bg-black" />
           <div className="mx-6 my-5 flex flex-col items-center justify-between gap-4 sm:flex-row">

@@ -11,8 +11,10 @@ import { Inter } from "@next/font/google";
 import { store } from "@/components/shared/store";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ErrorBoundary from "@/components/error";
+import { MapContext } from "features/context/mapContext";
+import mapboxgl from "mapbox-gl";
 
 const sfPro = localFont({
   src: "../styles/SF-Pro-Display-Medium.otf",
@@ -30,6 +32,8 @@ export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps<{ session: Session }>) {
+  const [map, setMap] = useState<mapboxgl.Map | null>(null);
+
   const stripePromise = loadStripe(
     process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? "",
   );
@@ -40,14 +44,16 @@ export default function MyApp({
         <Provider store={store}>
           <Elements stripe={stripePromise}>
             <ErrorBoundary>
-              <div
-                className={`${cx(
-                  sfPro.variable,
-                  inter.variable,
-                )} overflow-x-clip`}
-              >
-                <Component {...pageProps} />
-              </div>
+              <MapContext.Provider value={{ map, setMap }}>
+                <div
+                  className={`${cx(
+                    sfPro.variable,
+                    inter.variable,
+                  )} overflow-x-clip`}
+                >
+                  <Component {...pageProps} />
+                </div>
+              </MapContext.Provider>
             </ErrorBoundary>
           </Elements>
         </Provider>

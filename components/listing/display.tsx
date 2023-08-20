@@ -115,10 +115,12 @@ const DisplayListings = ({
         page="listing"
         key={boat._id}
         boatImg={boat.imageUrls[0]}
+        boatImgs={boat.imageUrls}
+        boatName={boat.boatName}
         location={boat.location}
         captained={boat.captained}
       >
-        <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-start gap-2">
           <div className="flex flex-row gap-2">
             <button
               onClick={() => editListingHandler(boat)}
@@ -154,7 +156,7 @@ const DisplayListings = ({
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -10, opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="md:mx-10 lg:mx-20"
+        className="mx-4 sm:mx-10 lg:mx-20"
       >
         <div className="flex flex-row items-center justify-between">
           <p className="text-xl font-medium text-gray-900 sm:text-3xl">
@@ -170,7 +172,9 @@ const DisplayListings = ({
         <p className="mb-6 mt-1 text-gray-500">
           Track, manage and forecast your Listings.
         </p>
-        <div className="md mx-auto flex w-fit flex-wrap gap-6">{displayEl}</div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {displayEl}
+        </div>
         {dataLength > 10 && (
           <div className="mx-6 my-5 flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-lg">

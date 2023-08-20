@@ -31,6 +31,7 @@ const initialState: any = {
   },
   editableBoat: null,
   bookmarks: null,
+  boats: [],
 };
 
 export const boatSlice = createSlice({
@@ -43,8 +44,8 @@ export const boatSlice = createSlice({
     updateLocationField: (state: any, { payload: { key, value } }) => {
       state.boatInfo.location[key] = value;
     },
-    updateCoordinateField: (state: any, { payload: { key, value } }) => {
-      state.boatInfo.latLng[key] = value;
+    updateCoordinateField: (state: any, { payload: value }) => {
+      state.boatInfo.latLng = value;
     },
     updateFeaturesList: (state, { payload: { key, value } }) => {
       if (value) {
@@ -102,24 +103,20 @@ export const boatSlice = createSlice({
     updateCurrency: (state, { payload: currency }) => {
       state.currency = currency;
     },
-    updatePricing: (state, { payload: { type, action, value, min = 1 } }) => {
-      if (action) {
-        let index = state.boatInfo.pricing.findIndex(
-          (priceType: any) => priceType.type === type,
-        );
-        let updatedPricing = state.boatInfo.pricing;
-        if (index !== -1) {
-          updatedPricing[index] = { ...updatedPricing[index], value, min };
-        } else {
-          updatedPricing = [...state.boatInfo.pricing, { type, value, min }];
-        }
-        state.boatInfo.pricing = updatedPricing;
+    updatePricing: (state, { payload: { type, value, min = 1 } }) => {
+      let index = state.boatInfo.pricing.findIndex(
+        (priceType: any) => priceType.type === type,
+      );
+      let updatedPricing = state.boatInfo.pricing;
+      if (index !== -1) {
+        updatedPricing[index] = { ...updatedPricing[index], value, min };
       } else {
-        let updatedPricing = state.boatInfo.pricing.filter(
-          (priceType: any) => priceType.type !== type,
-        );
-        state.boatInfo.pricing = updatedPricing;
+        updatedPricing = [...state.boatInfo.pricing, { type, value, min }];
       }
+      state.boatInfo.pricing = updatedPricing;
+    },
+    setBoats: (state, { payload: boats }) => {
+      state.boats = boats;
     },
   },
 });
@@ -144,6 +141,7 @@ export const {
   resetBookmarks,
   updatePricing,
   updateSecurityAllowance,
+  setBoats,
 } = boatSlice.actions;
 
 export default boatSlice.reducer;

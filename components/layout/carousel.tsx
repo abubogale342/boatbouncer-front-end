@@ -36,19 +36,22 @@ export default function Carousel({ images }: { images: any }) {
           onSwipeRight={handlePrevSlide}
           className="relative z-10 h-full w-full"
         >
-          {images.map((image: string, index: number) => {
-            if (index === currentSlide) {
-              return (
-                <Image
-                  key={index}
-                  src={image}
-                  fill
-                  alt=""
-                  className="animate-fadeIn relative mx-auto h-full w-fit max-w-[100%] object-cover md:block xl:w-auto"
-                />
-              );
-            }
-          })}
+          {images &&
+            images?.length &&
+            images.length > 0 &&
+            images.map((image: string, index: number) => {
+              if (index === currentSlide) {
+                return (
+                  <Image
+                    key={index}
+                    src={image}
+                    fill
+                    alt=""
+                    className="animate-fadeIn relative mx-auto h-full w-fit max-w-[100%] object-cover md:block xl:w-auto"
+                  />
+                );
+              }
+            })}
         </Swipe>
 
         <AiFillRightCircle
@@ -56,26 +59,6 @@ export default function Carousel({ images }: { images: any }) {
           className="absolute inset-y-1/2 right-4 z-20 m-auto cursor-pointer text-5xl text-white opacity-90 sm:right-5"
         />
       </div>
-
-      {/* <div className="absolute inset-x-1/2 bottom-4 z-20">
-        <div className="relative flex w-fit justify-center rounded-full bg-white p-2">
-          {images.map((_: any, index: number) => {
-            return (
-              <div
-                className={
-                  index === currentSlide
-                    ? "mx-2 h-3 w-3 cursor-pointer rounded-full bg-gray-900"
-                    : "mx-2 h-3 w-3 cursor-pointer rounded-full bg-gray-300"
-                }
-                key={index}
-                onClick={() => {
-                  setCurrentSlide(index);
-                }}
-              />
-            );
-          })}
-        </div>
-      </div> */}
     </div>
   );
 }

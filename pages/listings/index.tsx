@@ -3,38 +3,17 @@ import Header from "@/components/shared/header";
 import { IncomingMessage } from "http";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
-import { Fragment, useEffect, useState } from "react";
+import { useState } from "react";
 import AddListing from "@/components/listing/add";
-import { AnimatePresence, motion } from "framer-motion";
-import useGeolocation from "react-hook-geolocation";
-import { useDispatch } from "react-redux";
-import { updateCoordinateField } from "features/boat/boatSlice";
 import DisplayListings from "@/components/listing/display";
 import Meta from "@/components/layout/meta";
 
 export default function Index(props: any) {
   const [enableAddList, setEnableAddList] = useState(false);
-  const geolocation = useGeolocation();
-  const dispatch = useDispatch();
 
   const addListingHandler = (status: boolean) => {
     setEnableAddList(status);
   };
-
-  useEffect(() => {
-    if (!geolocation.error) {
-      dispatch(
-        updateCoordinateField({ key: "latitude", value: geolocation.latitude }),
-      );
-
-      dispatch(
-        updateCoordinateField({
-          key: "longitude",
-          value: geolocation.longitude,
-        }),
-      );
-    }
-  }, [geolocation.latitude, geolocation.longitude]);
 
   let listingEl = <DisplayListings addListingsHn={addListingHandler} />;
 

@@ -52,23 +52,17 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
           securityAllowance: boatInfo.securityAllowance,
           captained: boatInfo.captained,
           currency: boatInfo.currency,
+          latLng: boatInfo.latLng,
+          pricing: boatInfo.pricing,
         }}
         onSubmit={(values: any, { setSubmitting }: { setSubmitting: any }) => {
           let finalValues = {
             ...boatInfo,
-            imageUrls: boatInfo.imageUrls,
-            subCategory: boatInfo.subCategory,
             securityAllowance: `${boatInfo.securityAllowance} ${boatInfo.currency}`,
           };
 
           if (editableBoat) {
             let difference = objectDiff(editableBoat, boatInfo);
-
-            // we don't need to update the location
-            if ("latLng" in difference) {
-              delete difference.latLng;
-            }
-
             if (Object.keys(difference).length === 0) {
               setChagesMade(true);
               setTimeout(() => {
@@ -217,6 +211,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
                       handleChange,
                       handleBlur,
                       handleSubmit,
+                      setValues,
                     }}
                   />
                   <div className="mt-4 px-4">

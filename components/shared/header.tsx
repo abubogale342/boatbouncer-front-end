@@ -2,7 +2,7 @@ import avatar from "../../public/empty-profile-picture.png";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import logo from "public/Boat Bouncer Logo 1.png";
+import logo from "public/boatbouncer-favicon.png";
 import Image from "next/image";
 
 export default function Header(props: any) {

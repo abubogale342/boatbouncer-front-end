@@ -4,18 +4,27 @@ import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import { CheckCircle2, XCircle } from "lucide-react";
 import { getSession } from "next-auth/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from "next/link";
 import BookingForm from "@/components/booking/form";
 import Meta from "@/components/layout/meta";
 import Reviews from "@/components/reviews";
+import { useSelector } from "react-redux";
+import SearchResults from "@/components/searchResults";
 
 const SPECS = ["year", "length", "model", "manufacturer"];
 
 export default function Search(props: any) {
   const { data, error, ...user } = props;
+  const boats = useSelector((state: any) => state.boat.boats);
+  const [boatId, setBoadId] = useState<string | undefined>("");
 
   let element = null;
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    setBoadId(location.pathname.split("/").pop());
+  }, [typeof window]);
 
   if (data) {
     element = (
@@ -25,7 +34,7 @@ export default function Search(props: any) {
         }`}
       >
         <div>
-          <Carousel images={data?.imageUrls} />
+          <Carousel images={data?.imageUrls.filter((img: string) => img)} />
           {data.owner === user._id && (
             <p className="mt-1 text-center text-lg italic">
               Note: Since you are creator of this boat, you can&apos;t book for
@@ -74,22 +83,12 @@ export default function Search(props: any) {
               <XCircle color="red" size="32" />
             )}
           </div>
-
-          <div className="mt-10 flex flex-row flex-wrap gap-6">
-            <Reviews />
-            <Reviews />
-            <Reviews />
-            <Reviews />
-            <Reviews />
-            <Reviews />
-          </div>
         </div>
         {data.owner !== user._id && (
           <div className="mx-auto w-full sm:block">
             <BookingForm data={data} user={user} />
           </div>
         )}
-        <br />
       </div>
     );
   }
@@ -131,6 +130,33 @@ export default function Search(props: any) {
           <div className="flex w-full flex-wrap justify-evenly gap-x-1.5 gap-y-2.5">
             {element}
           </div>
+          <div className="mx-4 sm:mx-6 md:mx-6">
+            <div className="mt-10 flex flex-row flex-wrap gap-6">
+              <Reviews />
+              <Reviews />
+              <Reviews />
+              <Reviews />
+              <Reviews />
+              <Reviews />
+            </div>
+
+            <br />
+            <br />
+
+            {boatId && boats && boats.data && boats.data.length > 0 && (
+              <p className="mb-3 text-lg font-bold text-black">
+                Related Bookings
+              </p>
+            )}
+
+            {boatId && boats && boats.data && boats.data.length > 0 && (
+              <SearchResults
+                boats={boats.data.filter(
+                  ({ _id }: { _id: string }) => _id != boatId,
+                )}
+              />
+            )}
+          </div>
         </motion.div>
       </AnimatePresence>
       <Footer />
@@ -166,6 +192,7 @@ export async function getServerSideProps(context: any) {
     );
 
     data = await data.json();
+
     if (!data) {
       error = true;
     }

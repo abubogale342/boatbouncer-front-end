@@ -1,7 +1,7 @@
 import Image from "next/image";
 import icon from "../../public/icon.svg";
 import Icon from "./icons/icon";
-import logo2 from "public/Boat Bouncer Logo 1.png";
+import logo2 from "public/boatbouncer-favicon.png";
 
 export default function Footer() {
   return (

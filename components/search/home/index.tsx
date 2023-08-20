@@ -1,39 +1,16 @@
-import { useContext, useEffect, useState } from "react";
-import { icons } from "../shared/locationIcon";
+import { useEffect, useState } from "react";
+import { icons } from "../../shared/locationIcon";
 import { SearchBox } from "@mapbox/search-js-react";
 import { SearchBoxRetrieveResponse } from "@mapbox/search-js-core";
 import { useRouter } from "next/router";
-// import mapboxgl from "mapbox-gl";
-import { MapContext } from "features/context/mapContext";
 
 const Search = ({ page }: { page?: string }) => {
   const [searchVal, setSearchVal] = useState("");
-  const { map } = useContext(MapContext);
   const router = useRouter();
 
   const handleChange = (value: string) => {
     setSearchVal(value);
   };
-
-  useEffect(() => {
-    if (!map) return;
-
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const bbox = urlParams.get("bbox");
-    const coordinate = urlParams.get("coordinates");
-
-    if (bbox) {
-      map.fitBounds(JSON.parse(bbox));
-    } else {
-      if (coordinate) {
-        let coords = JSON.parse(coordinate);
-        map.flyTo({ center: [coords.longitude, coords.latitude] });
-      }
-    }
-  }, [map]);
-
-  if (!map) return <></>;
 
   const handleRetrieve = (res: SearchBoxRetrieveResponse) => {
     let query: any = {};
@@ -66,16 +43,15 @@ const Search = ({ page }: { page?: string }) => {
   };
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!document.getElementsByTagName("mapbox-search-box")[0]) return;
-    const mapBoxSearchBox = document.getElementsByTagName("mapbox-search-box");
+    const mapBoxSearchBox =
+      document.getElementsByTagName("mapbox-search-box")[0];
 
-    const searchBox = mapBoxSearchBox[0].firstElementChild;
+    const searchBox = mapBoxSearchBox.firstElementChild;
     const searchInput = searchBox?.getElementsByTagName("input")[0];
 
-    searchInput?.classList.add("mapbox-search");
-    searchBox?.classList.add("mapbox-search");
-  }, [window]);
+    searchInput?.classList.add("mapbox-search-box");
+    searchBox?.classList.add("mapbox-search-box");
+  }, []);
 
   return (
     <>
@@ -108,9 +84,6 @@ const Search = ({ page }: { page?: string }) => {
               }}
               value={searchVal}
               onChange={handleChange}
-              // marker={true}
-              // mapboxgl={mapboxgl}
-              map={map}
             />
             <p className="absolute right-0 top-0 z-10 h-10 w-10 rounded-full"></p>
           </div>

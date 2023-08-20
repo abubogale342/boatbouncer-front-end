@@ -13,11 +13,16 @@ const Boat = ({
   status,
   start,
   checked,
+  currency,
   end,
   renterPrice,
+  boatImgs,
   type,
   _id,
   captained,
+  pricing,
+  boatName,
+  markerId,
 }: {
   page: string;
   children: React.ReactNode;
@@ -31,48 +36,63 @@ const Boat = ({
     | undefined
     | null;
   status?: string;
+  currency?: string;
   start?: Date;
   end?: Date;
   renterPrice?: number;
   type?: string;
   _id?: string;
   captained?: boolean;
+  pricing?: any;
+  boatName?: any;
+  boatImgs?: string[];
+  markerId?: string;
 }) => {
   const dispatch = useDispatch();
   const { id } = useSelector((state: any) => state.bookmark.bookmarkInfo);
 
   return (
     <div
-      className={`flex h-full w-fit flex-col justify-between shadow-sm drop-shadow-sm ${
-        page === "listing" ? "sm:flex-row" : ""
-      } ${
+      className={`flex h-full w-full flex-col justify-between shadow-sm drop-shadow-sm hover:shadow-lg ${
         id && id == _id
           ? "relative order-first w-full flex-col border-[3px] border-[#219EBC] transition-[border-color] duration-1000 sm:flex-row"
-          : "w-fit border-zinc-100 transition-[border-color] duration-1000"
+          : "w-full border-zinc-100 transition-[border-color] duration-1000"
       } ${_id && " cursor-pointer "} gap-0 rounded-2xl border border-solid p-2`}
       onClick={() => {
         if (_id) {
           dispatch(setActiveId(_id));
         }
       }}
+      onMouseEnter={() => {
+        if (markerId) {
+          document.getElementById(markerId)?.classList.add("active_div");
+        }
+      }}
+      onMouseLeave={() => {
+        if (markerId) {
+          document.getElementById(markerId)?.classList.remove("active_div");
+        }
+      }}
     >
       {id && id == _id && (
         <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
-      {!id &&
-        (boatImg ? (
-          <img
-            src={boatImg}
-            alt=""
-            className={`mx-auto mb-2 h-full max-w-xs rounded-2xl object-cover sm:h-full sm:w-full`}
-          />
-        ) : (
-          <Image
-            src={FavouriteImage}
-            alt=""
-            className="mx-full mb-2 h-full max-w-xs rounded-2xl sm:h-full sm:w-full"
-          />
-        ))}
+      <div>
+        {!id &&
+          (boatImg ? (
+            <img
+              src={boatImg}
+              alt=""
+              className={`mx-auto mb-2 h-full w-full rounded-2xl object-cover sm:h-full`}
+            />
+          ) : (
+            <Image
+              src={FavouriteImage}
+              alt=""
+              className="mx-full mb-2 h-full w-full rounded-2xl sm:h-full"
+            />
+          ))}
+      </div>
 
       <div className="h-fit p-2">
         <div className="flex flex-row items-center justify-between">
@@ -87,7 +107,7 @@ const Boat = ({
           )}
           {page !== "listing" && (
             <p>
-              <span style={{ fontSize: "8px" }} className="text-zinc-400">
+              {/* <span style={{ fontSize: "8px" }} className="text-zinc-400">
                 28 Bookings
               </span>
               <span
@@ -95,7 +115,7 @@ const Boat = ({
                 style={{ fontSize: "10px" }}
               >
                 4.5 *
-              </span>
+              </span> */}
             </p>
           )}
         </div>
@@ -106,7 +126,7 @@ const Boat = ({
           </p>
         )}
         <p className={`max-w-xs pr-2 text-base font-medium text-zinc-900`}>
-          Sunchaser Party Barge on beautiful lake union
+          {boatName}
         </p>
         {page !== "bookmarks" && (
           <ul className="my-2 flex flex-row items-center gap-2 text-xs font-medium">
@@ -114,16 +134,30 @@ const Boat = ({
               <span>4-8 Hours Rental</span>
             </li>
             <li className="whitespace-nowrap rounded-2xl bg-orange-50 px-2 py-1 text-orange-700">
-              <span>{captained ? "Captained" : ""}</span>
+              <span>{captained ? "Captained" : null}</span>
             </li>
           </ul>
         )}
-        {page !== "listing" && page !== "bookmarks" && (
-          <p className="text-zinc-900">
-            <span className="font-bold ">$315</span>{" "}
-            <span className="text-xs font-light">hour</span>
-          </p>
-        )}
+        {page !== "listing" &&
+          page !== "bookmarks" &&
+          pricing &&
+          pricing.map((price: any) => (
+            <p className="inline-block w-1/3 text-zinc-900" key={price.type}>
+              <span className="font-bold ">
+                {currency == "USD" ? "$" : "€"}
+                {price.value}
+              </span>{" "}
+              <span className="text-xs font-light">
+                {price.type === "Per Hour"
+                  ? "/ hour"
+                  : price.type === "Per Day"
+                  ? "/ day"
+                  : price.type === "Per Night"
+                  ? "/ night"
+                  : ""}
+              </span>
+            </p>
+          ))}
         {page === "bookmarks" && (
           <p className="flex flex-row justify-between text-zinc-900">
             <span className="text-lg font-light leading-7 text-[#1C1B1F]">

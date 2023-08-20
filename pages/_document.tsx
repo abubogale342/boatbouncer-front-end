@@ -5,6 +5,10 @@ export default function Document() {
     <Html lang="en">
       <Head />
       <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+      <link
+        href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+        rel="stylesheet"
+      />
       <body>
         <Main />
         <NextScript />

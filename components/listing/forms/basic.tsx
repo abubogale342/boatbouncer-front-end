@@ -42,6 +42,8 @@ const BasicInfo = ({
     dispatch(updateLocationField({ key, value }));
   };
 
+  // console.log("errors", errors);
+
   return (
     <div className="w-full px-4">
       <p className="text-xl font-semibold text-gray-900">Basic Information</p>
@@ -237,7 +239,10 @@ const BasicInfo = ({
           values={values}
           value={values.address}
           setValues={setValues}
+          errors={errors}
+          touched={touched}
         />
+
         <div className="relative h-11 w-full">
           <input
             className={returnClass(!!(errors.year && touched.year))[0]}

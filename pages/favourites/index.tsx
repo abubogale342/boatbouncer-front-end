@@ -31,7 +31,7 @@ export default function Index(props: any) {
           <p className="mb-10 text-center text-gray-500">
             List of your favourite boats
           </p>
-          <div className="flex w-full flex-wrap justify-evenly gap-2">
+          <div className="mx-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Boat page="favourites" boatImg={null} location={null}>
               {""}
             </Boat>
