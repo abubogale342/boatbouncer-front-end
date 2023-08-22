@@ -260,13 +260,22 @@ export default function Search(props: any) {
       setMarkers([...markers, marker]);
     });
 
-    data.data.forEach((d: any) => {
-      if (d.latLng.coordinates[0] && d.latLng.coordinates[1]) {
-        bounds.extend([d.latLng.coordinates[0], d.latLng.coordinates[1]]);
-      }
-    });
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const bbox = urlParams.get("bbox");
+    // const coordinate = urlParams.get("coordinates");
 
-    map.fitBounds(bounds, { padding: 50 });
+    if (bbox) {
+      map.fitBounds(JSON.parse(bbox));
+    } else {
+      data.data.forEach((d: any) => {
+        if (d.latLng.coordinates[0] && d.latLng.coordinates[1]) {
+          bounds.extend([d.latLng.coordinates[0], d.latLng.coordinates[1]]);
+        }
+      });
+
+      map.fitBounds(bounds, { padding: 50 });
+    }
   }, [data, map]);
 
   useEffect(() => {

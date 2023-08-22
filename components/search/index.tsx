@@ -15,23 +15,10 @@ const Search = ({ page }: { page?: string }) => {
     setSearchVal(value);
   };
 
-  useEffect(() => {
-    if (!map) return;
+  // useEffect(() => {
+  //   if (!map) return;
 
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const bbox = urlParams.get("bbox");
-    const coordinate = urlParams.get("coordinates");
-
-    if (bbox) {
-      map.fitBounds(JSON.parse(bbox));
-    } else {
-      if (coordinate) {
-        let coords = JSON.parse(coordinate);
-        map.flyTo({ center: [coords.longitude, coords.latitude] });
-      }
-    }
-  }, [map]);
+  // }, [map]);
 
   if (!map) return <></>;
 
