@@ -1,11 +1,5 @@
 import { useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
-import { DateRange } from "@mui/x-date-pickers-pro";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { SingleInputDateRangeField } from "@mui/x-date-pickers-pro/SingleInputDateRangeField";
-import { SingleInputDateTimeRangeField } from "@mui/x-date-pickers-pro/SingleInputDateTimeRangeField";
-
+import dayjs from "dayjs";
 import { setActiveId } from "features/bookmark/bookmarkSlice";
 import useFetcher from "@/lib/hooks/use-axios";
 import { useDispatch } from "react-redux";
@@ -13,7 +7,7 @@ import Router from "next/router";
 import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from "react-tailwindcss-datepicker/dist/types";
 import DatePicker from "react-datepicker";
-import { addHours, getHours, setHours, setMinutes } from "date-fns";
+import { addHours } from "date-fns";
 import { PopoverDirectionType } from "react-tailwindcss-datepicker/dist/types";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -24,6 +18,14 @@ interface IProps {
 
 const BookingForm = ({ data, user }: IProps) => {
   const [pricingType, setPricingType] = useState("Per Hour");
+
+  const perHourPrice = data.pricing.filter(
+    ({ type }: { type: string }) => type == "Per Hour",
+  )[0].value;
+
+  const perDayPrice = data.pricing.filter(
+    ({ type }: { type: string }) => type == "Per Day",
+  )[0].value;
 
   const { fetchWithAuthSync } = useFetcher();
   const dispatch = useDispatch();
@@ -205,15 +207,31 @@ const BookingForm = ({ data, user }: IProps) => {
             </span>
           </p>
           <p className="text-xs font-light">Boat Price</p>
-          <p className="text-end font-medium">879.0</p>
-          <p className="text-xs font-light">Captain Price</p>
-          <p className="text-end  font-medium">238.0</p>
+          <p className="text-end font-medium">
+            {data.currency == "USD" ? "$" : "€"}
+            {pricingType === "Per Hour"
+              ? dayjs(endDate).diff(dayjs(startDate), "hour") * perHourPrice
+              : dayjs(value?.endDate ?? 0).diff(
+                  dayjs(value?.startDate ?? 0),
+                  "day",
+                ) * perDayPrice}
+          </p>
+          {/* <p className="text-xs font-light">Captain Price</p>
+          <p className="text-end  font-medium">238.0</p> */}
 
           <hr className="my-1 h-px border-0 bg-gray-200" />
           <hr className="my-1 h-px border-0 bg-gray-200" />
 
           <p className="text-sm">Booking total</p>
-          <p className="text-end  font-medium">$1202.00</p>
+          <p className="text-end  font-medium">
+            {data.currency == "USD" ? "$" : "€"}
+            {pricingType === "Per Hour"
+              ? dayjs(endDate).diff(dayjs(startDate), "hour") * perHourPrice
+              : dayjs(value?.endDate ?? 0).diff(
+                  dayjs(value?.startDate ?? 0),
+                  "day",
+                ) * perDayPrice}
+          </p>
         </div>
         <button
           type="submit"
@@ -228,8 +246,8 @@ const BookingForm = ({ data, user }: IProps) => {
             Terms
           </h5>
           <ul className="flex list-inside list-disc flex-col gap-2 text-xs font-light text-zinc-800 dark:text-[white]">
-            <li>Fuel Not Included</li>
-            <li>Security Deposit 1000</li>
+            {/* <li>Fuel Not Included</li> */}
+            <li>Security Deposit {data.securityAllowance}</li>
             <li>Cancelation policy</li>
           </ul>
         </div>

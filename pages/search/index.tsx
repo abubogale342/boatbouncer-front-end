@@ -411,10 +411,10 @@ export default function Search(props: any) {
                 <p className="font-medium">Boat length</p>
 
                 <p>
-                  {boatValue[0]}' -
+                  {boatValue[0]}&apos; -
                   {boatValue[1] === 100
-                    ? `${boatValue[1]}'+`
-                    : `${boatValue[1]}'`}
+                    ? `${boatValue[1]}&apos;+`
+                    : `${boatValue[1]}&apos;`}
                 </p>
               </div>
               <div className="mb-2 ml-2.5 mr-5">

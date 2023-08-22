@@ -83,8 +83,8 @@ const PricingForm = ({
       </div>
 
       {["Per Hour", "Per Day"].map((perTime, index) => (
-        <div className={`mb-8`}>
-          <div className={`flex w-full flex-row items-end gap-6`} key={index}>
+        <div className={`mb-8`} key={index}>
+          <div className={`flex w-full flex-row items-end gap-6`}>
             <div className="flex w-1/2 flex-col">
               <div className="flex flex-row items-center gap-2 pb-4 pr-10">
                 {/* <input

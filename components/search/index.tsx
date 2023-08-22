@@ -3,7 +3,6 @@ import { icons } from "../shared/locationIcon";
 import { SearchBox } from "@mapbox/search-js-react";
 import { SearchBoxRetrieveResponse } from "@mapbox/search-js-core";
 import { useRouter } from "next/router";
-// import mapboxgl from "mapbox-gl";
 import { MapContext } from "features/context/mapContext";
 
 const Search = ({ page }: { page?: string }) => {
@@ -14,13 +13,6 @@ const Search = ({ page }: { page?: string }) => {
   const handleChange = (value: string) => {
     setSearchVal(value);
   };
-
-  // useEffect(() => {
-  //   if (!map) return;
-
-  // }, [map]);
-
-  if (!map) return <></>;
 
   const handleRetrieve = (res: SearchBoxRetrieveResponse) => {
     let query: any = {};
@@ -63,6 +55,8 @@ const Search = ({ page }: { page?: string }) => {
     searchInput?.classList.add("mapbox-search");
     searchBox?.classList.add("mapbox-search");
   }, [window]);
+
+  if (!map) return <></>;
 
   return (
     <>
