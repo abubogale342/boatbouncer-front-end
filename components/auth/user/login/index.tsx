@@ -97,6 +97,7 @@ function Login({ handleSubmit }: Props) {
                   placeholder="......."
                   onBlur={handleBlur}
                   onChange={handleChange}
+                  autoComplete="on"
                 />
                 <p className="ml-1 text-sm text-orange-700">
                   {errors.password && touched.password && errors.password}

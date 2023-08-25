@@ -24,7 +24,7 @@ import mapboxgl from "mapbox-gl";
 import { MapContext } from "features/context/mapContext";
 import { useDispatch } from "react-redux";
 import { setBoats } from "features/boat/boatSlice";
-import bgImage from "public/boatbouncer-marker.png";
+import bgImage from "public/location.png";
 
 const AddressAutoFill = dynamic(
   async () => await import("../../components/search"),

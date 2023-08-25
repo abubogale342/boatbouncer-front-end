@@ -123,7 +123,7 @@ function Form({
     }
 
     if (!smsResponse.status) {
-      setErrorMessage("Seems connection error, please try again!");
+      setErrorMessage("server or connection error, please try again!");
     }
   };
 
@@ -209,9 +209,9 @@ function Form({
               setRecaptchaLoader(false);
               setErrorMessage("Seems connection error, please try again!");
             }
-          } catch (error) {
+          } catch (error: any) {
             setRecaptchaLoader(false);
-            setErrorMessage("error occured, please try again!");
+            setErrorMessage(error.message);
           }
         }
       }}
@@ -389,6 +389,7 @@ function Form({
                   placeholder=" "
                   onBlur={handleBlur}
                   onChange={handleChange}
+                  autoComplete="on"
                 />
                 <label
                   className={`${
@@ -420,6 +421,7 @@ function Form({
                   placeholder=" "
                   onBlur={handleBlur}
                   onChange={handleChange}
+                  autoComplete="on"
                 />
                 <label
                   className={`${

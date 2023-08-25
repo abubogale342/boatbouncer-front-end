@@ -127,7 +127,7 @@ const BookingForm = ({ data, user }: IProps) => {
           </label>
           <select
             id="type"
-            className="mb-3 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            className="mb-5 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
             onChange={handleSelectChange}
             defaultValue={pricingType}
           >
@@ -136,7 +136,7 @@ const BookingForm = ({ data, user }: IProps) => {
           </select>
 
           {pricingType === "Per Hour" && (
-            <div className="flex flex-col items-center justify-center xs:flex-row">
+            <div className="flex flex-col items-center justify-center">
               <DatePicker
                 timeFormat="p"
                 dateFormat="Pp"
@@ -149,9 +149,9 @@ const BookingForm = ({ data, user }: IProps) => {
                 }}
                 filterTime={filterPassedStartTime}
                 placeholderText="Starting Time"
-                className="mx-auto flex justify-center rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                className="mx-auto mb-5 flex w-full justify-center rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               />
-              <span className="w-4 text-2xl"> ~ </span>
+              {/* <span className="w-4 text-2xl"> ~ </span> */}
               <DatePicker
                 timeFormat="p"
                 dateFormat="Pp"
@@ -167,7 +167,8 @@ const BookingForm = ({ data, user }: IProps) => {
                   setDateError("");
                   setEndDate(date);
                 }}
-                className="mx-auto flex justify-center rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                calendarClassName="w-full"
+                className="mx-auto flex w-full justify-center rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               />
             </div>
           )}

@@ -169,7 +169,7 @@ const Chat = ({
         <label htmlFor="chat" className="sr-only">
           Your message
         </label>
-        <div className="relative flex items-end rounded-lg bg-gray-50 dark:bg-gray-700">
+        <div className="relative flex items-end rounded-lg bg-gray-50">
           <textarea
             required
             rows={1}
@@ -178,7 +178,7 @@ const Chat = ({
             ref={textAreaRef}
             onChange={handleChange}
             placeholder="Write Your message"
-            className="block h-fit w-full overflow-hidden rounded-lg border border-gray-300 bg-white pr-14 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+            className="block h-fit w-full overflow-hidden rounded-lg border border-gray-300 bg-white pr-14 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
           ></textarea>
           <button
             type="submit"

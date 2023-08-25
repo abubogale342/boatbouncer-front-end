@@ -72,7 +72,7 @@ const SearchResults = ({
       <Link key={boat._id} href={`/boat/${boat._id}`} target="_blank">
         <Boat
           page=""
-          boatImg={boat.imageUrls}
+          boatImg={boat.imageUrls[0]}
           boatImgs={boat.imageUrls}
           location={boat.location}
           pricing={boat.pricing}

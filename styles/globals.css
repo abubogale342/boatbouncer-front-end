@@ -221,15 +221,15 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .marker-div {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: white;
+  display: inline-flex;
+  padding: 5px 6px 5px 4px;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4px;
+  height: 32px;
+  /* width: 70px; */
   border-radius: 8px;
-  height: 2rem;
-  padding: 0rem 0.5rem 0rem 0rem;
-  border: #219ebc 1px solid;
-  box-shadow: 1px 1px#d0d5dd;
+  background: #219ebc;
 }
 
 .active_div {
@@ -238,13 +238,24 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .marker-image {
-  height: 100%;
-  width: auto;
+  padding: 2px;
+  border-radius: 8px;
+  background: var(--base-white, #fff);
+  display: flex;
+  width: 18px;
+  height: 18px;
+  justify-content: center;
+  align-items: center;
 }
 
 .marker-p {
+  color: #fff;
+  /* Text sm/Medium */
+  font-family: Inter;
   font-size: 14px;
-  font-weight: 600;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 142.857% */
 }
 
 .dropDownItem:hover {

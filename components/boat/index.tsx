@@ -53,7 +53,9 @@ const Boat = ({
 
   return (
     <div
-      className={`flex h-full w-full flex-col justify-between shadow-sm drop-shadow-sm hover:shadow-lg ${
+      className={`flex h-full w-full flex-col ${
+        page == "bookmarks" && "mr-8"
+      } justify-between shadow-sm drop-shadow-sm hover:shadow-lg ${
         id && id == _id
           ? "relative order-first w-full flex-col border-[3px] border-[#219EBC] transition-[border-color] duration-1000 sm:flex-row"
           : "w-full border-zinc-100 transition-[border-color] duration-1000"

@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { poster } from "@/lib/utils";
 import { Props } from "@/lib/types";
 import { DefaultSession } from "next-auth";
+import axios, { AxiosError } from "axios";
 
 // nextauth.d.ts
 declare module "next-auth" {
@@ -88,20 +89,13 @@ export const authOptions: NextAuthOptions = {
             password: credentials.password,
           });
 
-          // console.log(login.response.data.message);
-          // console.log(login.response.status);
-
           if (login._id) {
             return login;
           }
 
-          if (login?.response?.status == "401") {
-            throw new Error(login.response.data.message);
-          }
-
-          if (!login.status) {
-            throw new Error("Seems connection error, please try again!");
-          }
+          // if (!login.status) {
+          //   throw new Error("server or connection error, please try again!");
+          // }
         }
       },
     }),

@@ -4,7 +4,7 @@ import Header from "@/components/shared/header";
 import { AnimatePresence, motion } from "framer-motion";
 import { getSession, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useFetcher from "@/lib/hooks/use-axios";
 import Details from "@/components/booking/details";
 import AlertDialogs from "@/components/shared/alertDialog";
@@ -17,6 +17,7 @@ import Chat from "@/components/chat";
 import { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { CircularProgress } from "@mui/material";
+import { setActiveId } from "features/bookmark/bookmarkSlice";
 
 export default function Bookmarks(props: any) {
   const { ...user } = props;
@@ -186,10 +187,10 @@ export default function Bookmarks(props: any) {
           }`}
         >
           <div
-            className={`flex h-fit w-full flex-wrap justify-center gap-x-1.5 gap-y-2.5 ${
+            className={`mb-4 flex h-fit w-full flex-wrap justify-center gap-x-3 gap-y-3 ${
               id
-                ? "sm:min-w-[320px] sm:max-w-[50%] md:max-w-[40%] lg:max-w-sm xl:max-w-md "
-                : "w-full flex-row sm:max-w-full md:max-w-full lg:max-w-full xl:max-w-full"
+                ? "mx-4 sm:min-w-[320px] sm:max-w-[50%] md:max-w-[40%] lg:max-w-sm xl:max-w-md "
+                : "mx-4 grid grid-cols-1 sm:ml-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             }`}
           >
             {element}
