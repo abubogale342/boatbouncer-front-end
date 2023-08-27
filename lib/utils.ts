@@ -73,13 +73,18 @@ export function getter<JSON = any>(path: RequestInfo): Promise<JSON> {
 
 export function poster(path: string, body?: any) {
   return axios
-    .post(`${process.env.NEXT_PUBLIC_API_URL}/${path}`, body)
+    .post(`${process.env.NEXT_PUBLIC_API_URL}${path}`, body)
     .then((response) => response.data)
     .catch((error: any) => {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log("error.response", error.response);
+        if (
+          error.response.statusText &&
+          typeof error.response.statusText === "string"
+        ) {
+          throw new Error(`${error.response.statusText}. Try again`);
+        }
         return error.response;
       } else if (error.request) {
         // The request was made but no response was received
