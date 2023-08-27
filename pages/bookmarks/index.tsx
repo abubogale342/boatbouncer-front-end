@@ -38,8 +38,6 @@ export default function Bookmarks(props: any) {
   const [chargesEnabled, setchargesEnabled] = useState<Boolean>(false);
   const router = useRouter();
 
-  console.log("data", data);
-
   let element = null;
 
   const setRefreshHn = () => {

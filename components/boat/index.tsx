@@ -83,19 +83,19 @@ const Boat = ({
       {id && id == _id && (
         <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
+
       {!id && page !== "listing" && (
         <div className={`w-full ${page == "bookmarks" ? "h-24" : "h-full"}`}>
-          {boatImg ? <Carousel images={images} page={page} /> : null}
+          {boatImg ? (
+            <Carousel images={images} page={page} />
+          ) : (
+            <img alt="Boat Image" />
+          )}
         </div>
       )}
 
       {page == "listing" && boatImg && (
         <div className="h-full">
-          {/* <img
-            src={boatImg}
-            alt=""
-            className={`mx-auto mb-2 w-full rounded-2xl object-cover`}
-          /> */}
           <Carousel images={images} page={page} />
         </div>
       )}
