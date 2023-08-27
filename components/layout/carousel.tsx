@@ -35,13 +35,13 @@ export default function Carousel({
     <div className="relative">
       <div
         className={`group relative m-auto flex ${
-          page == "search" ? "h-56" : "h-[82.5vh]"
+          page == "search" || page == "listing" ? "h-56" : "h-[82.5vh]"
         } w-full overflow-hidden rounded-lg shadow-sm drop-shadow-sm`}
       >
         <AiFillLeftCircle
           onClick={handlePrevSlide}
           className={`absolute inset-y-1/2 left-4 z-20 m-auto cursor-pointer transition-all ${
-            page == "search"
+            page == "search" || page == "listing"
               ? "left-2.5 text-3xl opacity-0 group-hover:opacity-75 sm:left-2.5"
               : "left-4 text-5xl opacity-90 sm:left-5"
           } text-white`}
@@ -73,7 +73,7 @@ export default function Carousel({
         <AiFillRightCircle
           onClick={handleNextSlide}
           className={`absolute inset-y-1/2 transition-all ${
-            page == "search"
+            page == "search" || page == "listing"
               ? "right-2.5 text-3xl opacity-0 group-hover:opacity-75 sm:right-2.5"
               : "right-4 text-5xl opacity-90 sm:right-5"
           } z-20 m-auto cursor-pointer text-white `}

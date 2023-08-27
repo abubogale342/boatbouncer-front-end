@@ -83,25 +83,20 @@ const Boat = ({
       {id && id == _id && (
         <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
-      {page == "bookmarks" && !id && (
+      {!id && page !== "listing" && (
         <div className={`w-full ${page == "bookmarks" ? "h-24" : "h-full"}`}>
-          {!id &&
-            (boatImg ? (
-              // <img
-              //   src={boatImg}
-              //   alt=""
-              //   className={`mx-auto mb-2 h-full w-full rounded-2xl object-cover sm:h-full`}
-              // />
-              <Carousel images={images} page={page} />
-            ) : (
-              <Image
-                src={FavouriteImage}
-                alt=""
-                className={`mx-full mb-2 ${
-                  page == "bookmarks" ? "h-24" : "h-full"
-                } w-full rounded-2xl object-cover sm:h-full`}
-              />
-            ))}
+          {boatImg ? <Carousel images={images} page={page} /> : null}
+        </div>
+      )}
+
+      {page == "listing" && boatImg && (
+        <div className="h-full">
+          {/* <img
+            src={boatImg}
+            alt=""
+            className={`mx-auto mb-2 w-full rounded-2xl object-cover`}
+          /> */}
+          <Carousel images={images} page={page} />
         </div>
       )}
 
