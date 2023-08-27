@@ -46,7 +46,7 @@ const SearchResults = ({
     element = boats.map((boat: any) => (
       <Link key={boat._id} href={`/boat/${boat._id}`} target="_blank">
         <Boat
-          page=""
+          page="search"
           checked={checked}
           boatImg={boat.imageUrls[0]}
           boatImgs={boat.imageUrls}
@@ -71,7 +71,7 @@ const SearchResults = ({
     element = data.map((boat: any) => (
       <Link key={boat._id} href={`/boat/${boat._id}`} target="_blank">
         <Boat
-          page=""
+          page="search"
           boatImg={boat.imageUrls[0]}
           boatImgs={boat.imageUrls}
           location={boat.location}

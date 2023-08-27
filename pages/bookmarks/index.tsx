@@ -38,6 +38,8 @@ export default function Bookmarks(props: any) {
   const [chargesEnabled, setchargesEnabled] = useState<Boolean>(false);
   const router = useRouter();
 
+  console.log("data", data);
+
   let element = null;
 
   const setRefreshHn = () => {
@@ -95,7 +97,7 @@ export default function Bookmarks(props: any) {
   };
 
   if (data?.length > 0) {
-    element = <Lists bookmarks={data} />;
+    element = <Lists bookmarks={data} userType={bookingTab} />;
   }
 
   if (data && data?.length === 0) {

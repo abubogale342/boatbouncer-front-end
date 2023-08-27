@@ -67,10 +67,7 @@ export default function Index(props: any) {
 
   if (data && data.length > 0) {
     cardListDisplayEl = (
-      <div
-        className="mx-10 mb-10 flex flex-row flex-wrap justify-center gap-6"
-        key="has-card"
-      >
+      <div className="mx-10 mb-10 flex flex-row flex-wrap gap-6" key="has-card">
         {data.map((card: any, index: number) => (
           <div
             key={card.id}

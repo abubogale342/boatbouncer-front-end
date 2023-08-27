@@ -32,7 +32,7 @@ export default function Index(props: any) {
             List of your favourite boats
           </p>
           <div className="mx-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Boat page="favourites" boatImg={null} location={null}>
+            {/* <Boat page="favourites" boatImg={null} location={null}>
               {""}
             </Boat>
             <Boat page="favourites" boatImg={null} location={null}>
@@ -43,7 +43,7 @@ export default function Index(props: any) {
             </Boat>
             <Boat page="favourites" boatImg={null} location={null}>
               {""}
-            </Boat>
+            </Boat> */}
           </div>
         </motion.div>
       </AnimatePresence>

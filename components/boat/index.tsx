@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { Triangle } from "lucide-react";
 import { setActiveId } from "features/bookmark/bookmarkSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Carousel from "../layout/carousel";
 
 const Boat = ({
   page,
@@ -23,6 +24,7 @@ const Boat = ({
   pricing,
   boatName,
   markerId,
+  peer,
 }: {
   page: string;
   children: React.ReactNode;
@@ -47,9 +49,11 @@ const Boat = ({
   boatName?: any;
   boatImgs?: string[];
   markerId?: string;
+  peer?: any;
 }) => {
   const dispatch = useDispatch();
   const { id } = useSelector((state: any) => state.bookmark.bookmarkInfo);
+  const images = boatImgs?.filter((boat: string) => boat);
 
   return (
     <div
@@ -79,22 +83,27 @@ const Boat = ({
       {id && id == _id && (
         <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
-      <div>
-        {!id &&
-          (boatImg ? (
-            <img
-              src={boatImg}
-              alt=""
-              className={`mx-auto mb-2 h-full w-full rounded-2xl object-cover sm:h-full`}
-            />
-          ) : (
-            <Image
-              src={FavouriteImage}
-              alt=""
-              className="mx-full mb-2 h-full w-full rounded-2xl sm:h-full"
-            />
-          ))}
-      </div>
+      {page == "bookmarks" && !id && (
+        <div className={`w-full ${page == "bookmarks" ? "h-24" : "h-full"}`}>
+          {!id &&
+            (boatImg ? (
+              // <img
+              //   src={boatImg}
+              //   alt=""
+              //   className={`mx-auto mb-2 h-full w-full rounded-2xl object-cover sm:h-full`}
+              // />
+              <Carousel images={images} page={page} />
+            ) : (
+              <Image
+                src={FavouriteImage}
+                alt=""
+                className={`mx-full mb-2 ${
+                  page == "bookmarks" ? "h-24" : "h-full"
+                } w-full rounded-2xl object-cover sm:h-full`}
+              />
+            ))}
+        </div>
+      )}
 
       <div className="h-fit p-2">
         <div className="flex flex-row items-center justify-between">
@@ -130,6 +139,11 @@ const Boat = ({
         <p className={`max-w-xs pr-2 text-base font-medium text-zinc-900`}>
           {boatName}
         </p>
+        {page === "bookmarks" && peer && (
+          <div className="flex flex-row gap-1 py-1 text-sm font-normal">
+            <p>{peer.firstName}</p> <p>{peer.lastName}</p>
+          </div>
+        )}
         {page !== "bookmarks" && (
           <ul className="my-2 flex flex-row items-center gap-2 text-xs font-medium">
             <li className="whitespace-nowrap rounded-2xl bg-gray-100 px-2 py-1 text-zinc-700">

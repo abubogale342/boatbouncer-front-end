@@ -132,12 +132,12 @@ export default function Search(props: any) {
           </div>
           <div className="mx-4 sm:mx-6 md:mx-6">
             <div className="mt-10 flex flex-row flex-wrap gap-6">
+              {/* <Reviews />
               <Reviews />
               <Reviews />
               <Reviews />
               <Reviews />
-              <Reviews />
-              <Reviews />
+              <Reviews /> */}
             </div>
 
             <br />
