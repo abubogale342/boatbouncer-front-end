@@ -101,7 +101,7 @@ const SearchResults = ({
         className={`grid w-full gap-6 pb-2.5 ${
           checked
             ? "overflow-y-scroll [-ms-overflow-y-style:'none'] [scrollbar-width:'none'] lg:grid-cols-2 [&::-webkit-scrollbar]:hidden"
-            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+            : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
         }`}
       >
         {element}
