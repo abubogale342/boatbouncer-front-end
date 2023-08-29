@@ -8,6 +8,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { returnClass } from "@/components/shared/styles/input";
 import { DollarSign, EuroIcon } from "lucide-react";
+import { useState } from "react";
 
 const PricingForm = ({
   values,
@@ -26,6 +27,10 @@ const PricingForm = ({
 }) => {
   const boatInfo = useSelector((state: any) => state.boat.boatInfo);
   const dispatch = useDispatch();
+  const [blurValue, setBlurValue] = useState({
+    PerHourPrice: false,
+    PerDayPrice: false,
+  });
 
   const updatePricingCurrency = (value: string) => {
     dispatch(updateCurrency(value));
@@ -52,6 +57,16 @@ const PricingForm = ({
       }
     }
   };
+
+  const handlePricingBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    setBlurValue({
+      ...blurValue,
+      [event.target.id]: true,
+    });
+    handleBlur(event);
+  };
+
+  console.log(errors, values);
 
   return (
     <div className="mt-4 px-4">
@@ -87,21 +102,6 @@ const PricingForm = ({
           <div className={`flex w-full flex-row items-end gap-6`}>
             <div className="flex w-1/2 flex-col">
               <div className="flex flex-row items-center gap-2 pb-4 pr-10">
-                {/* <input
-                id={perTime.split(" ").join("")}
-                name={perTime.split(" ").join("")}
-                type="checkbox"
-                className="appearance-none focus:ring-0"
-                onBlur={handleBlur}
-                checked={
-                  !!boatInfo.pricing.filter(
-                    (value: any) => value.type === perTime,
-                  )[0]
-                }
-                onChange={(event) => {
-                  updatePricingDetail(perTime, event.target.checked);
-                }}
-              /> */}
                 <label
                   className="text-sm  font-medium text-gray-700"
                   htmlFor={perTime.split(" ").join("")}
@@ -125,6 +125,7 @@ const PricingForm = ({
                   type="number"
                   id={`${perTime.split(" ").join("")}Price`}
                   name={`${perTime.split(" ").join("")}Price`}
+                  onBlur={handlePricingBlur}
                   onChange={(event) =>
                     updatePricingDetail(
                       perTime,
@@ -192,16 +193,17 @@ const PricingForm = ({
               </div>
             </div>
           </div>
-          {errors.pricing && (
-            <p className="ml-1 text-sm text-orange-700">
-              {errors.pricing[index] && "Please Enter valid pricing"}
-            </p>
-          )}
         </div>
       ))}
 
+      {errors.pricing && (
+        <p className="-mt-8 ml-1 text-sm text-orange-700">
+          Provide both Per Hour and Per Day Pricing
+        </p>
+      )}
+
       {/* security allowance */}
-      <div className="flex w-full flex-row">
+      <div className="mt-4 flex w-full flex-row">
         <div className="relative flex w-full flex-row gap-0">
           <input
             className={`${

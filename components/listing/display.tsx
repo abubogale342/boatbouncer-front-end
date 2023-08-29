@@ -82,14 +82,7 @@ const DisplayListings = ({
     );
   }
 
-  if (
-    !error &&
-    !loading &&
-    data &&
-    data.length &&
-    data.length === 0 &&
-    pageNo === 1
-  ) {
+  if (!error && !loading && data && data?.length == 0 && pageNo == 1) {
     displayEl = (
       <motion.p className="mx-2 flex h-14 items-center justify-center text-center text-2xl text-red-500">
         You have no listings added.
