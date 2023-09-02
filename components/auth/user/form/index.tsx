@@ -100,7 +100,7 @@ function Form({
     }
 
     const smsResponse = await poster("user/sendSms", {
-      phoneNumber: `+${credentials.phoneNumber}`,
+      phoneNumber: credentials.phoneNumber,
       recaptchaToken: res,
     });
 
