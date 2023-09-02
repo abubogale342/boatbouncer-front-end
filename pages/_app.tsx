@@ -41,8 +41,8 @@ export default function MyApp({
   return (
     <SessionProvider session={session}>
       <RWBProvider>
-        <Provider store={store}>
-          <Elements stripe={stripePromise}>
+        <Elements stripe={stripePromise}>
+          <Provider store={store}>
             <ErrorBoundary>
               <MapContext.Provider value={{ map, setMap }}>
                 <div
@@ -55,8 +55,8 @@ export default function MyApp({
                 </div>
               </MapContext.Provider>
             </ErrorBoundary>
-          </Elements>
-        </Provider>
+          </Provider>
+        </Elements>
       </RWBProvider>
       <Analytics />
     </SessionProvider>

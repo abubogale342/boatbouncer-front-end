@@ -79,11 +79,16 @@ export function poster(path: string, body?: any) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
+        console.log("error", error.response);
         if (
           error.response.statusText &&
           typeof error.response.statusText === "string"
         ) {
-          throw new Error(`${error.response.statusText}. Try again`);
+          throw new Error(
+            `${
+              error.response.data?.message ?? error.response.statusText
+            }. Try again`,
+          );
         }
         return error.response;
       } else if (error.request) {
