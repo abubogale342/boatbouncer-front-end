@@ -1,18 +1,18 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { icons } from "../shared/locationIcon";
 import { SearchBox } from "@mapbox/search-js-react";
 import { SearchBoxRetrieveResponse } from "@mapbox/search-js-core";
 import { useRouter } from "next/router";
 import { MapContext } from "features/context/mapContext";
+import { SearchBoxRefType } from "@mapbox/search-js-react/dist/components/SearchBox";
 
 const Search = ({ page }: { page?: string }) => {
   const [searchVal, setSearchVal] = useState("");
   const { map } = useContext(MapContext);
+  const searchBoxRef = useRef<SearchBoxRefType>();
   const router = useRouter();
 
-  const handleChange = (value: string) => {
-    setSearchVal(value);
-  };
+  const handleChange = (value: string) => setSearchVal(value);
 
   const handleRetrieve = (res: SearchBoxRetrieveResponse) => {
     let query: any = {};
@@ -72,6 +72,7 @@ const Search = ({ page }: { page?: string }) => {
           </label>
           <div className="relative w-full">
             <SearchBox
+              ref={searchBoxRef}
               accessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
               placeholder="Where would you like to travel ;)"
               onRetrieve={handleRetrieve}
@@ -96,8 +97,12 @@ const Search = ({ page }: { page?: string }) => {
             <p className="absolute right-0 top-0 z-10 h-10 w-10 rounded-full"></p>
           </div>
           <button
-            type="submit"
+            type="button"
             disabled={!searchVal}
+            onClick={() => {
+              if (!searchBoxRef.current) return;
+              searchBoxRef.current.search(searchVal);
+            }}
             className={`z-10 shadow-sm drop-shadow-sm ${
               page == "home"
                 ? "absolute bottom-1.5 right-2 h-11 rounded-3xl bg-cyan-600 px-6 py-1 text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

@@ -66,8 +66,6 @@ const PricingForm = ({
     handleBlur(event);
   };
 
-  console.log(errors, values);
-
   return (
     <div className="mt-4 px-4">
       <p className="text-xl font-semibold text-gray-900">Set Pricing</p>
