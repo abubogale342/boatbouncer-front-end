@@ -3,7 +3,9 @@ import { Html, Head, Main, NextScript } from "next/document";
 export default function Document() {
   return (
     <Html lang="en">
-      <Head />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
       <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
       <link
         href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
