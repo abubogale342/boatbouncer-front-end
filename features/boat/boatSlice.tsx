@@ -49,9 +49,12 @@ export const boatSlice = createSlice({
     },
     updateFeaturesList: (state, { payload: { key, value } }) => {
       if (value) {
-        state.boatInfo.features = key;
+        state.boatInfo.features = [...state.boatInfo.features, key];
       } else {
-        state.boatInfo.features = "";
+        let filteredState = state.boatInfo.features.filter(
+          (val: string) => val !== key,
+        );
+        state.boatInfo.features = filteredState;
       }
     },
     updateCategory: (state: any, { payload: value }) => {

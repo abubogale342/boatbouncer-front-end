@@ -84,6 +84,7 @@ function useFetcher() {
           setData(res);
         })
         .catch((err) => {
+          console.log("err", err);
           setError(err);
           setLoading(false);
           setData(null);
@@ -102,6 +103,24 @@ function useFetcher() {
           setData(null);
         });
     }
+  }
+
+  function fetchCategories(path: string) {
+    setError(null);
+    setLoading(true);
+    setData(null);
+
+    Axios.get(path)
+      .then((res) => {
+        setLoading(false);
+        setError(null);
+        setData(res?.data);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+        setData(null);
+      });
   }
 
   function attachPaymentCard(path: string) {
@@ -135,6 +154,7 @@ function useFetcher() {
   return {
     Axios,
     fetchWithAuth,
+    fetchCategories,
     fetchWithAuthSync,
     attachPaymentCard,
     getPaymentCards,

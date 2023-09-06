@@ -7,6 +7,8 @@ import { Formik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
 import { useDebouncedCallback } from "use-debounce";
 import { amenitiesLists, featureLists } from "./data";
+import useFetcher from "@/lib/hooks/use-axios";
+import { useEffect } from "react";
 
 const FeatureForm = ({
   values,
@@ -25,6 +27,7 @@ const FeatureForm = ({
 }) => {
   const boatInfo = useSelector((state: any) => state.boat.boatInfo);
   const dispatch = useDispatch();
+  const { fetchCategories, data } = useFetcher();
 
   const updateFeaturesLists = (key: string, value: boolean) => {
     dispatch(updateFeaturesList({ key, value }));
@@ -59,6 +62,31 @@ const FeatureForm = ({
     }
   };
 
+  const handleFeaturesChange = (checked: boolean) => {
+    if (checked) {
+      setValues({
+        ...values,
+        features: ["on"],
+      });
+    } else {
+      if (boatInfo.features.length === 1) {
+        setValues({
+          ...values,
+          features: [],
+        });
+      } else {
+        setValues({
+          ...values,
+          features: ["on"],
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories("/boat/categories");
+  }, []);
+
   return (
     <div>
       <div className="pl-4">
@@ -66,28 +94,28 @@ const FeatureForm = ({
         <hr className="mb-6 mt-3 h-px border-0 bg-gray-200" />
 
         <div className="flex flex-row flex-wrap">
-          {featureLists.map((feature) => (
+          {data?.boatFeaturesEnum.map((feature: string, index: number) => (
             <div
               className="flex flex-row items-center gap-2 rounded pb-2 pr-10"
-              key={feature.id}
+              key={`${feature} ${index}`}
             >
               <input
                 className="appearance-none focus:ring-0"
                 type="checkbox"
                 onBlur={handleBlur}
                 name="features"
-                id={feature.id}
-                checked={feature.id === boatInfo.features}
+                id={`${feature} ${index}`}
+                checked={boatInfo.features.includes(feature)}
                 onChange={(event) => {
-                  handleChange(event);
-                  updateFeaturesLists(feature.id, event.target.checked);
+                  handleFeaturesChange(event.target.checked);
+                  updateFeaturesLists(feature, event.target.checked);
                 }}
               />
               <label
                 className="text-sm font-medium text-gray-700"
-                htmlFor={feature.id}
+                htmlFor={`${feature} ${index}`}
               >
-                {feature.id}
+                {feature}
               </label>
             </div>
           ))}

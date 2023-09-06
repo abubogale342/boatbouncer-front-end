@@ -118,12 +118,13 @@ function Login({ handleSubmit }: Props) {
                     Remember for 30 days
                   </label>
                 </div>
-                <button
+                <Link
+                  href={"/user/password"}
                   type="button"
                   className="text-sm font-medium text-cyan-600"
                 >
                   Forgot Password
-                </button>
+                </Link>
               </div>
               {errorMessage && (
                 <div className="text-center text-red-700">{errorMessage}</div>

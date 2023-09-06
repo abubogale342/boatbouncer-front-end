@@ -10,7 +10,7 @@ import useFetcher from "@/lib/hooks/use-axios";
 import { LoadingDots } from "@/components/shared/icons";
 import Router from "next/router";
 import { objectDiff } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BasicInfos from "./basic";
 import { SaveIcon } from "@/components/shared/icons/save";
 

@@ -5,7 +5,7 @@ import {
   updateCategory,
   updateSubCategory,
 } from "features/boat/boatSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { categories, subCategories } from "./data";
 import { returnClass } from "@/components/shared/styles/input";
@@ -21,6 +21,7 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import useFetcher from "@/lib/hooks/use-axios";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
@@ -39,6 +40,7 @@ const CategoryForm = ({
 }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { fetchCategories, data } = useFetcher();
 
   const MenuProps = {
     PaperProps: {
@@ -70,6 +72,10 @@ const CategoryForm = ({
     dispatch(updateSubCategory(value));
   };
 
+  useEffect(() => {
+    fetchCategories("/boat/categories");
+  }, []);
+
   return (
     <div className="mt-0 px-4">
       <p className="text-xl font-semibold text-gray-900">Category</p>
@@ -78,6 +84,7 @@ const CategoryForm = ({
       <div className="relative w-full">
         <FormControl sx={{ width: "100%" }}>
           <InputLabel id="demo-multiple-chip-label">Categories</InputLabel>
+
           <Select
             id="category"
             name="category"
@@ -107,7 +114,7 @@ const CategoryForm = ({
             )}
             MenuProps={MenuProps}
           >
-            {categories.map((category) => (
+            {data?.categoriesEnum.map((category: string) => (
               <MenuItem
                 key={category}
                 value={category}
@@ -133,6 +140,7 @@ const CategoryForm = ({
             <InputLabel className="!shadow-sm !drop-shadow-sm">
               Subcategory
             </InputLabel>
+
             <Select
               id="subCategory"
               name="subCategory"
@@ -160,7 +168,7 @@ const CategoryForm = ({
               )}
               MenuProps={MenuProps}
             >
-              {subCategories.map((category) => (
+              {data?.subCategoriesEnum.map((category: string) => (
                 <MenuItem
                   key={category}
                   value={category}

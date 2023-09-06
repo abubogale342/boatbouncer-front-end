@@ -179,6 +179,7 @@ function Form({
         } else if (page === "register") {
           try {
             setRecaptchaLoader(true);
+
             const createdAccount = await poster(
               "user/createAccount",
               finalValues,
@@ -443,105 +444,7 @@ function Form({
               </div>
             </motion.div>
           )}
-          {/* {step === 2 && (
-            <motion.div
-              animate={{ x: [-100, 0] }}
-              transition={{ duration: 0.25 }}
-            >
-              <div className="mb-6 grid grid-cols-2 items-end">
-                <div className="mr-2 flex flex-col">
-                  <label
-                    htmlFor="stateInput"
-                    className={`${
-                      returnClass(!!(errors.userName && touched.userName))[1]
-                    }`}
-                  >
-                    State
-                  </label>
-                  <input
-                    name="state"
-                    className={
-                      returnClass(!!(errors.userName && touched.userName))[0]
-                    }
-                    type="text"
-                    id="stateInput"
-                    placeholder="state"
-                    value={values.state}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="ml-2 flex flex-col">
-                  <label
-                    htmlFor="zipCodeInput"
-                    className={`${
-                      returnClass(!!(errors.userName && touched.userName))[1]
-                    }`}
-                  >
-                    Zip code
-                  </label>
-                  <input
-                    name="zipCode"
-                    className={
-                      returnClass(!!(errors.userName && touched.userName))[0]
-                    }
-                    type="text"
-                    id="zipCodeInput"
-                    placeholder="zipCode"
-                    value={values.zipCode}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="mb-6 grid grid-cols-2 items-end">
-                <div className="mr-2 flex flex-col">
-                  <label
-                    htmlFor="addressInput"
-                    className={`${
-                      returnClass(!!(errors.userName && touched.userName))[1]
-                    }`}
-                  >
-                    Address
-                  </label>
-                  <input
-                    name="address"
-                    className={
-                      returnClass(!!(errors.userName && touched.userName))[0]
-                    }
-                    type="text"
-                    id="addressInput"
-                    placeholder="address"
-                    value={values.address}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="ml-2 flex flex-col">
-                  <label
-                    htmlFor="cityInput"
-                    className={`${
-                      returnClass(!!(errors.userName && touched.userName))[1]
-                    }`}
-                  >
-                    City
-                  </label>
-                  <input
-                    name="city"
-                    className={
-                      returnClass(!!(errors.userName && touched.userName))[0]
-                    }
-                    type="text"
-                    id="cityInput"
-                    placeholder="city"
-                    value={values.city}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )} */}
+
           {errorMessage && (
             <div className="text-center text-orange-700">{errorMessage}</div>
           )}
@@ -552,29 +455,6 @@ function Form({
               className="flex w-full justify-center"
             ></div>
           </div>
-
-          {/* <>
-            <button
-              type="button"
-              disabled={step === 1}
-              onClick={() => setStep?.(1)}
-              className={`${
-                step === 1 ? "hidden" : ""
-              } absolute -left-0 bottom-14 w-fit rounded-full bg-gray-300 px-1 py-1 opacity-60 `}
-            >
-              <ChevronLeft />
-            </button>
-            <button
-              type="button"
-              disabled={step === 2}
-              onClick={() => setStep?.(2)}
-              className={`${
-                step === 2 ? "hidden " : ""
-              } absolute -right-0 bottom-14 ml-auto flex w-fit rounded-full bg-gray-300 px-1 py-1 opacity-60`}
-            >
-              <ChevronRight />
-            </button>
-          </> */}
 
           <motion.div className={`mt-4 rounded-md text-center`}>
             <button

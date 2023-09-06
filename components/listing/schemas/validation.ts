@@ -16,8 +16,8 @@ export const formUpdateSchema = Yup.object().shape({
     .min(1, "Category is required")
     .required("Category is required"),
   subCategory: Yup.array(),
-  features: Yup.bool()
-    .oneOf([true], "Feature is required")
+  features: Yup.array()
+    .min(1, "Feature is required")
     .required("Feature is required"),
   securityAllowance: Yup.number().required("Security allowance is required"),
   pricing: Yup.array()
