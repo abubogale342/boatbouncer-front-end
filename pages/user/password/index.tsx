@@ -45,7 +45,6 @@ function Index() {
     res: string,
     phoneNumber?: E164Number,
   ) => {
-    console.log("phoneNumber", phoneNumber);
     Router.push({
       pathname: "/user/password/confirm",
       query: { recaptchaToken: res, phoneNumber: phoneNumber },

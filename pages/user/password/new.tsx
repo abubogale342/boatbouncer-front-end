@@ -4,10 +4,11 @@ import { motion } from "framer-motion";
 import { returnClass } from "@/components/shared/styles/input";
 import { useState } from "react";
 import BaseLayout from "@/components/auth/base";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import { poster } from "@/lib/utils";
 import { LoadingCircle } from "@/components/shared/icons";
 import { signIn } from "next-auth/react";
+import { CheckCircle2 } from "lucide-react";
 const lowerLetterRegex = /(?=.*?[a-z])/; // Password should contain a lower case letter
 const upperLetterRegex = /(?=.*?[A-Z])/; // Password should contain an upper case letter
 const numberRegex = /(?=.*[0-9])/; // Password should contain number
@@ -15,6 +16,7 @@ const specialCharRegex = /(?=.*[!@#$%^&*])(?=.{8,})/; // Password should contain
 
 const Index = () => {
   const [errorMessage, setErrorMessage] = useState("");
+  const [success, setSuccess] = useState(false);
   const [resetting, setResetting] = useState(false);
   const router = useRouter();
   const { query } = router;
@@ -48,21 +50,42 @@ const Index = () => {
         })}
         onSubmit={async (values, { setSubmitting }) => {
           setResetting(true);
-          const resetPassword = await poster("user/changePassword", {
-            newPassword: values.newPassword,
-            encryption: encryption,
-          });
-
-          if (resetPassword._id) {
-            await signIn("credentials", {
-              redirect: false,
-              email: resetPassword.email,
-              password: values.newPassword,
-              callbackUrl: "/",
+          try {
+            const resetPassword = await poster("user/changePassword", {
+              newPassword: values.newPassword,
+              encryption: encryption,
             });
-          }
 
-          setResetting(false);
+            if (resetPassword.email) {
+              setSuccess(true);
+
+              const status = await signIn("credentials", {
+                redirect: false,
+                email: resetPassword.email,
+                password: values.newPassword,
+                callbackUrl: "/",
+              });
+
+              if (status?.ok && status?.url) {
+                setErrorMessage("");
+
+                Router.push({
+                  pathname: status?.url,
+                });
+              } else {
+                setResetting(false);
+                setSuccess(false);
+                setErrorMessage("Error while logging in, please refresh");
+              }
+
+              setSuccess(false);
+              setResetting(false);
+            }
+          } catch (error: any) {
+            setErrorMessage(error?.message ?? "Error occured while resetting");
+            setResetting(false);
+            setSuccess(false);
+          }
         }}
       >
         {({
@@ -162,16 +185,12 @@ const Index = () => {
                 className={`flex w-full flex-row-reverse items-center justify-center gap-2 rounded-md bg-cyan-600 py-3 font-medium  text-white hover:bg-cyan-700 active:translate-y-[1.5px]`}
                 disabled={Object.keys(errors).length > 0}
               >
+                <span>{success && <CheckCircle2 />}</span>
                 <span>{resetting && <LoadingCircle />}</span>
                 <span>
                   {/* {accountStatus.error && !accountStatus.loading && (
                   <XCircle color="red" />
                 )} */}
-                </span>
-                <span>
-                  {/* {!accountStatus.error &&
-                  !accountStatus.loading &&
-                  accountStatus.success && <CheckCircle2 />} */}
                 </span>
                 <span className="flex items-center justify-center gap-1">
                   Reset Password
