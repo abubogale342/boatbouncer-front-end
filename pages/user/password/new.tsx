@@ -7,6 +7,7 @@ import BaseLayout from "@/components/auth/base";
 import { useRouter } from "next/router";
 import { poster } from "@/lib/utils";
 import { LoadingCircle } from "@/components/shared/icons";
+import { signIn } from "next-auth/react";
 const lowerLetterRegex = /(?=.*?[a-z])/; // Password should contain a lower case letter
 const upperLetterRegex = /(?=.*?[A-Z])/; // Password should contain an upper case letter
 const numberRegex = /(?=.*[0-9])/; // Password should contain number
@@ -52,7 +53,15 @@ const Index = () => {
             encryption: encryption,
           });
 
-          console.log("resetPassword", resetPassword);
+          if (resetPassword._id) {
+            await signIn("credentials", {
+              redirect: false,
+              email: resetPassword.email,
+              password: values.newPassword,
+              callbackUrl: "/",
+            });
+          }
+
           setResetting(false);
         }}
       >
