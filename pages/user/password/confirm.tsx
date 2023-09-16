@@ -10,26 +10,16 @@ import { useEffect, useState } from "react";
 function Index() {
   const router = useRouter();
   const { query } = router;
-  const { phoneNumber, recaptchaToken } = query;
+  const { phoneNumber, encryption } = query;
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationError, setVerificationError] = useState<any>(null);
-  const { data, fetchWithAuth } = useFetcher();
 
   useEffect(() => {
     if (phoneNumber) return;
     Router.push({
       pathname: "/user/login",
     });
-  }, [phoneNumber]);
-
-  useEffect(() => {
-    if (!phoneNumber || !recaptchaToken) return;
-    fetchWithAuth("/user/forgetPassword", { phoneNumber, recaptchaToken });
   }, []);
-
-  if (!phoneNumber) {
-    return;
-  }
 
   return (
     <>
@@ -47,7 +37,7 @@ function Index() {
             const verifiedSms = await poster("user/validateResetOTP", {
               phoneNumber: values.phoneNumber,
               verificationCode: values.code,
-              encryption: data.data,
+              encryption: encryption,
             });
 
             if (typeof verifiedSms == "string") {
@@ -77,7 +67,7 @@ function Index() {
             >
               <fieldset>
                 <div className="mb-5 flex flex-col">
-                  <label htmlFor="useremailInput">Phone Number</label>
+                  <label htmlFor="phoneNumberInput">Phone Number</label>
                   <input
                     className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     name="phoneNumber"

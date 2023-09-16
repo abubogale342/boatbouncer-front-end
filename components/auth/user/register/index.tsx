@@ -7,16 +7,12 @@ import Link from "next/link";
 import Form from "../form";
 import { number } from "yup";
 
-type Props = {
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-};
-
 type step = {
   errors: boolean;
   values: boolean;
 };
 
-function Register({ handleSubmit }: Props) {
+function Register() {
   const [step, setSteps] = useState(1);
 
   const [mandatoryStep, setMandatoryStep] = useState({
@@ -56,7 +52,6 @@ function Register({ handleSubmit }: Props) {
       mandatory={mandatoryStep}
     >
       <Form
-        handleSubmit={handleSubmit}
         type="Create account"
         initialValues={initialValues}
         setMandatory={setMandatory}

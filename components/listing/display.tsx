@@ -13,6 +13,7 @@ import {
 } from "features/boat/boatSlice";
 import AlertDialogs from "../shared/alertDialog";
 import { CircularProgress } from "@mui/material";
+import { authGetter } from "@/lib/utils";
 
 const PAGE_SIZE = 10;
 
@@ -23,10 +24,29 @@ const DisplayListings = ({
 }) => {
   const { fetchWithAuth, deleteBoat, data, loading, error, dataLength } =
     useFetcher();
+  const [favorites, setFavorites] = useState<string[]>([]);
   const editableListing = useSelector((state: any) => state.boat.editableBoat);
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const [pageNo, setPageNo] = useState(1);
+
+  useEffect(() => {
+    const getFavorites = async () => {
+      try {
+        const favorites = await authGetter("boat/favorites");
+        if (favorites.total == 0) return;
+
+        const favoriteIds = favorites.data.map(
+          (favorite: any) => favorite.boat._id,
+        );
+
+        setFavorites(favoriteIds);
+      } catch (error) {}
+    };
+
+    if (!session?.token) return;
+    getFavorites();
+  }, [session?.token]);
 
   useEffect(() => {
     if (!session?.token) return;
@@ -84,7 +104,7 @@ const DisplayListings = ({
 
   if (!error && !loading && data && data?.length == 0 && pageNo == 1) {
     displayEl = (
-      <motion.p className="mx-2 flex h-14 items-center justify-center text-center text-2xl text-red-500">
+      <motion.p className="flex h-12 items-center justify-start text-center text-2xl text-red-500">
         You have no listings added.
       </motion.p>
     );
@@ -92,7 +112,7 @@ const DisplayListings = ({
 
   if (error) {
     displayEl = (
-      <p className="mr-4 h-12 items-center justify-center text-3xl text-orange-700">
+      <p className="h-12 items-center justify-start text-3xl text-orange-700">
         Error fetching your listings
       </p>
     );
@@ -106,7 +126,9 @@ const DisplayListings = ({
     displayEl = data.map((boat: any) => (
       <Boat
         page="listing"
+        boatId={boat._id}
         key={boat._id}
+        favorite={favorites.includes(boat._id)}
         boatImg={boat.imageUrls[0]}
         boatImgs={boat.imageUrls}
         boatName={boat.boatName}

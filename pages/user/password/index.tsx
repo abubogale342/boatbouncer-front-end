@@ -11,11 +11,14 @@ import { RecaptchaVerifier } from "firebase/auth";
 import { auth } from "@/lib/config";
 import * as Yup from "yup";
 import { E164Number } from "libphonenumber-js/core";
+import useFetcher from "@/lib/hooks/use-axios";
 
 function Index() {
   const [recaptchaLoader, setRecaptchaLoader] = useState(false);
+  const [Recaptcha, setRecaptcha] = useState<RecaptchaVerifier | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [verificationError, setVerificationError] = useState<any>(null);
+  const { fetchWithAuthSync } = useFetcher();
   let phoneNumber: E164Number | undefined;
 
   const setupRecaptcha = (cb: any) => {
@@ -36,19 +39,29 @@ function Index() {
         }, 1000);
       })
       .catch(() => {
-        setErrorMessage("unable to render recaptcha");
         setRecaptchaLoader(false);
       });
+
+    setRecaptcha(recaptcha);
   };
 
   const recaptchAfterValidation = async (
     res: string,
     phoneNumber?: E164Number,
   ) => {
-    Router.push({
-      pathname: "/user/password/confirm",
-      query: { recaptchaToken: res, phoneNumber: phoneNumber },
-    });
+    try {
+      const response = await poster("/user/forgetPassword", {
+        phoneNumber,
+        recaptchaToken: res,
+      });
+
+      Router.push({
+        pathname: "/user/password/confirm",
+        query: { phoneNumber: phoneNumber, encryption: response },
+      });
+    } catch (error: any) {
+      setVerificationError(error?.message);
+    }
   };
 
   return (
@@ -56,8 +69,8 @@ function Index() {
       <Meta title="recover account" />
 
       <BaseLayout
-        action="Reset your password"
-        prompt={`Please enter the email associated with your boatbouncer account`}
+        action="Find your account"
+        prompt={`Please enter your phone number to search for your account.`}
       >
         <Formik
           initialValues={{ phoneNumber }}
@@ -65,6 +78,7 @@ function Index() {
             phoneNumber: Yup.string().required("Phone number is required"),
           })}
           onSubmit={async (values, { setSubmitting }) => {
+            Recaptcha?.clear();
             setupRecaptcha((args: any) => {
               recaptchAfterValidation(args, values.phoneNumber);
             });
@@ -96,6 +110,7 @@ function Index() {
                     value={values?.phoneNumber}
                     onBlur={handleBlur}
                     onChange={(value) => {
+                      setVerificationError(null);
                       setValues({ phoneNumber: value });
                     }}
                   />
@@ -116,10 +131,11 @@ function Index() {
 
                 <div className="mt-3 ">
                   {verificationError && (
-                    <div className="text-center text-orange-700">
+                    <div className="ml-1 text-center text-sm text-orange-700">
                       {verificationError}
                     </div>
                   )}
+
                   <button
                     type="submit"
                     className="w-full rounded-md bg-cyan-600 py-3 text-center font-medium text-white hover:bg-cyan-700 active:active:translate-y-[1.5px]"

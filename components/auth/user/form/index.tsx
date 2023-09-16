@@ -20,7 +20,6 @@ type step = {
 };
 
 type Props = {
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   type: String | null | undefined;
   initialValues: {
     email?: string;
@@ -44,7 +43,6 @@ type Props = {
 };
 
 function Form({
-  handleSubmit,
   type,
   initialValues,
   page,
@@ -62,7 +60,7 @@ function Form({
     success: false,
   });
   const [recaptchaLoader, setRecaptchaLoader] = useState(false);
-
+  const [Recaptcha, setRecaptcha] = useState<RecaptchaVerifier | null>(null);
   const accountRef = useRef<HTMLFormElement | null>(null);
 
   const reset = (timer: number) => {
@@ -91,39 +89,36 @@ function Form({
         setErrorMessage("unable to render recaptcha");
       });
     // setRecaptchaLoader(false);
+
+    setRecaptcha(recaptcha);
   };
 
   const recaptchAfterValidation = async (res: any, credentials: any) => {
-    setRecaptchaLoader(false);
-    if (submitFormRef.current) {
-      submitFormRef.current.style.display = "none";
-    }
+    try {
+      setRecaptchaLoader(true);
+      await poster("user/createAccount", credentials);
 
-    const smsResponse = await poster("user/sendSms", {
-      phoneNumber: credentials.phoneNumber,
-      recaptchaToken: res,
-    });
-
-    if (smsResponse._id || smsResponse.phoneNumber == credentials.phoneNumber) {
-      Router.push({
-        pathname: "/user/verify",
-        query: { ...credentials, recaptchaToken: res },
+      const smsResponse = await poster("user/sendSms", {
+        phoneNumber: credentials.phoneNumber,
+        recaptchaToken: res,
       });
 
-      return;
-    }
+      if (
+        smsResponse._id ||
+        smsResponse.phoneNumber == credentials.phoneNumber
+      ) {
+        if (submitFormRef.current) {
+          submitFormRef.current.style.display = "none";
+        }
 
-    if (smsResponse?.response?.status) {
-      setErrorMessage(
-        smsResponse.response?.data?.message ||
-          smsResponse.response.data?.errors[0]?.msg ||
-          "Error occured, try again",
-      );
-      return;
-    }
-
-    if (!smsResponse.status) {
-      setErrorMessage("server or connection error, please try again!");
+        Router.push({
+          pathname: "/user/verify",
+          query: { ...credentials, recaptchaToken: res },
+        });
+      }
+    } catch (error: any) {
+      setRecaptchaLoader(false);
+      setErrorMessage(error.message);
     }
   };
 
@@ -177,38 +172,19 @@ function Form({
             reset(1500);
           }
         } else if (page === "register") {
+          Recaptcha?.clear();
           try {
             setRecaptchaLoader(true);
-
-            const createdAccount = await poster(
-              "user/createAccount",
+            const isValidUser = await poster(
+              "/user/validateUserForm",
               finalValues,
             );
-
-            if (createdAccount._id) {
+            if (isValidUser) {
               setupRecaptcha((args: any) => {
                 recaptchAfterValidation(args, finalValues);
               });
 
               setErrorMessage("");
-
-              return;
-            }
-
-            if (createdAccount?.response?.status) {
-              setRecaptchaLoader(false);
-              setErrorMessage(
-                createdAccount.response?.data?.message ||
-                  createdAccount.response.data?.errors[0]?.msg,
-              );
-              if (submitFormRef.current) {
-                submitFormRef.current.style.display = "block";
-              }
-            }
-
-            if (!createdAccount.status) {
-              setRecaptchaLoader(false);
-              setErrorMessage("Seems connection error, please try again!");
             }
           } catch (error: any) {
             setRecaptchaLoader(false);

@@ -74,7 +74,7 @@ function Login({ handleSubmit }: Props) {
                   className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                   name="email"
                   type="email"
-                  id="emailInput"
+                  id="useremailInput"
                   placeholder="Enter your email"
                   value={values.email}
                   onBlur={handleBlur}

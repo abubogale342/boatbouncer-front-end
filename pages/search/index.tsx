@@ -532,7 +532,7 @@ export async function getServerSideProps(context: any) {
 
   try {
     data = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/boat?${queryString}`,
+      `${process.env.NEXT_PUBLIC_API_URL}boat?${queryString}`,
       requestOptions,
     );
 
@@ -548,7 +548,7 @@ export async function getServerSideProps(context: any) {
   return {
     props: {
       ...session,
-      data,
+      data: data[0],
       error,
     },
   };

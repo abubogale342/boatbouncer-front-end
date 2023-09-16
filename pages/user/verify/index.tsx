@@ -82,7 +82,7 @@ function Index() {
             >
               <fieldset>
                 <div className="mb-5 flex flex-col">
-                  <label htmlFor="useremailInput">Phone Number</label>
+                  <label htmlFor="phoneNumberInput">Phone Number</label>
                   <input
                     className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
                     name="phoneNumber"

@@ -23,91 +23,86 @@ const Index = () => {
   const { encryption } = query;
 
   return (
-    <BaseLayout action="Reset Password" prompt="Create new password">
-      <Formik
-        initialValues={{ newPassword: "", confirmPassword: "" }}
-        validationSchema={Yup.object().shape({
-          newPassword: Yup.string()
-            .min(8, "Password should be at least 8 cahracters")
-            .max(60, "Password should not be greater than 60!")
-            .matches(
-              lowerLetterRegex,
-              "Password should contain a lowercase letter",
-            )
-            .matches(
-              upperLetterRegex,
-              "Password should contain an uppercase letter",
-            )
-            .matches(numberRegex, "Password should contain a number")
-            .matches(
-              specialCharRegex,
-              "Password should contain a special character",
-            )
-            .required("Password is required"),
-          confirmPassword: Yup.string()
-            .required("Confirmation password is required!")
-            .oneOf([Yup.ref("newPassword"), ""], "Passwords must match"),
-        })}
-        onSubmit={async (values, { setSubmitting }) => {
-          setResetting(true);
-          try {
-            const resetPassword = await poster("user/changePassword", {
-              newPassword: values.newPassword,
-              encryption: encryption,
-            });
-
-            if (resetPassword.email) {
-              setSuccess(true);
-
-              const status = await signIn("credentials", {
-                redirect: false,
-                email: resetPassword.email,
-                password: values.newPassword,
-                callbackUrl: "/",
+    <>
+      <BaseLayout action="Reset Password" prompt="Create new password">
+        <Formik
+          initialValues={{ newPassword: "", confirmPassword: "" }}
+          validationSchema={Yup.object().shape({
+            newPassword: Yup.string()
+              .min(8, "Password should be at least 8 characters")
+              .max(60, "Password should not be greater than 60!")
+              .matches(
+                lowerLetterRegex,
+                "Password should contain a lowercase letter",
+              )
+              .matches(
+                upperLetterRegex,
+                "Password should contain an uppercase letter",
+              )
+              .matches(numberRegex, "Password should contain a number")
+              .matches(
+                specialCharRegex,
+                "Password should contain a special character",
+              )
+              .required("Password is required"),
+            confirmPassword: Yup.string()
+              .required("Confirmation password is required!")
+              .oneOf([Yup.ref("newPassword"), ""], "Passwords must match"),
+          })}
+          onSubmit={async (values, { setSubmitting }) => {
+            setResetting(true);
+            try {
+              const resetPassword = await poster("user/changePassword", {
+                newPassword: values.newPassword,
+                encryption: encryption,
               });
 
-              if (status?.ok && status?.url) {
-                setErrorMessage("");
+              if (resetPassword.email) {
+                setSuccess(true);
 
-                Router.push({
-                  pathname: status?.url,
+                const status = await signIn("credentials", {
+                  redirect: false,
+                  email: resetPassword.email,
+                  password: values.newPassword,
+                  callbackUrl: "/",
                 });
-              } else {
-                setResetting(false);
-                setSuccess(false);
-                setErrorMessage("Error while logging in, please refresh");
-              }
 
-              setSuccess(false);
+                if (status?.ok && status?.url) {
+                  setErrorMessage("");
+
+                  Router.push({
+                    pathname: status?.url,
+                  });
+                } else {
+                  setResetting(false);
+                  setSuccess(false);
+                  setErrorMessage("Error while logging in, please refresh");
+                }
+
+                setSuccess(false);
+                setResetting(false);
+              }
+            } catch (error: any) {
+              setErrorMessage(
+                error?.message ?? "Error occured while resetting",
+              );
               setResetting(false);
+              setSuccess(false);
             }
-          } catch (error: any) {
-            setErrorMessage(error?.message ?? "Error occured while resetting");
-            setResetting(false);
-            setSuccess(false);
-          }
-        }}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          setValues,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-        }) => (
-          <form
-            onSubmit={handleSubmit}
-            onChange={() => {}}
-            className="relative"
-          >
-            <motion.div
-              animate={{ x: [100, 0] }}
-              transition={{ duration: 0.25 }}
-            >
-              <div className="relative mb-7 flex flex-col">
+          }}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            setValues,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+          }) => (
+            <form onSubmit={handleSubmit} onChange={handleChange}>
+              <div className="relative mb-7 flex min-w-[240px] flex-col">
                 <input
                   type="password"
                   name="newPassword"
@@ -172,38 +167,40 @@ const Index = () => {
                     </p>
                   )}
               </div>
-            </motion.div>
 
-            {errorMessage && (
-              <div className="text-center text-orange-700">{errorMessage}</div>
-            )}
+              {errorMessage && (
+                <div className="text-center text-orange-700">
+                  {errorMessage}
+                </div>
+              )}
 
-            <motion.div className={`mt-4 rounded-md text-center`}>
-              <button
-                type="submit"
-                onClick={() => {}}
-                className={`flex w-full flex-row-reverse items-center justify-center gap-2 rounded-md bg-cyan-600 py-3 font-medium  text-white hover:bg-cyan-700 active:translate-y-[1.5px]`}
-                disabled={Object.keys(errors).length > 0}
-              >
-                <span>{success && <CheckCircle2 />}</span>
-                <span>{resetting && <LoadingCircle />}</span>
-                <span>
-                  {/* {accountStatus.error && !accountStatus.loading && (
+              <motion.div className={`mt-4 rounded-md text-center`}>
+                <button
+                  type="submit"
+                  onClick={() => {}}
+                  className={`flex w-full flex-row-reverse items-center justify-center gap-2 rounded-md bg-cyan-600 py-3 font-medium  text-white hover:bg-cyan-700 active:translate-y-[1.5px]`}
+                  disabled={Object.keys(errors).length > 0}
+                >
+                  <span>{success && <CheckCircle2 />}</span>
+                  <span>{resetting && <LoadingCircle />}</span>
+                  <span>
+                    {/* {accountStatus.error && !accountStatus.loading && (
                   <XCircle color="red" />
                 )} */}
-                </span>
-                <span className="flex items-center justify-center gap-1">
-                  Reset Password
-                  {/* {type}
+                  </span>
+                  <span className="flex items-center justify-center gap-1">
+                    Reset Password
+                    {/* {type}
                   
                 {recaptchaLoader && <LoadingCircle />} */}
-                </span>
-              </button>
-            </motion.div>
-          </form>
-        )}
-      </Formik>
-    </BaseLayout>
+                  </span>
+                </button>
+              </motion.div>
+            </form>
+          )}
+        </Formik>
+      </BaseLayout>
+    </>
   );
 };
 

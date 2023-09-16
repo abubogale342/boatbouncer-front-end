@@ -1,10 +1,13 @@
-import Image from "next/image";
-import FavouriteImage from "../../public/favouriteBoat.svg";
 import dayjs from "dayjs";
 import { Triangle } from "lucide-react";
 import { setActiveId } from "features/bookmark/bookmarkSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Carousel from "../layout/carousel";
+import Favorite from "../shared/icons/favorite";
+import { useState } from "react";
+import { authPoster } from "@/lib/utils";
+import useFetcher from "@/lib/hooks/use-axios";
+import { useSession } from "next-auth/react";
 
 const Boat = ({
   page,
@@ -23,7 +26,9 @@ const Boat = ({
   captained,
   pricing,
   boatName,
+  favorite,
   markerId,
+  boatId,
   peer,
 }: {
   page: string;
@@ -44,6 +49,8 @@ const Boat = ({
   renterPrice?: number;
   type?: string;
   _id?: string;
+  favorite?: boolean;
+  boatId?: string;
   captained?: boolean;
   pricing?: any;
   boatName?: any;
@@ -54,6 +61,19 @@ const Boat = ({
   const dispatch = useDispatch();
   const { id } = useSelector((state: any) => state.bookmark.bookmarkInfo);
   const images = boatImgs?.filter((boat: string) => boat);
+  const [isFavorite, setIsFavorite] = useState(favorite ?? false);
+  const { data: session } = useSession();
+  const { Axios } = useFetcher();
+
+  const favoriteClickHn = async (id: string | undefined) => {
+    if (!id) return;
+    setIsFavorite((fav) => !fav);
+    try {
+      await authPoster(Axios, `boat/addFavorite/${boatId}`);
+    } catch (error) {
+      setIsFavorite((fav) => !fav);
+    }
+  };
 
   return (
     <div
@@ -80,11 +100,19 @@ const Boat = ({
         }
       }}
     >
+      {session?.token && (
+        <button
+          onClick={() => favoriteClickHn(boatId)}
+          className="absolute right-3 top-3 z-10 rounded-lg bg-white p-2"
+        >
+          <Favorite isFavorite={isFavorite} />
+        </button>
+      )}
       {id && id == _id && (
         <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
 
-      {!id && page !== "listing" && (
+      {!id && page !== "listing" && page !== "favorite" && (
         <div className={`w-full ${page == "bookmarks" ? "h-24" : "h-full"}`}>
           {boatImg ? (
             <Carousel images={images} page={page} />
@@ -94,7 +122,7 @@ const Boat = ({
         </div>
       )}
 
-      {page == "listing" && boatImg && (
+      {(page == "listing" || page == "favorite") && boatImg && (
         <div className="h-full">
           <Carousel images={images} page={page} />
         </div>
@@ -141,12 +169,14 @@ const Boat = ({
         )}
         {page !== "bookmarks" && (
           <ul className="my-2 flex flex-row items-center gap-2 text-xs font-medium">
-            <li className="whitespace-nowrap rounded-2xl bg-gray-100 px-2 py-1 text-zinc-700">
+            {/* <li className="whitespace-nowrap rounded-2xl bg-gray-100 px-2 py-1 text-zinc-700">
               <span>4-8 Hours Rental</span>
-            </li>
-            <li className="whitespace-nowrap rounded-2xl bg-orange-50 px-2 py-1 text-orange-700">
-              <span>{captained ? "Captained" : null}</span>
-            </li>
+            </li> */}
+            {captained && (
+              <li className="whitespace-nowrap rounded-2xl bg-orange-50 px-2 py-1 text-orange-700">
+                <span>Captained</span>
+              </li>
+            )}
           </ul>
         )}
         {page !== "listing" &&

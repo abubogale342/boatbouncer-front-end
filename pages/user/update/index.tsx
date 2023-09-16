@@ -5,14 +5,10 @@ import { getSession } from "next-auth/react";
 import Meta from "@/components/layout/meta";
 
 function Index() {
-  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    console.log("I am trying to submit");
-  };
-
   return (
     <div className="h-screen overflow-hidden">
       <Meta title="update profile" />
-      <Profile handleSubmit={submitHandler} />;
+      <Profile />
     </div>
   );
 }

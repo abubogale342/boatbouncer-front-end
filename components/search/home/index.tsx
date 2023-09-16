@@ -64,9 +64,7 @@ const Search = ({ page }: { page?: string }) => {
           method="POST"
           id="searchForm"
         >
-          <label htmlFor="voice-search" className="sr-only">
-            Search
-          </label>
+          <label className="sr-only">Search</label>
           <div className="relative w-full">
             <SearchBox
               ref={searchBoxRef}

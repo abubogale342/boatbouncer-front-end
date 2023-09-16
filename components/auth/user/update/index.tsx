@@ -10,11 +10,7 @@ import Image from "next/image";
 import { LoadingCircle, LoadingSpinner } from "@/components/shared/icons";
 import { CircularProgress } from "@mui/material";
 
-type Props = {
-  handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-};
-
-function Update({ handleSubmit }: Props) {
+function Update() {
   const { data: session } = useSession();
   const [initialValues, setInitialValues] = useState(null);
   const [step, setSteps] = useState(1);
@@ -50,7 +46,6 @@ function Update({ handleSubmit }: Props) {
   if (initialValues) {
     formEl = (
       <Form
-        handleSubmit={handleSubmit}
         type="Save Account"
         initialValues={initialValues}
         page="update"

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 import ms from "ms";
 import { DateObject } from "react-multi-date-picker";
 
@@ -71,6 +71,13 @@ export function getter<JSON = any>(path: RequestInfo): Promise<JSON> {
     .catch((err) => err);
 }
 
+export function authGetter<JSON = any>(path: RequestInfo): Promise<JSON> {
+  return axios
+    .get(`${process.env.NEXT_PUBLIC_API_URL}/${path}`)
+    .then((res) => res.data)
+    .catch((err) => err);
+}
+
 export function poster(path: string, body?: any) {
   return axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}${path}`, body)
@@ -79,10 +86,66 @@ export function poster(path: string, body?: any) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
+
         if (
           error.response.statusText &&
           typeof error.response.statusText === "string"
         ) {
+          if (
+            error?.response?.data?.errors &&
+            Array.isArray(error?.response?.data?.errors)
+          ) {
+            let message = error?.response?.data?.errors
+              .map(({ msg }: { msg: string }) => msg)
+              .join(",")
+              .split(",");
+
+            throw new Error(message);
+          }
+          throw new Error(
+            `${
+              error.response.data?.message ?? error.response.statusText
+            }. Try again`,
+          );
+        }
+        return error.response;
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        // console.log("error.request", error.request);
+        throw new Error("The request was made but no response was received");
+        return;
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        throw new Error(error.message);
+      }
+    });
+}
+
+export function authPoster(Axios: Axios, path: string, body?: any) {
+  return Axios.post(`${process.env.NEXT_PUBLIC_API_URL}${path}`, body)
+    .then((response) => response.data)
+    .catch((error: any) => {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+
+        if (
+          error.response.statusText &&
+          typeof error.response.statusText === "string"
+        ) {
+          if (
+            error?.response?.data?.errors &&
+            Array.isArray(error?.response?.data?.errors)
+          ) {
+            let message = error?.response?.data?.errors
+              .map(({ msg }: { msg: string }) => msg)
+              .join(",")
+              .split(",");
+
+            throw new Error(message);
+          }
           throw new Error(
             `${
               error.response.data?.message ?? error.response.statusText
