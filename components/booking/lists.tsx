@@ -9,13 +9,15 @@ const Lists = ({
   userType: string;
 }) => {
   let element = <></>;
+  console.log(bookmarks);
 
   element = bookmarks.map((boat: any, index: number) => (
     <Boat
       page="bookmarks"
       key={index}
-      boatImg={boat.imageUrls}
-      location={boat.location}
+      boatImg={boat.boatId.imageUrls[0]}
+      boatImgs={boat.boatId.imageUrls}
+      location={boat.boatId.location}
       status={boat.status}
       start={boat.duration.start}
       end={boat.duration.end}

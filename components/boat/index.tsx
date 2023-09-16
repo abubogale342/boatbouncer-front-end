@@ -4,7 +4,7 @@ import { setActiveId } from "features/bookmark/bookmarkSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Carousel from "../layout/carousel";
 import Favorite from "../shared/icons/favorite";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { authPoster } from "@/lib/utils";
 import useFetcher from "@/lib/hooks/use-axios";
 import { useSession } from "next-auth/react";
@@ -65,7 +65,11 @@ const Boat = ({
   const { data: session } = useSession();
   const { Axios } = useFetcher();
 
-  const favoriteClickHn = async (id: string | undefined) => {
+  const favoriteClickHn = async (
+    event: React.MouseEvent<HTMLElement>,
+    id: string | undefined,
+  ) => {
+    event.preventDefault();
     if (!id) return;
     setIsFavorite((fav) => !fav);
     try {
@@ -74,6 +78,11 @@ const Boat = ({
       setIsFavorite((fav) => !fav);
     }
   };
+
+  useEffect(() => {
+    if (!session?.token) return;
+    setIsFavorite(favorite ?? false);
+  }, [favorite]);
 
   return (
     <div
@@ -100,20 +109,21 @@ const Boat = ({
         }
       }}
     >
-      {session?.token && (
-        <button
-          onClick={() => favoriteClickHn(boatId)}
-          className="absolute right-3 top-3 z-10 rounded-lg bg-white p-2"
-        >
-          <Favorite isFavorite={isFavorite} />
-        </button>
-      )}
+      {session?.token &&
+        (page === "listing" || page === "favorites" || page === "search") && (
+          <button
+            onClick={(event) => favoriteClickHn(event, boatId)}
+            className="absolute right-3 top-3 z-10 rounded-lg bg-white p-2"
+          >
+            <Favorite isFavorite={isFavorite} />
+          </button>
+        )}
       {id && id == _id && (
         <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
 
       {!id && page !== "listing" && page !== "favorite" && (
-        <div className={`w-full ${page == "bookmarks" ? "h-24" : "h-full"}`}>
+        <div className={`w-full ${page == "bookmarks" ? "h-32" : "h-full"}`}>
           {boatImg ? (
             <Carousel images={images} page={page} />
           ) : (

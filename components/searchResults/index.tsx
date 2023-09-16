@@ -4,6 +4,7 @@ import useFetcher from "@/lib/hooks/use-axios";
 import Skeleton from "../shared/icons/skeleton";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { authGetter } from "@/lib/utils";
 const PAGE_SIZE = 10;
 
 const SearchResults = ({
@@ -17,13 +18,33 @@ const SearchResults = ({
 }) => {
   const [pageNo, setPageNo] = useState(1);
   const { data: session } = useSession();
+  const [favorites, setFavorites] = useState<string[]>([]);
 
-  const { fetchWithAuth, data, loading, error } = useFetcher();
+  const { fetchWithAuth, data, loading, error, Axios } = useFetcher();
 
   useEffect(() => {
     if (!session?.token) return;
     fetchWithAuth(`/boat?pageNo=${pageNo}&size=${PAGE_SIZE}`);
   }, [session?.token, pageNo]);
+
+  useEffect(() => {
+    const getFavorites = async () => {
+      try {
+        const favorites = await authGetter(Axios, "boat/favorites");
+
+        if (favorites.total == 0) return;
+
+        const favoriteIds = favorites.data.map(
+          (favorite: any) => favorite.boat._id,
+        );
+
+        setFavorites(favoriteIds);
+      } catch (error: any) {}
+    };
+
+    if (!session?.token) return;
+    getFavorites();
+  }, [session?.token]);
 
   useLayoutEffect(() => {
     window.scrollTo({
@@ -47,6 +68,7 @@ const SearchResults = ({
       <Link key={boat._id} href={`/boat/${boat._id}`} target="_blank">
         <Boat
           page="search"
+          favorite={favorites.includes(boat._id)}
           checked={checked}
           boatImg={boat.imageUrls[0]}
           boatImgs={boat.imageUrls}
@@ -56,6 +78,7 @@ const SearchResults = ({
           currency={boat.currency}
           captained={boat.captained}
           markerId={boat._id}
+          boatId={boat._id}
         >
           {""}
         </Boat>

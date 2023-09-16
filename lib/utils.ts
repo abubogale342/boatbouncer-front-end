@@ -71,9 +71,11 @@ export function getter<JSON = any>(path: RequestInfo): Promise<JSON> {
     .catch((err) => err);
 }
 
-export function authGetter<JSON = any>(path: RequestInfo): Promise<JSON> {
-  return axios
-    .get(`${process.env.NEXT_PUBLIC_API_URL}/${path}`)
+export function authGetter<JSON = any>(
+  Axios: Axios,
+  path: RequestInfo,
+): Promise<JSON> {
+  return Axios.get(`${process.env.NEXT_PUBLIC_API_URL}/${path}`)
     .then((res) => res.data)
     .catch((err) => err);
 }

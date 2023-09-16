@@ -22,7 +22,7 @@ const DisplayListings = ({
 }: {
   addListingsHn: (status: any) => void;
 }) => {
-  const { fetchWithAuth, deleteBoat, data, loading, error, dataLength } =
+  const { fetchWithAuth, deleteBoat, data, Axios, loading, error, dataLength } =
     useFetcher();
   const [favorites, setFavorites] = useState<string[]>([]);
   const editableListing = useSelector((state: any) => state.boat.editableBoat);
@@ -33,7 +33,7 @@ const DisplayListings = ({
   useEffect(() => {
     const getFavorites = async () => {
       try {
-        const favorites = await authGetter("boat/favorites");
+        const favorites = await authGetter(Axios, "boat/favorites");
         if (favorites.total == 0) return;
 
         const favoriteIds = favorites.data.map(

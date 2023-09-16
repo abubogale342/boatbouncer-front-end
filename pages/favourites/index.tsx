@@ -2,6 +2,7 @@ import Boat from "@/components/boat";
 import Meta from "@/components/layout/meta";
 import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
+import useFetcher from "@/lib/hooks/use-axios";
 import { authGetter } from "@/lib/utils";
 import { CircularProgress } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
@@ -16,11 +17,12 @@ export default function Index(props: any) {
   const [error, setError] = useState(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const { data: session } = useSession();
+  const { Axios } = useFetcher();
 
   useEffect(() => {
     const getFavorites = async () => {
       try {
-        const favorites = await authGetter("boat/favorites");
+        const favorites = await authGetter(Axios, "boat/favorites");
         if (favorites.total == 0) return;
         setError(null);
         setData(favorites);

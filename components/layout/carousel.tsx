@@ -37,17 +37,21 @@ export default function Carousel({
         className={`group relative m-auto flex ${
           page == "search" || page == "listing" || page == "favorite"
             ? "h-56"
+            : page == "bookmarks"
+            ? "h-32"
             : "h-[82.5vh]"
         } w-full overflow-hidden rounded-lg shadow-sm drop-shadow-sm`}
       >
-        <AiFillLeftCircle
-          onClick={handlePrevSlide}
-          className={`absolute inset-y-1/2 left-4 z-20 m-auto cursor-pointer transition-all ${
-            page == "search" || page == "listing" || page == "favorite"
-              ? "left-2.5 text-3xl opacity-0 group-hover:opacity-75 sm:left-2.5"
-              : "left-4 text-5xl opacity-90 sm:left-5"
-          } text-white`}
-        />
+        {page !== "bookmarks" && (
+          <AiFillLeftCircle
+            onClick={handlePrevSlide}
+            className={`absolute inset-y-1/2 left-4 z-20 m-auto cursor-pointer transition-all ${
+              page == "search" || page == "listing" || page == "favorite"
+                ? "left-2.5 text-3xl opacity-0 group-hover:opacity-75 sm:left-2.5"
+                : "left-4 text-5xl opacity-90 sm:left-5"
+            } text-white`}
+          />
+        )}
 
         <Swipe
           onSwipeLeft={handleNextSlide}
@@ -72,14 +76,16 @@ export default function Carousel({
             })}
         </Swipe>
 
-        <AiFillRightCircle
-          onClick={handleNextSlide}
-          className={`absolute inset-y-1/2 transition-all ${
-            page == "search" || page == "listing" || page == "favorite"
-              ? "right-2.5 text-3xl opacity-0 group-hover:opacity-75 sm:right-2.5"
-              : "right-4 text-5xl opacity-90 sm:right-5"
-          } z-20 m-auto cursor-pointer text-white `}
-        />
+        {page !== "bookmarks" && (
+          <AiFillRightCircle
+            onClick={handleNextSlide}
+            className={`absolute inset-y-1/2 transition-all ${
+              page == "search" || page == "listing" || page == "favorite"
+                ? "right-2.5 text-3xl opacity-0 group-hover:opacity-75 sm:right-2.5"
+                : "right-4 text-5xl opacity-90 sm:right-5"
+            } z-20 m-auto cursor-pointer text-white `}
+          />
+        )}
       </div>
     </div>
   );
