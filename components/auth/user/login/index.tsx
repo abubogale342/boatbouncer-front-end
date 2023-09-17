@@ -1,4 +1,4 @@
-import { Google } from "@/components/shared/icons";
+import { Google, LoadingCircle } from "@/components/shared/icons";
 import Balancer from "react-wrap-balancer";
 import { Formik } from "formik";
 import React, { useEffect, useRef, useState } from "react";
@@ -37,6 +37,7 @@ function Login({ handleSubmit }: Props) {
         initialValues={{ email: "", password: "" }}
         validationSchema={loginSchema}
         onSubmit={async (values, { setSubmitting }) => {
+          setIsLoading(true);
           const status = await signIn("credentials", {
             redirect: false,
             email: values.email,
@@ -51,6 +52,7 @@ function Login({ handleSubmit }: Props) {
               pathname: status?.url,
             });
           } else {
+            setIsLoading(false);
             setErrorMessage(status?.error ?? "Unknown error occured");
           }
         }}
@@ -134,9 +136,9 @@ function Login({ handleSubmit }: Props) {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 font-medium text-white"
+                  className="flex w-full flex-row items-center justify-center gap-1 py-3 font-medium text-white"
                 >
-                  Sign in
+                  Sign in {isLoading && <LoadingCircle />}
                 </button>
               </div>
             </fieldset>

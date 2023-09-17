@@ -1,5 +1,5 @@
 import { Formik } from "formik";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { formUpdateSchema } from "../schemas/validation";
 import FeatureForm from "./features";
 import { CheckCircle2, Save } from "lucide-react";
@@ -13,12 +13,14 @@ import { objectDiff } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import BasicInfos from "./basic";
 import { SaveIcon } from "@/components/shared/icons/save";
+import { resetBoat } from "features/boat/boatSlice";
 
 const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
   const boatInfo = useSelector((state: any) => state.boat.boatInfo);
   const editableBoat = useSelector((state: any) => state.boat.editableBoat);
   const { fetchWithAuth, data, loading, error, updateBoat } = useFetcher();
   const [changesMade, setChagesMade] = useState(false);
+  const dispatch = useDispatch();
 
   if (!loading && !error && data) {
     setTimeout(() => {
@@ -26,6 +28,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
         pathname: "/listings",
       });
       cancelHn(false);
+      dispatch(resetBoat());
     }, 400);
   }
 
@@ -48,11 +51,18 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
           zipCode: boatInfo.location.zipCode,
           category: boatInfo.category,
           subCategory: boatInfo.subCategory,
-          features: Boolean(boatInfo.features),
+          features: boatInfo.features,
           securityAllowance: boatInfo.securityAllowance,
           captained: boatInfo.captained,
           currency: boatInfo.currency,
-          latLng: boatInfo.latLng,
+          latLng: {
+            latitude: boatInfo.latLng?.coordinates
+              ? boatInfo.latLng?.coordinates[1]
+              : null,
+            longitude: boatInfo.latLng?.coordinates
+              ? boatInfo.latLng?.coordinates[0]
+              : null,
+          },
           pricing: boatInfo.pricing,
         }}
         onSubmit={(values: any, { setSubmitting }: { setSubmitting: any }) => {

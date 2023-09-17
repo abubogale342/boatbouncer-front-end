@@ -84,7 +84,6 @@ function useFetcher() {
           setData(res);
         })
         .catch((err) => {
-          console.log("err", err);
           setError(err);
           setLoading(false);
           setData(null);
