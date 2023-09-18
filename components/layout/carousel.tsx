@@ -1,7 +1,7 @@
-import Image from "next/image";
 import { useState } from "react";
 import Swipe from "react-easy-swipe";
 import { AiFillLeftCircle, AiFillRightCircle } from "react-icons/ai";
+import DynamicImage from "./image";
 
 /**
  * Carousel component for nextJS and Tailwind.
@@ -18,6 +18,7 @@ export default function Carousel({
   page?: string;
 }) {
   const [currentSlide, setCurrentSlide] = useState(0);
+  // const url = buildUrl()
 
   const handleNextSlide = (event: any) => {
     event.preventDefault();
@@ -63,15 +64,7 @@ export default function Carousel({
             images.length > 0 &&
             images.map((image: string, index: number) => {
               if (index === currentSlide) {
-                return (
-                  <Image
-                    key={index}
-                    src={image}
-                    fill
-                    alt=""
-                    className="animate-fadeIn relative mx-auto h-full w-fit max-w-[100%] object-cover md:block xl:w-auto"
-                  />
-                );
+                return <DynamicImage image={image} key={index} />;
               }
             })}
         </Swipe>

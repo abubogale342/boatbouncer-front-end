@@ -110,7 +110,7 @@ const Boat = ({
       }}
     >
       {session?.token &&
-        (page === "listing" || page === "favorites" || page === "search") && (
+        (page === "listing" || page === "favorite" || page === "search") && (
           <button
             onClick={(event) => favoriteClickHn(event, boatId)}
             className="absolute right-3 top-3 z-10 rounded-lg bg-white p-2"

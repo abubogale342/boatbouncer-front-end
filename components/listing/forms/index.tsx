@@ -73,6 +73,9 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
 
           if (editableBoat) {
             let difference = objectDiff(editableBoat, boatInfo);
+            if (editableBoat["captained"] !== boatInfo["captained"]) {
+              difference.captained = boatInfo["captained"];
+            }
             if (Object.keys(difference).length === 0) {
               setChagesMade(true);
               setTimeout(() => {

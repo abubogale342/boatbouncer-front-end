@@ -13,7 +13,6 @@ function useFetcher() {
   const dispatch = useDispatch();
 
   Axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
-
   useEffect(() => {
     if (session?.token) {
       Axios.defaults.headers.common = {
@@ -104,6 +103,25 @@ function useFetcher() {
     }
   }
 
+  function fetchWithAuthWCancellation(path: string) {
+    setError(null);
+    setLoading(true);
+    setData(null);
+
+    Axios.get(path)
+      .then((res) => {
+        setLoading(false);
+        setError(null);
+        setData(res?.data?.data);
+        setDataLength(res?.data?.total ?? 0);
+      })
+      .catch((err) => {
+        setError(err);
+        setLoading(false);
+        setData(null);
+      });
+  }
+
   function fetchCategories(path: string) {
     setError(null);
     setLoading(true);
@@ -156,6 +174,7 @@ function useFetcher() {
     fetchCategories,
     fetchWithAuthSync,
     attachPaymentCard,
+    fetchWithAuthWCancellation,
     getPaymentCards,
     cancelBooking,
     updateOffer,

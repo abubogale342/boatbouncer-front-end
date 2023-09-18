@@ -44,7 +44,7 @@ const PricingForm = ({
       let index = values.pricing.findIndex(
         (priceType: any) => priceType.type === type,
       );
-      let currentPricing = values.pricing;
+      let currentPricing = [...values.pricing];
 
       if (index === -1) {
         setValues({
@@ -203,10 +203,15 @@ const PricingForm = ({
       {/* security allowance */}
       <div className="mt-4 flex w-full flex-row">
         <div className="relative flex w-full flex-row gap-0">
+          <div
+            className={`text-blue-gray-500 absolute left-3 top-2/4 z-10 grid h-5 w-5 -translate-y-2/4 place-items-center opacity-70`}
+          >
+            {values.currency === "USD" ? <DollarSign /> : <EuroIcon />}
+          </div>
           <input
             className={`${
               returnClass()[0]
-            } rounded-e-none focus:rounded-e-none`}
+            } rounded-e-none pl-10 text-xl focus:rounded-e-none`}
             placeholder=" "
             type="number"
             onBlur={handleBlur}
@@ -219,14 +224,14 @@ const PricingForm = ({
           />
           <label className={`${returnClass()[1]}`}>Security Allowance</label>
         </div>
-        <div className="relative w-24">
+        {/* <div className="relative w-24">
           <select
             id="currency"
             name="currency"
             className={`${
               returnClass()[0]
             } w-fit rounded-s-none before:rounded-none after:rounded-none focus:rounded-s-none`}
-            defaultValue={values.currency}
+            value={values.currency}
           >
             <option>USD</option>
             <option>EUR</option>
@@ -236,7 +241,7 @@ const PricingForm = ({
               returnClass()[1]
             } before:content[''] after:content[''] before:ml-0 before:mr-0 before:rounded-none after:ml-0 after:mr-0 after:rounded-none focus:rounded-s-none`}
           ></label>
-        </div>
+        </div> */}
       </div>
 
       {errors.securityAllowance && touched.securityAllowance && (

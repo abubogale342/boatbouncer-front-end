@@ -104,7 +104,7 @@ export const boatSlice = createSlice({
       state.bookmarks = initialState.bookmarks;
     },
     updateCurrency: (state, { payload: currency }) => {
-      state.currency = currency;
+      state.boatInfo.currency = currency;
     },
     updatePricing: (state, { payload: { type, value, min = 1 } }) => {
       let index = state.boatInfo.pricing.findIndex(

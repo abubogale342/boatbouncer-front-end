@@ -31,7 +31,7 @@ export default function Index(props: any) {
         </Link>
       </Header>
       <hr className="mt-1 h-px border-0 bg-gray-200" />
-      <main className="my-4 sm:my-8">{listingEl}</main>
+      <main className="my-4 sm:mt-8">{listingEl}</main>
       <Footer />
     </div>
   );

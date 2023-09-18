@@ -22,8 +22,15 @@ const DisplayListings = ({
 }: {
   addListingsHn: (status: any) => void;
 }) => {
-  const { fetchWithAuth, deleteBoat, data, Axios, loading, error, dataLength } =
-    useFetcher();
+  const {
+    fetchWithAuthWCancellation,
+    deleteBoat,
+    data,
+    Axios,
+    loading,
+    error,
+    dataLength,
+  } = useFetcher();
   const [favorites, setFavorites] = useState<string[]>([]);
   const editableListing = useSelector((state: any) => state.boat.editableBoat);
   const { data: session } = useSession();
@@ -50,17 +57,24 @@ const DisplayListings = ({
 
   useEffect(() => {
     if (!session?.token) return;
-    fetchWithAuth(`/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`);
+
+    fetchWithAuthWCancellation(
+      `/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`,
+    );
   }, [session?.token, pageNo, dataLength]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   }, [pageNo]);
 
-  let displayEl = null;
+  let displayEl = (
+    <div className="my-auto mb-3 flex w-full items-center justify-center text-cyan-600">
+      <CircularProgress color="inherit" size="7.5vh" />
+    </div>
+  );
 
   const nextPage = () => {
     setPageNo((page) => page + 1);
@@ -94,14 +108,6 @@ const DisplayListings = ({
     deleteBoat(`/boat/${boat._id}`, boat);
   };
 
-  if (loading || (!data && !error)) {
-    displayEl = (
-      <div className="my-auto flex w-full items-center justify-center text-cyan-600">
-        <CircularProgress color="inherit" size="7.5vh" />
-      </div>
-    );
-  }
-
   if (!error && !loading && data && data?.length == 0 && pageNo == 1) {
     displayEl = (
       <motion.p className="flex h-12 items-center justify-start text-center text-2xl text-red-500">
@@ -112,7 +118,7 @@ const DisplayListings = ({
 
   if (error) {
     displayEl = (
-      <p className="h-12 items-center justify-start text-3xl text-orange-700">
+      <p className="mb-3 items-center justify-start text-3xl text-orange-700">
         Error fetching your listings
       </p>
     );
@@ -165,33 +171,28 @@ const DisplayListings = ({
   }
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ y: 10, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -10, opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="mx-4 sm:mx-10 lg:mx-20"
-      >
-        <div className="flex flex-row items-center justify-between">
-          <p className="text-xl font-medium text-gray-900 sm:text-3xl">
-            My Listings
-          </p>
-          <button
-            onClick={addNewListingHn}
-            className="flex flex-row items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 font-inter text-sm font-medium text-white shadow-sm drop-shadow-sm hover:bg-cyan-700 active:translate-y-[1.5px] sm:gap-2 sm:px-3"
-          >
-            <Plus size="20" /> Add New Listing
-          </button>
-        </div>
-        <p className="mb-6 mt-1 text-gray-500">
-          Track, manage and forecast your Listings.
+    <div className="mx-4 sm:mx-10 lg:mx-20">
+      <div className="flex flex-row items-center justify-between">
+        <p className="text-xl font-medium text-gray-900 sm:text-3xl">
+          My Listings
         </p>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {displayEl}
-        </div>
-        {dataLength > 10 && (
-          <div className="mx-6 my-5 flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <button
+          onClick={addNewListingHn}
+          className="flex flex-row items-center gap-2 rounded-lg bg-cyan-600 px-3 py-2 font-inter text-sm font-medium text-white shadow-sm drop-shadow-sm hover:bg-cyan-700 active:translate-y-[1.5px] sm:gap-2 sm:px-3"
+        >
+          <Plus size="20" /> Add New Listing
+        </button>
+      </div>
+      <p className="mb-6 mt-1 text-gray-500">
+        Track, manage and forecast your Listings.
+      </p>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+        {displayEl}
+      </div>
+      {dataLength > 10 && (
+        <>
+          <hr className="mb-2 mt-5" />
+          <div className="mx-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-lg">
               Page {pageNo} | ({dataLength} results)
             </p>
@@ -216,9 +217,9 @@ const DisplayListings = ({
               </button>
             </div>
           </div>
-        )}
-      </motion.div>
-    </AnimatePresence>
+        </>
+      )}
+    </div>
   );
 };
 
