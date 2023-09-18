@@ -14,6 +14,8 @@ import {
 import AlertDialogs from "../shared/alertDialog";
 import { CircularProgress } from "@mui/material";
 import { authGetter } from "@/lib/utils";
+import Router from "next/router";
+import { setActiveId } from "features/bookmark/bookmarkSlice";
 
 const PAGE_SIZE = 10;
 
@@ -128,6 +130,14 @@ const DisplayListings = ({
     prevPage();
   }
 
+  const bookingClickHn = (boat: any) => {
+    dispatch(setActiveId(boat._id));
+    Router.push({
+      pathname: "/bookmarks",
+      query: { type: "owner" },
+    });
+  };
+
   if (data && data.length > 0) {
     displayEl = data.map((boat: any) => (
       <Boat
@@ -149,7 +159,10 @@ const DisplayListings = ({
             >
               Edit Listing
             </button>
-            <button className="my-2 flex flex-row items-center rounded-lg border border-solid border-amber-500 px-3 py-2 text-sm font-medium text-amber-500">
+            <button
+              onClick={() => bookingClickHn(boat)}
+              className="my-2 flex flex-row items-center rounded-lg border border-solid border-amber-500 px-3 py-2 text-sm font-medium text-amber-500"
+            >
               Bookings <Circle size="20" className="ml-2" />
             </button>
           </div>

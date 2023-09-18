@@ -4,12 +4,13 @@ import Boat from "../boat";
 const Lists = ({
   bookmarks,
   userType,
+  idExists,
 }: {
   bookmarks: any;
   userType: string;
+  idExists: boolean;
 }) => {
   let element = <></>;
-  console.log(bookmarks);
 
   element = bookmarks.map((boat: any, index: number) => (
     <Boat
@@ -24,7 +25,8 @@ const Lists = ({
       renterPrice={boat.renterPrice}
       type={boat.type}
       peer={userType == "renter" ? boat.renter : boat.owner}
-      _id={boat._id}
+      _id={boat.boatId._id}
+      idExists={idExists}
     >
       {""}
     </Boat>

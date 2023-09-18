@@ -24,6 +24,7 @@ const Boat = ({
   type,
   _id,
   captained,
+  idExists,
   pricing,
   boatName,
   favorite,
@@ -44,6 +45,7 @@ const Boat = ({
     | null;
   status?: string;
   currency?: string;
+  idExists?: boolean;
   start?: Date;
   end?: Date;
   renterPrice?: number;
@@ -89,7 +91,7 @@ const Boat = ({
       className={`flex h-full w-full flex-col ${
         page == "bookmarks" && "mr-8"
       } justify-between shadow-sm drop-shadow-sm hover:shadow-lg ${
-        id && id == _id
+        id && idExists && id == _id
           ? "relative order-first w-full flex-col border-[3px] border-[#219EBC] transition-[border-color] duration-1000 sm:flex-row"
           : "w-full border-zinc-100 transition-[border-color] duration-1000"
       } ${_id && " cursor-pointer "} gap-0 rounded-2xl border border-solid p-2`}
@@ -122,7 +124,7 @@ const Boat = ({
         <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
 
-      {!id && page !== "listing" && page !== "favorite" && (
+      {!idExists && page !== "listing" && page !== "favorite" && (
         <div className={`w-full ${page == "bookmarks" ? "h-32" : "h-full"}`}>
           {boatImg ? (
             <Carousel images={images} page={page} />

@@ -17,7 +17,7 @@ import Chat from "@/components/chat";
 import { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { CircularProgress } from "@mui/material";
-import { setActiveId } from "features/bookmark/bookmarkSlice";
+import { resetId } from "features/bookmark/bookmarkSlice";
 
 export default function Bookmarks(props: any) {
   const { ...user } = props;
@@ -33,10 +33,17 @@ export default function Bookmarks(props: any) {
     error,
     fetchWithAuthSync,
   } = useFetcher();
-  const [bookingTab, setBookingTab] = useState("renter");
+  const router = useRouter();
+  const { query } = router;
+  const { type } = query;
+
+  const [bookingTab, setBookingTab] = useState(type ? "owner" : "renter");
   const [refresh, setRefresh] = useState(false);
   const [chargesEnabled, setchargesEnabled] = useState<Boolean>(false);
-  const router = useRouter();
+  const dispatch = useDispatch();
+
+  let idExists =
+    data && data.filter((d: any) => d.boatId._id === id).length > 0;
 
   let element = null;
 
@@ -53,8 +60,7 @@ export default function Bookmarks(props: any) {
   useEffect(() => {
     if (!id) return;
     if (!session?.token) return;
-
-    let bookmark = data && data.filter((d: any) => d._id === id);
+    let bookmark = data && data.filter((d: any) => d.boatId._id === id);
     if (bookmark) {
       setBookmarks(bookmark[0]);
     }
@@ -95,7 +101,9 @@ export default function Bookmarks(props: any) {
   };
 
   if (data?.length > 0) {
-    element = <Lists bookmarks={data} userType={bookingTab} />;
+    element = (
+      <Lists bookmarks={data} idExists={idExists} userType={bookingTab} />
+    );
   }
 
   if (data && data?.length === 0) {
@@ -183,19 +191,19 @@ export default function Bookmarks(props: any) {
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2 }}
           className={`mt-4 flex w-full flex-row gap-x-4 gap-y-6 sm:mt-0 ${
-            id ? "flex-col sm:flex-row" : ""
+            id && idExists ? "flex-col sm:flex-row" : ""
           }`}
         >
           <div
             className={`mb-4 flex h-fit w-full flex-wrap justify-center gap-x-3 gap-y-3 ${
-              id
-                ? "mx-4 sm:min-w-[320px] sm:max-w-[50%] md:max-w-[40%] lg:max-w-sm xl:max-w-md "
+              id && idExists
+                ? "mx-4 sm:ml-12 sm:min-w-[320px] sm:max-w-[50%] md:max-w-[40%] lg:max-w-sm xl:max-w-md "
                 : "mx-4 grid grid-cols-1 sm:ml-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             }`}
           >
             {element}
           </div>
-          {id && bookmarks && (
+          {id && idExists && bookmarks && (
             <div className="flex w-full flex-col sm:mr-5 md:mr-10">
               <div className="flex flex-row gap-3 border-b border-solid border-b-slate-200 bg-[#219EBC] px-6 py-2.5 sm:mx-0 sm:rounded-[16px_16px_0px_0px]">
                 Profile Picture User Name
