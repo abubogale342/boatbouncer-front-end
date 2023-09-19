@@ -123,7 +123,7 @@ export default function Search(props: any) {
 
   let element = null;
 
-  if (data?.data && data?.total > 0) {
+  if (data?.data && data?.total && data?.total > 0) {
     element = (
       <SearchResults boats={data.data} total={data.total} checked={checked} />
     );
@@ -131,7 +131,8 @@ export default function Search(props: any) {
 
   useEffect(() => {
     let filteredData = serverData;
-    if (!filteredData || !filteredData.data || filteredData.total === 0) return;
+    if (!filteredData || !filteredData.data || filteredData?.total === 0)
+      return;
     filteredData = filteredData.data;
 
     if (priceValue[0] !== 1 || priceValue[1] !== 1000) {
@@ -298,7 +299,10 @@ export default function Search(props: any) {
     };
   }, [typeof window]);
 
-  if (!data || (data?.data && data?.total === 0)) {
+  if (
+    !data ||
+    (data?.data && (data?.total === 0 || data?.data?.length === 0))
+  ) {
     element = (
       <div className="py-10 text-center">
         <h1 className="text-2xl text-gray-700">

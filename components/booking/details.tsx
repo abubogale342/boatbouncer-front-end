@@ -10,12 +10,14 @@ const Details = ({ info }: { info: any }) => {
     <div className="flex flex-col">
       <p className="mt-2 text-xs font-light leading-4 text-[#333333]">Boat</p>
       <p className="text-sm font-normal leading-5 text-[#1C1B1F]">
-        Sunchaser Party Barge on beautiful lake union
+        {info.boatId.boatName}
       </p>
       <p className="mt-2 text-xs font-light leading-4 text-[#333333]">
         Captain
       </p>
-      <p className="text-sm font-normal leading-5 text-[#1C1B1F]">Included</p>
+      <p className="text-sm font-normal leading-5 text-[#1C1B1F]">
+        {info.boatId.captained ? "Included" : "Not Included"}
+      </p>
 
       <p className="mt-2 text-xs font-light leading-4 text-[#333333]">
         Durations
@@ -38,7 +40,7 @@ const Details = ({ info }: { info: any }) => {
         Return Date
       </p>
       <p className="text-sm font-normal leading-5 text-[#1C1B1F]">
-        {dayjs(start).format(
+        {dayjs(end).format(
           `dddd, MMMM D, YYYY ${type === "Per Day" ? "" : "h:mm A"}`,
         )}
       </p>

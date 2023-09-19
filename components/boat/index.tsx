@@ -92,7 +92,7 @@ const Boat = ({
         page == "bookmarks" && "mr-8"
       } justify-between shadow-sm drop-shadow-sm hover:shadow-lg ${
         id && idExists && id == _id
-          ? "relative order-first w-full flex-col border-[3px] border-[#219EBC] transition-[border-color] duration-1000 sm:flex-row"
+          ? "relative w-full flex-col border-[3px] border-[#219EBC] transition-[border-color] duration-1000 sm:flex-row"
           : "w-full border-zinc-100 transition-[border-color] duration-1000"
       } ${_id && " cursor-pointer "} gap-0 rounded-2xl border border-solid p-2`}
       onClick={() => {

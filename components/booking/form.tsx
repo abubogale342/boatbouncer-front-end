@@ -104,7 +104,7 @@ const BookingForm = ({ data, user }: IProps) => {
 
     fetchWithAuthSync("/booking", bookingData)
       .then(async (res) => {
-        dispatch(setActiveId(res.data._id));
+        dispatch(setActiveId(res.data.boatId._id));
         Router.push({ pathname: "/bookmarks" });
       })
       .catch((err) => console.log(err));

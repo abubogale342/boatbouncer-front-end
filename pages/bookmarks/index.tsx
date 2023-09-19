@@ -246,6 +246,7 @@ export default function Bookmarks(props: any) {
                           </button>
                         </AlertDialogs>
                         {bookingTab === "owner" &&
+                          bookmarks.owner &&
                           user._id === bookmarks.owner._id &&
                           !bookmarks?.offerId &&
                           chargesEnabled && (
@@ -269,6 +270,7 @@ export default function Bookmarks(props: any) {
                           )}
 
                         {bookingTab === "owner" &&
+                          bookmarks.owner &&
                           user._id === bookmarks.owner._id &&
                           !bookmarks?.offerId &&
                           !chargesEnabled && (
@@ -283,6 +285,7 @@ export default function Bookmarks(props: any) {
                           )}
 
                         {bookingTab === "owner" &&
+                          bookmarks.owner &&
                           user._id === bookmarks.owner._id &&
                           bookmarks?.offerId && (
                             <Offer
@@ -300,6 +303,7 @@ export default function Bookmarks(props: any) {
                             </Offer>
                           )}
                         {bookingTab === "renter" &&
+                          bookmarks?.renter &&
                           user._id === bookmarks.renter._id &&
                           bookmarks?.offerId &&
                           (bookmarks.offerId.status === "Processing" ? (
@@ -326,7 +330,7 @@ export default function Bookmarks(props: any) {
                     )}
                   </div>
                 </div>
-                <div className="xl:[55%] lg:min-h-parent flex h-96 w-full lg:w-[47.5%] lg:pt-6">
+                <div className="xl:[55%] lg:min-h-parent flex h-fit w-full lg:w-[47.5%] lg:pt-0">
                   <Chat
                     bookmarks={bookmarks}
                     user={user}

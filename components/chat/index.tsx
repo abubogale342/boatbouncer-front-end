@@ -124,7 +124,7 @@ const Chat = ({
   }
 
   return (
-    <div className="chat relative mx-1 mb-6 h-full w-full overflow-y-auto">
+    <div className="chat relative mx-1 h-full w-full overflow-y-auto">
       {messages.map((message: any) => (
         <div key={message._id} className="mb-4 flex w-full flex-col">
           {_id === message?.sender || _id === message?.senderId ? (
@@ -165,11 +165,11 @@ const Chat = ({
         </div>
       ))}
 
-      <form className="my-10" onSubmit={sendMessageHn}>
+      <form className="my-6" onSubmit={sendMessageHn}>
         <label htmlFor="chat" className="sr-only">
           Your message
         </label>
-        <div className="relative flex items-end rounded-lg bg-gray-50">
+        <div className="relative mx-1.5 flex items-end rounded-lg bg-gray-50 sm:mx-0">
           <textarea
             required
             rows={1}
@@ -177,12 +177,12 @@ const Chat = ({
             value={value}
             ref={textAreaRef}
             onChange={handleChange}
-            placeholder="Write Your message"
-            className="block h-fit w-full overflow-hidden rounded-lg border border-gray-300 bg-white pr-14 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Write Your Message"
+            className="block h-fit min-h-[3.5rem] w-full overflow-hidden rounded-2xl border-none border-gray-300 bg-slate-50 pr-14 text-sm text-gray-900 placeholder:absolute placeholder:top-3 placeholder:text-xs placeholder:font-light focus:border-blue-500 focus:ring-blue-500"
           ></textarea>
           <button
             type="submit"
-            className="absolute bottom-1 right-1 rounded-lg bg-[#023047] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#023017] focus:outline-none focus:ring-4"
+            className="absolute bottom-2.5 right-2.5 rounded-lg bg-[#023047] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#023017] focus:outline-none focus:ring-4"
           >
             <svg
               aria-hidden="true"
