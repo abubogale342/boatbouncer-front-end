@@ -3,7 +3,7 @@ import Footer from "@/components/shared/footer";
 import Header from "@/components/shared/header";
 import { AnimatePresence, motion } from "framer-motion";
 import { getSession, useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import useFetcher from "@/lib/hooks/use-axios";
 import Details from "@/components/booking/details";
@@ -17,12 +17,13 @@ import Chat from "@/components/chat";
 import { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { CircularProgress } from "@mui/material";
-import { resetId } from "features/bookmark/bookmarkSlice";
+import { resetId, resetIds } from "features/bookmark/bookmarkSlice";
 
 export default function Bookmarks(props: any) {
   const { ...user } = props;
   const { data: session } = useSession();
   const { id } = useSelector((state: any) => state.bookmark.bookmarkInfo);
+  const { ids } = useSelector((state: any) => state.bookmark.bookmarkInfo);
   const [bookmarks, setBookmarks] = useState<any>();
   const {
     cancelBooking,
@@ -42,8 +43,9 @@ export default function Bookmarks(props: any) {
   const [chargesEnabled, setchargesEnabled] = useState<Boolean>(false);
   const dispatch = useDispatch();
 
-  let idExists =
-    data && data.filter((d: any) => d.boatId._id === id).length > 0;
+  console.log("ids", ids);
+
+  console.log(data?.filter((d: any) => d.boatId._id == ids));
 
   let element = null;
 
@@ -60,7 +62,7 @@ export default function Bookmarks(props: any) {
   useEffect(() => {
     if (!id) return;
     if (!session?.token) return;
-    let bookmark = data && data.filter((d: any) => d.boatId._id === id);
+    let bookmark = data && data.filter((d: any) => d._id === id);
     if (bookmark) {
       setBookmarks(bookmark[0]);
     }
@@ -102,7 +104,10 @@ export default function Bookmarks(props: any) {
 
   if (data?.length > 0) {
     element = (
-      <Lists bookmarks={data} idExists={idExists} userType={bookingTab} />
+      <Lists
+        bookmarks={ids ? data?.filter((d: any) => d.boatId._id == ids) : data}
+        userType={bookingTab}
+      />
     );
   }
 
@@ -155,7 +160,7 @@ export default function Bookmarks(props: any) {
           Track, manage bookings as renter and owner at one place.
         </p>
         <div className="after:block after:h-px after:w-full after:bg-gray-300 after:content-['']">
-          <div className="mt-6 flex items-center gap-4">
+          <div className="relative mt-6 flex items-center gap-4">
             <button
               onClick={() => {
                 setBookingTab("owner");
@@ -180,6 +185,18 @@ export default function Bookmarks(props: any) {
             >
               As Renter
             </button>
+            {data && bookingTab == "owner" && (
+              <button
+                onClick={() => {
+                  dispatch(resetIds());
+                }}
+                className={`${
+                  ids ? "opacity-100" : "opacity-0"
+                } absolute bottom-0.5 right-0 cursor-pointer rounded-lg border border-gray-300 bg-cyan-600 px-3 py-2 text-center text-white transition-all duration-1000 hover:bg-cyan-700 active:translate-y-[1.5px]`}
+              >
+                View All
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -191,19 +208,19 @@ export default function Bookmarks(props: any) {
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2 }}
           className={`mt-4 flex w-full flex-row gap-x-4 gap-y-6 sm:mt-0 ${
-            id && idExists ? "flex-col sm:flex-row" : ""
+            id ? "flex-col sm:flex-row" : ""
           }`}
         >
           <div
             className={`mb-4 flex h-fit w-full flex-wrap justify-center gap-x-3 gap-y-3 ${
-              id && idExists
+              id
                 ? "mx-4 sm:ml-12 sm:min-w-[320px] sm:max-w-[50%] md:max-w-[40%] lg:max-w-sm xl:max-w-md "
                 : "mx-4 grid grid-cols-1 sm:ml-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
             }`}
           >
             {element}
           </div>
-          {id && idExists && bookmarks && (
+          {id && bookmarks && (
             <div className="flex w-full flex-col sm:mr-5 md:mr-10">
               <div className="flex flex-row gap-3 border-b border-solid border-b-slate-200 bg-[#219EBC] px-6 py-2.5 sm:mx-0 sm:rounded-[16px_16px_0px_0px]">
                 Profile Picture User Name

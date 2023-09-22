@@ -4,7 +4,7 @@ import { setActiveId } from "features/bookmark/bookmarkSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Carousel from "../layout/carousel";
 import Favorite from "../shared/icons/favorite";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { authPoster } from "@/lib/utils";
 import useFetcher from "@/lib/hooks/use-axios";
 import { useSession } from "next-auth/react";
@@ -24,7 +24,6 @@ const Boat = ({
   type,
   _id,
   captained,
-  idExists,
   pricing,
   boatName,
   favorite,
@@ -45,7 +44,6 @@ const Boat = ({
     | null;
   status?: string;
   currency?: string;
-  idExists?: boolean;
   start?: Date;
   end?: Date;
   renterPrice?: number;
@@ -66,6 +64,7 @@ const Boat = ({
   const [isFavorite, setIsFavorite] = useState(favorite ?? false);
   const { data: session } = useSession();
   const { Axios } = useFetcher();
+  const bookingRef = useRef<HTMLDivElement | null>(null);
 
   const favoriteClickHn = async (
     event: React.MouseEvent<HTMLElement>,
@@ -86,12 +85,22 @@ const Boat = ({
     setIsFavorite(favorite ?? false);
   }, [favorite]);
 
+  useEffect(() => {
+    if (!id) return;
+
+    bookingRef.current?.scroll({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [id]);
+
   return (
     <div
+      ref={bookingRef}
       className={`flex h-full w-full flex-col ${
         page == "bookmarks" && "mr-8"
       } justify-between shadow-sm drop-shadow-sm hover:shadow-lg ${
-        id && idExists && id == _id
+        id && id == _id
           ? "relative w-full flex-col border-[3px] border-[#219EBC] transition-[border-color] duration-1000 sm:flex-row"
           : "w-full border-zinc-100 transition-[border-color] duration-1000"
       } ${_id && " cursor-pointer "} gap-0 rounded-2xl border border-solid p-2`}
@@ -124,7 +133,7 @@ const Boat = ({
         <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
 
-      {!idExists && page !== "listing" && page !== "favorite" && (
+      {!id && page !== "listing" && page !== "favorite" && (
         <div className={`w-full ${page == "bookmarks" ? "h-32" : "h-full"}`}>
           {boatImg ? (
             <Carousel images={images} page={page} />
@@ -171,14 +180,14 @@ const Boat = ({
             {dayjs(end).format("dddd, MMMM D, YYYY h:mm A")}
           </p>
         )}
-        <p className={`max-w-xs pr-2 text-base font-medium text-zinc-900`}>
-          {boatName}
-        </p>
         {page === "bookmarks" && peer && (
-          <div className="flex flex-row gap-1 py-1 text-sm font-normal">
+          <div className="ml-1.5 flex flex-row gap-1 py-1 text-sm font-normal">
             <p>{peer.firstName}</p> <p>{peer.lastName}</p>
           </div>
         )}
+        <p className={`max-w-xs pr-2 text-base font-medium text-zinc-900`}>
+          {boatName}
+        </p>
         {page !== "bookmarks" && (
           <ul className="my-2 flex flex-row items-center gap-2 text-xs font-medium">
             {/* <li className="whitespace-nowrap rounded-2xl bg-gray-100 px-2 py-1 text-zinc-700">

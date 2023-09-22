@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
-import Skeleton from "../shared/icons/skeleton";
 import useFetcher from "@/lib/hooks/use-axios";
 import { useSession } from "next-auth/react";
 import { Circle, Plus } from "lucide-react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Boat from "../boat";
 import {
   resetBoat,
@@ -15,7 +14,7 @@ import AlertDialogs from "../shared/alertDialog";
 import { CircularProgress } from "@mui/material";
 import { authGetter } from "@/lib/utils";
 import Router from "next/router";
-import { setActiveId } from "features/bookmark/bookmarkSlice";
+import { setActiveIds } from "features/bookmark/bookmarkSlice";
 
 const PAGE_SIZE = 10;
 
@@ -131,7 +130,7 @@ const DisplayListings = ({
   }
 
   const bookingClickHn = (boat: any) => {
-    dispatch(setActiveId(boat._id));
+    dispatch(setActiveIds(boat._id));
     Router.push({
       pathname: "/bookmarks",
       query: { type: "owner" },
