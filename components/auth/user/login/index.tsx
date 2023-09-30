@@ -8,7 +8,7 @@ import Link from "next/link";
 import BaseLayout from "../../base";
 import { loginSchema } from "./loginSchema";
 import { poster } from "@/lib/utils";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 
 type Props = {
@@ -27,6 +27,10 @@ function Login({ handleSubmit }: Props) {
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const router = useRouter();
+  const { query } = router;
+  const { redirect_to } = query;
 
   return (
     <BaseLayout
@@ -49,7 +53,7 @@ function Login({ handleSubmit }: Props) {
             setErrorMessage("");
 
             Router.push({
-              pathname: status?.url,
+              pathname: redirect_to ? `${redirect_to}` : status?.url,
             });
           } else {
             setIsLoading(false);
@@ -160,7 +164,12 @@ function Login({ handleSubmit }: Props) {
       <motion.p className="text-center text-sm text-gray-500">
         <Balancer>
           Don&apos;t have an account?{" "}
-          <Link href="/user/register" className="font-medium text-cyan-500">
+          <Link
+            href={`/user/register${
+              redirect_to ? `?redirect_to=${redirect_to}` : ``
+            }`}
+            className="font-medium text-cyan-500"
+          >
             Sign up
           </Link>
         </Balancer>

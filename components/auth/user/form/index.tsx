@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { poster } from "@/lib/utils";
 import { RecaptchaVerifier } from "firebase/auth";
 import { auth } from "@/lib/config";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import useFetcher from "@/lib/hooks/use-axios";
 import { LoadingCircle } from "@/components/shared/icons";
 import { CheckCircle2, XCircle } from "lucide-react";
@@ -63,6 +63,10 @@ function Form({
   const [Recaptcha, setRecaptcha] = useState<RecaptchaVerifier | null>(null);
   const accountRef = useRef<HTMLFormElement | null>(null);
 
+  const router = useRouter();
+  const { query } = router;
+  const { redirect_to } = query;
+
   const reset = (timer: number) => {
     setTimeout(() => {
       setAccountStatus({ loading: false, error: false, success: false });
@@ -113,7 +117,7 @@ function Form({
 
         Router.push({
           pathname: "/user/verify",
-          query: { ...credentials, recaptchaToken: res },
+          query: { ...credentials, recaptchaToken: res, redirect_to },
         });
       }
     } catch (error: any) {

@@ -1,17 +1,21 @@
 import BaseLayout from "@/components/auth/base";
 import Meta from "@/components/layout/meta";
 import { LoadingCircle } from "@/components/shared/icons";
+import { auth } from "@/lib/config";
 import { poster } from "@/lib/utils";
+import { RecaptchaVerifier } from "firebase/auth";
 import { Formik } from "formik";
 import Router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Index() {
   const router = useRouter();
   const { query } = router;
-  const { phoneNumber } = query;
+  const { phoneNumber, redirect_to } = query;
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationError, setVerificationError] = useState<any>(null);
+  const [resendLoader, setResendLoader] = useState(false);
+  const recaptchaRef = useRef<RecaptchaVerifier | undefined | null>();
 
   useEffect(() => {
     if (phoneNumber) return;
@@ -23,6 +27,46 @@ function Index() {
   if (!phoneNumber) {
     return;
   }
+
+  const handleResetCode = async () => {
+    setResendLoader(true);
+
+    if (!recaptchaRef.current) {
+      recaptchaRef.current = new RecaptchaVerifier(
+        "recaptcha-container",
+        {
+          size: "invisible", // this property is important otherwise the captcha will be displayed on the screen
+        },
+        auth,
+      );
+    }
+
+    recaptchaRef.current
+      .verify()
+      .then(async (token: string) => {
+        try {
+          const response = await poster("user/resendSms", {
+            phoneNumber,
+            recaptchaToken: token,
+          });
+
+          setResendLoader(false);
+          console.log("response", response);
+        } catch (error: any) {
+          setVerificationError(
+            error?.message ?? "Resending failed, try again!",
+          );
+          setResendLoader(false);
+        }
+      })
+      .catch((error: any) => {
+        setResendLoader(false);
+        setVerificationError(error?.message ?? "Resending failed, try again!");
+      })
+      .finally(() => {
+        recaptchaRef.current?.clear();
+      });
+  };
 
   return (
     <>
@@ -45,7 +89,12 @@ function Index() {
             if (verifiedSms._id || verifiedSms.phoneNumber == phoneNumber) {
               setVerificationError(null);
               Router.push({
-                pathname: "/user/login",
+                pathname: `/user/login`,
+                ...(redirect_to && {
+                  query: {
+                    redirect_to,
+                  },
+                }),
               });
               return;
             }
@@ -138,10 +187,15 @@ function Index() {
                       {isVerifying && <LoadingCircle />}
                     </span>
                   </button>
+                  <div id="recaptcha-container"></div>
                   <div className="flex items-center justify-center">
                     <p></p>
-                    <button className="mt-5 text-center text-base font-semibold not-italic leading-6 tracking-[0.5px] text-cyan-600">
-                      Resend code
+                    <button
+                      type="button"
+                      onClick={handleResetCode}
+                      className="mt-5 flex flex-row items-center justify-center gap-2 text-center text-base font-semibold not-italic leading-6 tracking-[0.5px] text-cyan-600"
+                    >
+                      Resend code {resendLoader && <LoadingCircle />}
                     </button>
                   </div>
                 </div>

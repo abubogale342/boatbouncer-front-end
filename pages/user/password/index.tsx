@@ -1,24 +1,20 @@
 import BaseLayout from "@/components/auth/base";
 import Meta from "@/components/layout/meta";
 import { LoadingCircle } from "@/components/shared/icons";
-import PhoneInput, { isPossiblePhoneNumber } from "react-phone-number-input";
+import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
 import { poster } from "@/lib/utils";
 import { Formik } from "formik";
-import Router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import Router from "next/router";
+import { useState } from "react";
 import { RecaptchaVerifier } from "firebase/auth";
 import { auth } from "@/lib/config";
 import * as Yup from "yup";
 import { E164Number } from "libphonenumber-js/core";
-import useFetcher from "@/lib/hooks/use-axios";
 
 function Index() {
   const [recaptchaLoader, setRecaptchaLoader] = useState(false);
-  const [Recaptcha, setRecaptcha] = useState<RecaptchaVerifier | null>(null);
-  const [errorMessage, setErrorMessage] = useState("");
   const [verificationError, setVerificationError] = useState<any>(null);
-  const { fetchWithAuthSync } = useFetcher();
   let phoneNumber: E164Number | undefined;
 
   const setupRecaptcha = (cb: any) => {
@@ -42,7 +38,7 @@ function Index() {
         setRecaptchaLoader(false);
       });
 
-    setRecaptcha(recaptcha);
+    recaptcha.clear();
   };
 
   const recaptchAfterValidation = async (
@@ -50,10 +46,14 @@ function Index() {
     phoneNumber?: E164Number,
   ) => {
     try {
-      const response = await poster("/user/forgetPassword", {
+      setRecaptchaLoader(true);
+
+      const response = await poster("user/forgetPassword", {
         phoneNumber,
         recaptchaToken: res,
       });
+
+      setRecaptchaLoader(false);
 
       Router.push({
         pathname: "/user/password/confirm",
@@ -61,6 +61,7 @@ function Index() {
       });
     } catch (error: any) {
       setVerificationError(error?.message);
+      setRecaptchaLoader(false);
     }
   };
 
@@ -78,7 +79,6 @@ function Index() {
             phoneNumber: Yup.string().required("Phone number is required"),
           })}
           onSubmit={async (values, { setSubmitting }) => {
-            Recaptcha?.clear();
             setupRecaptcha((args: any) => {
               recaptchAfterValidation(args, values.phoneNumber);
             });

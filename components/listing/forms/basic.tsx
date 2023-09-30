@@ -42,8 +42,6 @@ const BasicInfo = ({
     dispatch(updateLocationField({ key, value }));
   };
 
-  // console.log("errors", errors);
-
   return (
     <div className="w-full px-4">
       <p className="text-xl font-semibold text-gray-900">Basic Information</p>

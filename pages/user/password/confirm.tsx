@@ -1,18 +1,22 @@
 import BaseLayout from "@/components/auth/base";
 import Meta from "@/components/layout/meta";
 import { LoadingCircle } from "@/components/shared/icons";
+import { auth } from "@/lib/config";
 import useFetcher from "@/lib/hooks/use-axios";
 import { poster } from "@/lib/utils";
+import { RecaptchaVerifier } from "firebase/auth";
 import { Formik } from "formik";
 import Router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function Index() {
   const router = useRouter();
   const { query } = router;
   const { phoneNumber, encryption } = query;
   const [isVerifying, setIsVerifying] = useState(false);
+  const [resendLoader, setResendLoader] = useState(false);
   const [verificationError, setVerificationError] = useState<any>(null);
+  const recaptchaRef = useRef<RecaptchaVerifier | undefined | null>();
 
   useEffect(() => {
     if (phoneNumber) return;
@@ -20,6 +24,46 @@ function Index() {
       pathname: "/user/login",
     });
   }, []);
+
+  const handleResetCode = async () => {
+    // let resendSms = await poster()
+    setResendLoader(true);
+
+    if (!recaptchaRef.current) {
+      recaptchaRef.current = new RecaptchaVerifier(
+        "recaptcha-container",
+        {
+          size: "invisible", // this property is important otherwise the captcha will be displayed on the screen
+        },
+        auth,
+      );
+    }
+
+    recaptchaRef.current
+      .verify()
+      .then(async (token: string) => {
+        try {
+          const response = await poster("user/resendSms", {
+            phoneNumber,
+            recaptchaToken: token,
+          });
+
+          setResendLoader(false);
+        } catch (error: any) {
+          setVerificationError(
+            error?.message ?? "Resending failed, try again!",
+          );
+          setResendLoader(false);
+        }
+      })
+      .catch((error: any) => {
+        setResendLoader(false);
+        setVerificationError(error?.message ?? "Resending failed, try again!");
+      })
+      .finally(() => {
+        recaptchaRef.current?.clear;
+      });
+  };
 
   return (
     <>
@@ -66,7 +110,7 @@ function Index() {
               }}
             >
               <fieldset>
-                <div className="mb-5 flex flex-col">
+                <div className="mb-5 flex min-w-[240px] flex-col">
                   <label htmlFor="phoneNumberInput">Phone Number</label>
                   <input
                     className="rounded-md border-gray-300 shadow-sm outline-none drop-shadow-sm"
@@ -113,12 +157,17 @@ function Index() {
                       {isVerifying && <LoadingCircle />}
                     </span>
                   </button>
-                  {/* <div className="flex items-center justify-center">
+                  <div className="flex items-center justify-center">
                     <p></p>
-                    <button className="mt-5 text-center text-base font-semibold not-italic leading-6 tracking-[0.5px] text-cyan-600">
-                      Resend code
+                    <div id="recaptcha-container"></div>
+                    <button
+                      onClick={handleResetCode}
+                      type="button"
+                      className="mt-5 flex flex-row items-center gap-1.5 text-center text-base font-semibold not-italic leading-6 tracking-[0.5px] text-cyan-600"
+                    >
+                      Resend code {resendLoader && <LoadingCircle />}
                     </button>
-                  </div> */}
+                  </div>
                 </div>
               </fieldset>
             </form>

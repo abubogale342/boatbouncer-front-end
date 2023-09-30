@@ -196,7 +196,6 @@ export default function Search(props: any) {
     if (!data || !data.data || data.data.length === 0 || !map) return;
     const bounds = new mapboxgl.LngLatBounds();
 
-    // console.log("data.data", data.data);
     if (markers.length > 0) {
       markers.forEach((marker: mapboxgl.Marker) => {
         marker.remove();

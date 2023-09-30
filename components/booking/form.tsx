@@ -10,6 +10,9 @@ import DatePicker from "react-datepicker";
 import { addHours } from "date-fns";
 import { PopoverDirectionType } from "react-tailwindcss-datepicker/dist/types";
 import "react-datepicker/dist/react-datepicker.css";
+import { useSession } from "next-auth/react";
+import { LoadingCircle } from "../shared/icons";
+import { poster } from "@/lib/utils";
 
 interface IProps {
   data: any;
@@ -18,6 +21,7 @@ interface IProps {
 
 const BookingForm = ({ data, user }: IProps) => {
   const [pricingType, setPricingType] = useState("Per Hour");
+  const { data: session } = useSession();
 
   const perHourPrice = data.pricing.filter(
     ({ type }: { type: string }) => type == "Per Hour",
@@ -27,7 +31,6 @@ const BookingForm = ({ data, user }: IProps) => {
     ({ type }: { type: string }) => type == "Per Day",
   )[0].value;
 
-  const { fetchWithAuthSync } = useFetcher();
   const dispatch = useDispatch();
 
   const [value, setValue] = useState<DateValueType>({
@@ -38,14 +41,18 @@ const BookingForm = ({ data, user }: IProps) => {
   const [dateError, setDateError] = useState("");
   const [startDate, setStartDate] = useState<Date | null>();
   const [endDate, setEndDate] = useState<Date | null>();
+  const [bookingError, setBookingError] = useState("");
+  const [booking, setBooking] = useState(false);
 
   const handleValueChange = (newValue: DateValueType) => {
     setDateError("");
     setValue(newValue);
+    setBookingError("");
   };
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setPricingType(event.target.value);
+    setBookingError("");
   };
 
   const filterPassedStartTime = (time: Date) => {
@@ -65,7 +72,22 @@ const BookingForm = ({ data, user }: IProps) => {
     return currentDate.getTime() < selectedDate.getTime();
   };
 
-  const requestBookingSubmitHn = (event: React.FormEvent<HTMLFormElement>) => {
+  const requestBookingSubmitHn = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
+    setBookingError("");
+
+    if (!session) {
+      Router.push({
+        pathname: `/user/login`,
+        query: {
+          redirect_to: `/boat/${location.href.split("/").pop()}`,
+        },
+      });
+
+      event.preventDefault();
+      return;
+    }
     let start;
     let end;
 
@@ -91,6 +113,8 @@ const BookingForm = ({ data, user }: IProps) => {
       }
     }
 
+    event.preventDefault();
+
     const bookingData = {
       boatId: data._id,
       type: pricingType,
@@ -102,12 +126,18 @@ const BookingForm = ({ data, user }: IProps) => {
       renterPrice: 100,
     };
 
-    fetchWithAuthSync("/booking", bookingData)
-      .then(async (res) => {
-        dispatch(setActiveId(res.data.boatId._id));
-        Router.push({ pathname: "/bookmarks" });
-      })
-      .catch((err) => console.log(err));
+    setBooking(true);
+
+    try {
+      const response = await poster("booking", bookingData);
+      dispatch(setActiveId(response._id));
+      Router.push({ pathname: "/bookmarks" });
+      event.preventDefault();
+    } catch (error: any) {
+      setBooking(false);
+      setBookingError(error?.message);
+      event.preventDefault();
+    }
 
     event.preventDefault();
   };
@@ -146,6 +176,7 @@ const BookingForm = ({ data, user }: IProps) => {
                 onChange={(date) => {
                   setDateError("");
                   setStartDate(date);
+                  setBookingError("");
                 }}
                 filterTime={filterPassedStartTime}
                 placeholderText="Starting Time"
@@ -166,6 +197,7 @@ const BookingForm = ({ data, user }: IProps) => {
                 onChange={(date) => {
                   setDateError("");
                   setEndDate(date);
+                  setBookingError("");
                 }}
                 calendarClassName="w-full"
                 className="mx-auto flex w-full justify-center rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
@@ -236,10 +268,13 @@ const BookingForm = ({ data, user }: IProps) => {
         </div>
         <button
           type="submit"
-          className="w-full rounded-lg bg-cyan-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="flex w-full flex-row items-center justify-center gap-2 rounded-lg bg-cyan-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          Request A Booking
+          Request A Booking {booking && <LoadingCircle />}
         </button>
+        <p className="text-center text-red-600">
+          {bookingError ? bookingError : ""}
+        </p>
         <hr className="mb-2 mt-1 h-px border-0 bg-gray-200" />
 
         <div className="flex flex-col items-start">

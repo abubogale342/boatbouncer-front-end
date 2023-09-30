@@ -43,10 +43,6 @@ export default function Bookmarks(props: any) {
   const [chargesEnabled, setchargesEnabled] = useState<Boolean>(false);
   const dispatch = useDispatch();
 
-  console.log("ids", ids);
-
-  console.log(data?.filter((d: any) => d.boatId._id == ids));
-
   let element = null;
 
   const setRefreshHn = () => {

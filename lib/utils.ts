@@ -83,12 +83,14 @@ export function authGetter<JSON = any>(
 export function poster(path: string, body?: any) {
   return axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}${path}`, body)
-    .then((response) => response.data)
+    .then((response) => {
+      console.log("response", response);
+      return response.data;
+    })
     .catch((error: any) => {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-
         if (
           error.response.statusText &&
           typeof error.response.statusText === "string"
@@ -115,7 +117,6 @@ export function poster(path: string, body?: any) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        // console.log("error.request", error.request);
         throw new Error("The request was made but no response was received");
         return;
       } else {
@@ -159,7 +160,6 @@ export function authPoster(Axios: Axios, path: string, body?: any) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        // console.log("error.request", error.request);
         throw new Error("The request was made but no response was received");
         return;
       } else {
