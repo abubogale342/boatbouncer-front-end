@@ -83,10 +83,7 @@ export function authGetter<JSON = any>(
 export function poster(path: string, body?: any) {
   return axios
     .post(`${process.env.NEXT_PUBLIC_API_URL}${path}`, body)
-    .then((response) => {
-      console.log("response", response);
-      return response.data;
-    })
+    .then((response) => response.data)
     .catch((error: any) => {
       if (error.response) {
         // The request was made and the server responded with a status code
