@@ -101,8 +101,8 @@ const Boat = ({
         page == "bookmarks" && "mr-8"
       } justify-between shadow-sm drop-shadow-sm hover:shadow-lg ${
         id && id == _id
-          ? "relative w-full flex-col border-[3px] border-[#219EBC] transition-[border-color] duration-1000 sm:flex-row"
-          : "w-full border-zinc-100 transition-[border-color] duration-1000"
+          ? "duration-750 relative w-full flex-col border-[2.5px] border-[#219EBC] transition-[border-color] sm:flex-row"
+          : "duration-750 w-full border-zinc-100 transition-[border-color]"
       } ${_id && " cursor-pointer "} gap-0 rounded-2xl border border-solid p-2`}
       onClick={() => {
         if (_id) {
@@ -130,7 +130,7 @@ const Boat = ({
           </button>
         )}
       {id && id == _id && (
-        <Triangle className="absolute -right-[22px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
+        <Triangle className="absolute -right-[21.5px] bottom-1/2 hidden rotate-90 fill-[#219EBC] text-[#219EBC] sm:block" />
       )}
 
       {!id && page !== "listing" && page !== "favorite" && (

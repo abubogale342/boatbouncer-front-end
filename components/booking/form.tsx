@@ -43,6 +43,7 @@ const BookingForm = ({ data, user }: IProps) => {
   const [endDate, setEndDate] = useState<Date | null>();
   const [bookingError, setBookingError] = useState("");
   const [booking, setBooking] = useState(false);
+  const { fetchWithAuthSync } = useFetcher();
 
   const handleValueChange = (newValue: DateValueType) => {
     setDateError("");
@@ -129,13 +130,13 @@ const BookingForm = ({ data, user }: IProps) => {
     setBooking(true);
 
     try {
-      const response = await poster("booking", bookingData);
-      dispatch(setActiveId(response._id));
+      const response = await fetchWithAuthSync("/booking", bookingData);
+      dispatch(setActiveId(response.data._id));
       Router.push({ pathname: "/bookmarks" });
       event.preventDefault();
     } catch (error: any) {
       setBooking(false);
-      setBookingError(error?.message);
+      setBookingError(error?.response?.data?.message ?? error.message);
       event.preventDefault();
     }
 
