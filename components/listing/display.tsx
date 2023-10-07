@@ -15,6 +15,9 @@ import { CircularProgress } from "@mui/material";
 import { authGetter } from "@/lib/utils";
 import Router from "next/router";
 import { setActiveIds } from "features/bookmark/bookmarkSlice";
+import { AxiosResponse } from "axios";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 const PAGE_SIZE = 10;
 
@@ -31,12 +34,16 @@ const DisplayListings = ({
     loading,
     error,
     dataLength,
+    fetchWithAuthSync,
   } = useFetcher();
   const [favorites, setFavorites] = useState<string[]>([]);
   const editableListing = useSelector((state: any) => state.boat.editableBoat);
+  const [chargesEnabled, setchargesEnabled] = useState<Boolean>(false);
   const { data: session } = useSession();
   const dispatch = useDispatch();
+
   const [pageNo, setPageNo] = useState(1);
+  const router = useRouter();
 
   useEffect(() => {
     const getFavorites = async () => {
@@ -63,6 +70,18 @@ const DisplayListings = ({
       `/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`,
     );
   }, [session?.token, pageNo, dataLength]);
+
+  useEffect(() => {
+    if (!session?.token) return;
+
+    fetchWithAuthSync("/user/current")
+      .then((res: AxiosResponse) => {
+        setchargesEnabled(res.data.chargesEnabled);
+      })
+      .catch(() => {
+        setchargesEnabled(false);
+      });
+  }, [session?.token]);
 
   useEffect(() => {
     window.scrollTo({
@@ -109,9 +128,17 @@ const DisplayListings = ({
     deleteBoat(`/boat/${boat._id}`, boat);
   };
 
+  const getPaymentHn = () => {
+    fetchWithAuthSync("/user/stripAccount", {})
+      .then((res: AxiosResponse) => {
+        router.replace(res.data.url);
+      })
+      .catch(() => {});
+  };
+
   if (!error && !loading && data && data?.length == 0 && pageNo == 1) {
     displayEl = (
-      <motion.p className="flex h-12 items-center justify-start text-center text-2xl text-red-500">
+      <motion.p className="flex h-12 items-center justify-start text-center text-2xl font-semibold text-orange-400">
         You have no listings added.
       </motion.p>
     );
@@ -184,6 +211,21 @@ const DisplayListings = ({
 
   return (
     <div className="mx-4 sm:mx-10 lg:mx-20">
+      {!chargesEnabled && !error && !loading && data && data?.length >= 1 && (
+        <div className="mb-3 flex flex-row flex-wrap text-base font-medium italic text-orange-400 sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
+          <p>
+            Your boats will not be visible unless you add a method to get
+            payments.{" "}
+            <Link onClick={getPaymentHn} href="" className="underline">
+              Add Here
+            </Link>{" "}
+          </p>
+          {/* <button onClick={getPaymentHn} className="italic underline">
+            
+          </button> */}
+          <p></p>
+        </div>
+      )}
       <div className="flex flex-row items-center justify-between">
         <p className="text-xl font-medium text-gray-900 sm:text-3xl">
           My Listings
