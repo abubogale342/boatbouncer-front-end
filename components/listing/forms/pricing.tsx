@@ -139,7 +139,11 @@ const PricingForm = ({
                     )[0]
                       ? boatInfo.pricing.filter(
                           (value: any) => value.type === perTime,
-                        )[0]?.value ?? ""
+                        )[0]?.value
+                        ? boatInfo.pricing.filter(
+                            (value: any) => value.type === perTime,
+                          )[0]?.value
+                        : ""
                       : ""
                   }
                   className={`${returnClass()[0]} pl-10 text-xl`}
@@ -177,6 +181,10 @@ const PricingForm = ({
                       ? boatInfo.pricing.filter(
                           (value: any) => value.type === perTime,
                         )[0]?.min
+                        ? boatInfo.pricing.filter(
+                            (value: any) => value.type === perTime,
+                          )[0]?.min
+                        : ""
                       : ""
                   }
                   type="number"
@@ -216,13 +224,19 @@ const PricingForm = ({
             type="number"
             onBlur={handleBlur}
             name="securityAllowance"
-            value={values.securityAllowance}
+            value={values.securityAllowance ? values.securityAllowance : ""}
             onChange={(event) => {
               handleChange(event);
               dispatch(updateSecurityAllowance(event.target.value));
             }}
           />
-          <label className={`${returnClass()[1]}`}>Security Allowance</label>
+          <label
+            className={`${
+              returnClass()[1]
+            } left-6 mt-1.5 peer-focus:left-0 peer-focus:mt-0`}
+          >
+            Security Allowance
+          </label>
         </div>
         {/* <div className="relative w-24">
           <select
