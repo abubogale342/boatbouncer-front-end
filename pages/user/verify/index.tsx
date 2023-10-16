@@ -33,10 +33,6 @@ function Index() {
     });
   }, [phoneNumber]);
 
-  if (!phoneNumber) {
-    return;
-  }
-
   useEffect(() => {
     if (!notification.time) return;
 
@@ -50,6 +46,11 @@ function Index() {
       clearInterval(timer); // Return a funtion to clear the timer so that it will stop being called on unmount
     };
   }, [notification.time]);
+  
+  if (!phoneNumber) {
+    return;
+  }
+
 
   const handleResetCode = async () => {
     setResendLoader(true);
