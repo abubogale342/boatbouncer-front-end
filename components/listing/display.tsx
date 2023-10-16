@@ -33,12 +33,11 @@ const DisplayListings = ({
     Axios,
     loading,
     error,
-    dataLength,
     fetchWithAuthSync,
   } = useFetcher();
   const [favorites, setFavorites] = useState<string[]>([]);
   const editableListing = useSelector((state: any) => state.boat.editableBoat);
-  const [chargesEnabled, setchargesEnabled] = useState<Boolean>(false);
+  const [chargesEnabled, setchargesEnabled] = useState<Boolean>(true);
   const { data: session } = useSession();
   const dispatch = useDispatch();
 
@@ -69,7 +68,7 @@ const DisplayListings = ({
     fetchWithAuthWCancellation(
       `/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`,
     );
-  }, [session?.token, pageNo, dataLength]);
+  }, [session?.token, pageNo]);
 
   useEffect(() => {
     if (!session?.token) return;
@@ -125,6 +124,9 @@ const DisplayListings = ({
 
   const deleteBoatHandler = (boat: any) => {
     dispatch(resetBoat());
+    if (data.length - (1 % 10) === 0) {
+      if (pageNo > 1) setPageNo((pageNo) => pageNo - 1);
+    }
     deleteBoat(`/boat/${boat._id}`, boat);
   };
 
@@ -243,12 +245,12 @@ const DisplayListings = ({
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {displayEl}
       </div>
-      {dataLength > 10 && (
+      {data?.length > 10 && (
         <>
           <hr className="mb-2 mt-5" />
           <div className="mx-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
             <p className="text-lg">
-              Page {pageNo} | ({dataLength} results)
+              Page {pageNo} | ({data?.length} results)
             </p>
             <div className="flex items-center gap-3">
               <button
@@ -263,9 +265,9 @@ const DisplayListings = ({
               <button
                 onClick={nextPage}
                 className={`rounded-lg border px-5 py-1.5 text-lg font-medium ${
-                  pageNo * PAGE_SIZE >= dataLength ? "opacity-40" : ""
+                  pageNo * PAGE_SIZE >= data?.length ? "opacity-40" : ""
                 }`}
-                disabled={pageNo * PAGE_SIZE >= dataLength}
+                disabled={pageNo * PAGE_SIZE >= data?.length}
               >
                 Next
               </button>

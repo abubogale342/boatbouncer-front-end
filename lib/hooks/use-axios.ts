@@ -9,7 +9,6 @@ function useFetcher() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState<any>(null);
-  const [dataLength, setDataLength] = useState(0);
   const dispatch = useDispatch();
 
   Axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_URL;
@@ -46,7 +45,6 @@ function useFetcher() {
     if (deleteBoat.status == 200) {
       let filteredData = data.filter((d: any) => d._id !== boat._id);
       setData(filteredData);
-      setDataLength(filteredData.length);
     }
   }
 
@@ -93,7 +91,6 @@ function useFetcher() {
           setLoading(false);
           setError(null);
           setData(res?.data?.data);
-          setDataLength(res?.data?.total ?? 0);
         })
         .catch((err) => {
           setError(err);
@@ -113,7 +110,6 @@ function useFetcher() {
         setLoading(false);
         setError(null);
         setData(res?.data?.data);
-        setDataLength(res?.data?.total ?? 0);
       })
       .catch((err) => {
         setError(err);
@@ -182,7 +178,6 @@ function useFetcher() {
     updateBoat,
     deleteBoat,
     updateUser,
-    dataLength,
     setData,
     loading,
     error,
