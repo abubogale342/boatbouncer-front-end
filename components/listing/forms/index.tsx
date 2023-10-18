@@ -37,7 +37,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
       <Formik
         initialValues={{
           boatName: boatInfo.boatName,
-          boatType: boatInfo.boatType,
+          boatType: "Boat",
           description: boatInfo.description,
           manufacturer: boatInfo.manufacturer,
           model: boatInfo.model,
@@ -68,6 +68,7 @@ const BoatForm = ({ cancelHn }: { cancelHn: (status: any) => void }) => {
         onSubmit={(values: any, { setSubmitting }: { setSubmitting: any }) => {
           let finalValues = {
             ...boatInfo,
+            boatType: "boat",
             securityAllowance: `${boatInfo.securityAllowance} ${boatInfo.currency}`,
           };
 

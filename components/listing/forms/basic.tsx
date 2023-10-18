@@ -72,7 +72,7 @@ const BasicInfo = ({
           )}
         </div>
 
-        <div className="relative h-11 w-full">
+        {/* <div className="relative h-11 w-full">
           <input
             className={returnClass(!!(errors.boatType && touched.boatType))[0]}
             placeholder=" "
@@ -96,7 +96,7 @@ const BasicInfo = ({
               {errors.boatType as string}
             </p>
           )}
-        </div>
+        </div> */}
       </div>
 
       <div className="mb-8 flex flex-col items-center gap-6 sm:flex-row">

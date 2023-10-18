@@ -161,7 +161,7 @@ const DisplayListings = ({
   const bookingClickHn = (boat: any) => {
     dispatch(setActiveIds(boat._id));
     Router.push({
-      pathname: "/bookmarks",
+      pathname: "/bookings",
       query: { type: "owner" },
     });
   };

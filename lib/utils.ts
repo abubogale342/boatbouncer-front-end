@@ -169,6 +169,7 @@ export function authPoster(Axios: Axios, path: string, body?: any) {
 export function objectDiff(obj1: any, obj2: any) {
   let diffObj: any = {};
   for (let key in obj2) {
+    if (key == "boatType") continue;
     if (!(obj2?.[key] && obj1?.[key])) {
       continue;
     }

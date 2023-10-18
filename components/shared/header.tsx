@@ -72,7 +72,7 @@ export default function Header(props: any) {
                     </div>
                   </DropdownMenu.Item>
                   <hr className="mt-1 h-px border-0 bg-gray-200" />
-                  <Link href="/bookmarks">
+                  <Link href="/bookings">
                     <DropdownMenu.Item className="dropDownItem py-3 pl-4 font-inter text-sm text-gray-700">
                       Bookings
                     </DropdownMenu.Item>

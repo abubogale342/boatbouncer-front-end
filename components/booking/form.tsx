@@ -132,7 +132,7 @@ const BookingForm = ({ data, user }: IProps) => {
     try {
       const response = await fetchWithAuthSync("/booking", bookingData);
       dispatch(setActiveId(response.data._id));
-      Router.push({ pathname: "/bookmarks" });
+      Router.push({ pathname: "/bookings" });
       event.preventDefault();
     } catch (error: any) {
       setBooking(false);

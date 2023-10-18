@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 export const formUpdateSchema = Yup.object().shape({
   boatName: Yup.string().required("Boat name is required"),
-  boatType: Yup.string().required("Boat type is required"),
+  // boatType: Yup.string().required("Boat type is required"),
   description: Yup.string().required("Description is required"),
   manufacturer: Yup.string().required("Manufacturer is required"),
   model: Yup.string().required("Model is required"),
