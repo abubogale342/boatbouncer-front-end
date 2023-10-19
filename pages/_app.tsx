@@ -31,7 +31,7 @@ if (!process.browser) React.useLayoutEffect = React.useEffect;
 export default function MyApp({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps<{ session: Session }>) {
+}: AppProps) {
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
 
   const stripePromise = loadStripe(
@@ -39,7 +39,7 @@ export default function MyApp({
   );
 
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={pageProps.session}>
       <RWBProvider>
         <Elements stripe={stripePromise}>
           <Provider store={store}>

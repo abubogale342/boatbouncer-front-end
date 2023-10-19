@@ -2,9 +2,7 @@ import NextAuth, { NextAuthOptions, RequestInternal } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { poster } from "@/lib/utils";
-import { Props } from "@/lib/types";
 import { DefaultSession } from "next-auth";
-import axios, { AxiosError } from "axios";
 
 // nextauth.d.ts
 declare module "next-auth" {

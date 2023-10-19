@@ -64,7 +64,6 @@ const DisplayListings = ({
 
   useEffect(() => {
     if (!session?.token) return;
-
     fetchWithAuthWCancellation(
       `/boat/listing?pageNo=${pageNo}&size=${PAGE_SIZE}`,
     );

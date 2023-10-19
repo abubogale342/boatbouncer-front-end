@@ -35,7 +35,7 @@ function useFetcher() {
         .catch((error) => {
           setLoading(false);
           setError(error);
-          // setData(null)
+          setData(null);
         });
     }
   }
@@ -72,7 +72,6 @@ function useFetcher() {
     setError(null);
     setLoading(true);
     setData(null);
-
     if (body) {
       Axios.post(path, body)
         .then((res) => {
