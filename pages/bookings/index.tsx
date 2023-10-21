@@ -140,6 +140,8 @@ export default function Bookmarks(props: any) {
     );
   }
 
+  console.log("bookmarks", bookmarks);
+
   return (
     <div className="flex min-h-screen flex-col">
       <Meta title="bookmarks" />

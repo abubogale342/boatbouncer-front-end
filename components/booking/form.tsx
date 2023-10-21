@@ -1,6 +1,6 @@
 import { useState } from "react";
 import dayjs from "dayjs";
-import { setActiveId } from "features/bookmark/bookmarkSlice";
+import { setActiveId, setActiveIds } from "features/bookmark/bookmarkSlice";
 import useFetcher from "@/lib/hooks/use-axios";
 import { useDispatch } from "react-redux";
 import Router from "next/router";
@@ -132,6 +132,7 @@ const BookingForm = ({ data, user }: IProps) => {
     try {
       const response = await fetchWithAuthSync("/booking", bookingData);
       dispatch(setActiveId(response.data._id));
+
       Router.push({ pathname: "/bookings" });
       event.preventDefault();
     } catch (error: any) {

@@ -79,9 +79,9 @@ const Lists = ({
 
     if (findIndex && findIndex !== -1) {
       setIndex(findIndex);
+    } else {
+      setIndex(0);
     }
-
-    setIndex(0);
   }, [isMobile]);
 
   useEffect(() => {
@@ -118,9 +118,10 @@ const Lists = ({
     );
 
     if (findIndex && findIndex !== -1) {
+      setIndex(Math.floor(findIndex / DESKTOP_PER_PAGE));
+    } else {
+      setIndex(0);
     }
-
-    setIndex(0);
   }, [isDesktop]);
 
   element =
@@ -166,13 +167,15 @@ const Lists = ({
           <div className="mr-10 flex flex-row items-center justify-center gap-6">
             <AiFillLeftCircle
               onClick={() => scrollBookmarkHn("left")}
-              size={36}
+              className="cursor-pointer"
               color="#219EBC"
+              size={36}
             />
             <AiFillRightCircle
-              size={36}
               onClick={() => scrollBookmarkHn("right")}
+              className="cursor-pointer"
               color="#219EBC"
+              size={36}
             />
           </div>
         )}
