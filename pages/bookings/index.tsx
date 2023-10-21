@@ -18,6 +18,7 @@ import { AxiosResponse } from "axios";
 import { useRouter } from "next/router";
 import { CircularProgress } from "@mui/material";
 import { resetId, resetIds } from "features/bookmark/bookmarkSlice";
+import { CheckCircle2 } from "lucide-react";
 
 export default function Bookmarks(props: any) {
   const { ...user } = props;
@@ -234,6 +235,18 @@ export default function Bookmarks(props: any) {
                       <span className="font-medium text-white">
                         {bookmarks?.offerId ? "Your Offer" : "No offer yet"}
                       </span>
+                      <span className="self-end text-gray-300">
+                        {bookingTab === "owner" &&
+                          bookmarks.owner &&
+                          user._id === bookmarks.owner._id &&
+                          bookmarks?.offerId &&
+                          bookmarks.offerId.status === "Processing" && (
+                            <span className="flex flex-row items-center gap-1">
+                              <span>Your Offer is Accepted</span>
+                              <CheckCircle2 />
+                            </span>
+                          )}
+                      </span>
                     </p>
                     {bookmarks?.offerId && (
                       <Preview
@@ -300,7 +313,8 @@ export default function Bookmarks(props: any) {
                         {bookingTab === "owner" &&
                           bookmarks.owner &&
                           user._id === bookmarks.owner._id &&
-                          bookmarks?.offerId && (
+                          bookmarks?.offerId &&
+                          bookmarks.offerId.status !== "Processing" && (
                             <Offer
                               bookId={bookmarks._id}
                               type={bookmarks.type}
@@ -315,6 +329,7 @@ export default function Bookmarks(props: any) {
                               </button>
                             </Offer>
                           )}
+
                         {bookingTab === "renter" &&
                           bookmarks?.renter &&
                           user._id === bookmarks.renter._id &&
